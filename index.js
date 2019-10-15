@@ -9,5 +9,8 @@ app.use(express.static('public'))
 app.use(cors())
 app.use(bodyParser.json())
 
+const {userRouter} = require('./routers')
+app.use("/user", userRouter)
+
 
 app.listen(port, ()=> console.log(` Api aktif di port  ${port} `))
