@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "enverd",
-    "password": "123123123",
-    "database": "kasihnusantara",
-    "host": "127.0.0.1",
+    "username": "lianeddy",
+    "password": "asd123",
+    "database": "sequelizedb",
+    "host": "localhost",
     "dialect": "mysql"
   },
   "test": {

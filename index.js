@@ -9,8 +9,9 @@ app.use(express.static('public'))
 app.use(cors())
 app.use(bodyParser.json())
 
-const {userRouter} = require('./routers')
+const { studentDetailRouter, userRouter } = require('./router')
 app.use("/user", userRouter)
+app.use("/student", studentDetailRouter)
 
 
 app.listen(port, ()=> console.log(` Api aktif di port  ${port} `))
