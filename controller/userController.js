@@ -9,20 +9,6 @@ const { createJWTToken, createForgotPasswordToken } = require('../helpers/jwtoke
 const transporter = require('../helpers/mailer')
 
 module.exports = {
-    getUserData :  (req,res) =>{
-        const { email, password } = req.body
-        User.findAll({where: {email, password}})
-        .then((results) => {
-            console.log(results);
-            res.send(results);
-        })
-        .catch((err) => {
-            console.log(err);
-        })
-    },
-    postUser : (req,res) =>{
-        
-    },
 
     //Register, Login, KeepLogin, Reset Password / Forgot Password, Change Password, Login Gmail, Login Facebook
     registerUser : (req, res) => {
