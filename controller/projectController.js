@@ -81,6 +81,7 @@ module.exports = {
 
                 })
                 .then((result)=>{
+                    console.log(result)
                     return res.status(200).send({message : 'success get projects', result})
                 })
                 .catch((err)=>{
@@ -138,6 +139,36 @@ module.exports = {
         // })
     },
     deleteProject : (req,res) =>{
+        var id = req.params.id
+        Project.findOne({
+            attributes : [
+                'projectImage'
+            ],
+            where : {
+                id : id
+            }
+        }).then((result)=>{
+            console.log(result.projectImage)
 
+            //DELETE IMAGE
+            if(result.projectImage){
+                fs.unlinkSync('./public' + result.projectImage);
+            }
+
+            Project.update({
+                isDeleted : 1
+            }, {where : { id : id}})
+            .then((result2)=>{
+                return res.status(200).send({message : 'success', result : result2})
+            })
+            .catch((err)=>{
+                return res.status(500).send({message : err})
+            })
+
+
+        })
+        .catch((err)=>{
+            return res.status(500).send({message : err})
+        })
     }
 }
