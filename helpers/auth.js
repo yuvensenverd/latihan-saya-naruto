@@ -6,6 +6,7 @@ module.exports = {
         if (req.method !== "OPTIONS") {
             // let success = true;
             //console.log(req.token.length)
+            console.log(req.token)
             jwt.verify(req.token, "KasihNusantaraJWToken", (error, decoded) => {
                 if (error) {
                     // success = false;
