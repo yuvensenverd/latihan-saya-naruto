@@ -19,6 +19,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      phoneNumber: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       isGoogle: {
         type: Sequelize.INTEGER,
         defaultValue : 0,
