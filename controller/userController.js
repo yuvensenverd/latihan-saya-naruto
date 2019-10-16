@@ -35,8 +35,8 @@ module.exports = {
                     where: {
                         email: data.email,
                         [Op.or]: [
-                            { isFacebook: '0' },
-                            { isGoogle: '0' }
+                            { isFacebook: null },
+                            { isGoogle: null }
                         ]
                     }
                 })
@@ -343,11 +343,11 @@ module.exports = {
         .then((dataUser) => {
             if(dataUser) {
 
-                if(dataUser.isGoogle === 1 && dataUser.password === null) {
+                if(dataUser.isGoogle && dataUser.password === null) {
                     return res.status(500).send({ status: 'gmailTrue', message: `Silahkan Login with Gmail dengan Email = ${req.body.email}` })
                 } 
 
-                if(dataUser.isFacebook === 1 && dataUser.password === null) {
+                if(dataUser.isFacebook && dataUser.password === null) {
                     return res.status(500).send({ status: 'facebookTrue', message: `Silahkan Login with Facebook dengan Email = ${req.body.email}` })
                 }
 
@@ -458,7 +458,7 @@ module.exports = {
         User.findOne({
             where: {
                 email: req.body.data.email,
-                isGoogle: '0',
+                isGoogle: null,
 
             }
         })
@@ -546,7 +546,7 @@ module.exports = {
         User.findOne({
             where: {
                 email: req.body.data.email,
-                isFacebook: '0',
+                isFacebook: null,
 
             }
         })
