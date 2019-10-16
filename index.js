@@ -9,7 +9,13 @@ app.use(express.static('public'))
 app.use(cors())
 app.use(bodyParser.json())
 
-const {userRouter} = require('./routers')
+app.get('/', (req, res) => {
+    res.status(200).send(
+        `<h3>Welcome to Kasih Nusantara API</h3>`
+    )
+})
+
+const {userRouter} = require('./router')
 app.use("/user", userRouter)
 
 
