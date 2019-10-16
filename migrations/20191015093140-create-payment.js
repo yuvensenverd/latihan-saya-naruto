@@ -57,6 +57,10 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      order_id: {
+        allowNull: false,
+        type: Sequelize.STRING
       }
     });
   },

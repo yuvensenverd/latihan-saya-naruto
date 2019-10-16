@@ -6,5 +6,5 @@ module.exports = {
     },
     postUser : (req,res) =>{
         
-    }
+    } 
 }
