@@ -67,8 +67,6 @@ module.exports = {
                         "totalTarget",
                         "projectImage"
                     ],
-                  
-
                     where : {
                         isDeleted : 0,
                     },

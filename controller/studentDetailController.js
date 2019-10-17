@@ -5,15 +5,19 @@ const { uploader } = require('../helpers/uploader')
 module.exports = {
     getStudentDetail : (req,res) => {
         const { id } = req.params
-            StudentDetail.findAll({
+            Student.findAll({
                 where: {
-                    studentId: id
+                    id: id,
                 },
                 include: [
                     {
-                        model: Student,
+                        model: StudentDetail,
                         require: true,
-                        attributes: ['name']
+                        // attributes: ['name']
+                        // separate:true,
+                        attributes: {
+                            exclude: ['createdAt', 'updatedAt']
+                        }
                     }
                 ],
                 attributes: {
@@ -21,6 +25,7 @@ module.exports = {
                 }
             })
             .then((results) => {
+                console.log(results);
                 res.send(results);
             })
             .catch((err) => {
@@ -44,6 +49,7 @@ module.exports = {
                     deskripsi, 
                     studentId, 
                 } = data
+                console.log(data)
                 StudentDetail.create({
                     pictureReport: imagePath,
                     deskripsi,
@@ -52,6 +58,7 @@ module.exports = {
                 .then(() => {
                     StudentDetail.findAll({where: {studentId}})
                     .then((results) => {
+                        console.log(results);
                         res.send(results);
                     })
                     .catch((err) => {
@@ -69,11 +76,13 @@ module.exports = {
         .then((results) =>{
             var oldImgPath = results[0].dataValues.pictureReport
             fs.unlinkSync('./Public' + oldImgPath)
-            StudentDetail.destroy(
+            StudentDetail.update(
+                {pictureReport: null},
                 {where: { id }})
             .then(() => {
                 StudentDetail.findAll({where: {studentId}})
                 .then((results2) => {
+                    console.log(results2);
                     res.send(results2);
                 })
             })
