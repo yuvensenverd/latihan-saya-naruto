@@ -11,11 +11,11 @@ const snap = new midtransClient.Snap({
 module.exports = {
     //====================// midtrans //====================
     getSnapMd : (req, res) => {
-        var { gross_amount, order_id} = req.body.parameter.transaction_details
+        let { projectId, userId, komentar, anonim} = req.body.userData
+        let { gross_amount, order_id} = req.body.parameter.transaction_details
         let { parameter } = req.body
         console.log('masuk get token midtrans')
         console.log(req.body)
-        console.log('gros amount' + typeof(gross_amount))
         console.log(order_id)
         var Date = moment().format("YYMMDD")
         var randInt = Math.floor(Math.random()*(999-100+1)+100)
@@ -24,17 +24,20 @@ module.exports = {
         .then((transaction)=>{
             transactionToken = transaction.token;
             console.log('transactionToken: ', transactionToken)
+            //######## INSERT DATABASE 
             Payment.create({
                 paymentType: '-',
                 nominal: gross_amount,
                 statusPayment: '-',
-                projectId: req.body.userData.projectId,
-                userId: req.body.userData.userId,
+                projectId: projectId,
+                userId: userId,
                 isRefund: '0',
                 isDeleted: '0',
                 createAt: Date,
                 updateAt : Date,
-                order_id: order_id
+                order_id: order_id,
+                komentar: komentar,
+                isAnonim: anonim
             }).then(()=>{
                 Payment.findAll()
                 .then((result)=>{
@@ -108,6 +111,32 @@ module.exports = {
             console.log(err)
         })
     },
+    updatePayment : (req, res) => {
+        console.log('masuk update payment ===> ')
+        console.log(req.body)
+        let { payment_type, transaction_status, transaction_time, order_id} = req.body
+        Payment.update({
+            paymentType : payment_type,
+            statusPayment : transaction_status,
+            updateAt: transaction_time
+        },
+        {
+            where : {
+                order_id
+            }
+        })
+
+        .then(() => {
+            Payment.findAll({ where : { order_id}})
+            .then((result) => {
+                console.log(result)
+                res.send(result)
+            })
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    }
     
 
 }
