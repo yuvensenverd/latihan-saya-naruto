@@ -642,6 +642,9 @@ module.exports = {
     },
     applySubscription : (req,res) => {
         var { subscriptionNominal, email } = req.body
+        if(!email){
+            return null
+        }
         console.log(req.body)
         User.update({
             subscriptionStatus: 1,
