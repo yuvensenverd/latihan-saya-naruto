@@ -18,11 +18,12 @@ app.get('/', (req, res) => {
     )
 })
 
-const {userRouter,studentRouter,studentDetailRouter,projectRouter} = require('./router')
+const {userRouter,studentRouter,studentDetailRouter,projectRouter, paymentRouter} = require('./router')
 app.use("/user", userRouter)
 app.use('/student',studentRouter)
 app.use("/project", projectRouter)
 app.use("/studentdetail", studentDetailRouter)
+app.use('/payment', paymentRouter)
 
 
 app.listen(port, ()=> console.log(` Api aktif di port  ${port} `))
