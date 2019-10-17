@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     projectEnded: DataTypes.DATE,
     totalTarget: DataTypes.INTEGER,
     projectImage: DataTypes.STRING,
+    shareDescription: DataTypes.STRING,
     userId: DataTypes.INTEGER,
     isCancelled: DataTypes.INTEGER,
     cancelledDate: DataTypes.DATE,
