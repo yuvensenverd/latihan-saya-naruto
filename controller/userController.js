@@ -123,7 +123,7 @@ module.exports = {
                                         email: dataUser.dataValues.email,
                                         token: tokenJwt,
                                         verified: dataUser.dataValues.verified,
-                                        UserImage: dataUser.dataValues.UserImage,
+                                        UserImage: dataUser.dataValues.userImage,
                                         role: dataUser.dataValues.role
                                     });
 
@@ -185,7 +185,7 @@ module.exports = {
                             email: dataUser.dataValues.email,
                             token: tokenJwt,
                             verified: dataUser.dataValues.verified,
-                            UserImage: dataUser.dataValues.UserImage,
+                            UserImage: dataUser.dataValues.userImage,
                             role: dataUser.dataValues.role
                         });
                         
@@ -242,7 +242,7 @@ module.exports = {
                         email: dataUser.dataValues.email,
                         token: tokenJwt,
                         verified: dataUser.dataValues.verified,
-                        UserImage: dataUser.dataValues.UserImage,
+                        UserImage: dataUser.dataValues.userImage,
                         role: dataUser.dataValues.role
                     });
 
@@ -271,7 +271,7 @@ module.exports = {
                     email: dataUser.dataValues.email,
                     token: tokenJwt,
                     verified: dataUser.dataValues.verified,
-                    UserImage: dataUser.dataValues.UserImage,
+                    UserImage: dataUser.dataValues.userImage,
                     role: dataUser.dataValues.role
                 });
 
@@ -319,7 +319,7 @@ module.exports = {
                             email: dataUser.dataValues.email,
                             token: tokenJwt,
                             verified: dataUser.dataValues.verified,
-                            UserImage: dataUser.dataValues.UserImage,
+                            UserImage: dataUser.dataValues.userImage,
                             role: dataUser.dataValues.role
                         });
                     })
@@ -495,7 +495,7 @@ module.exports = {
                             email: dataUser.email,
                             token: tokenJwt,
                             verified: dataUser.verified,
-                            UserImage: dataUser.UserImage,
+                            UserImage: dataUser.userImage,
                             role: dataUser.role
                         });
                     } else {
@@ -525,7 +525,7 @@ module.exports = {
                                     email: dataUserInsert.email,
                                     token: tokenJwt,
                                     verified: dataUserInsert.verified,
-                                    UserImage: dataUserInsert.UserImage,
+                                    UserImage: dataUserInsert.userImage,
                                     role: dataUserInsert.role
                                 });
                             })
@@ -583,7 +583,7 @@ module.exports = {
                             email: dataUser.email,
                             token: tokenJwt,
                             verified: dataUser.verified,
-                            UserImage: dataUser.UserImage,
+                            UserImage: dataUser.userImage,
                             role: dataUser.role
                         });
                     } else {
@@ -613,7 +613,7 @@ module.exports = {
                                     email: dataUserInsert.email,
                                     token: tokenJwt,
                                     verified: dataUserInsert.verified,
-                                    UserImage: dataUserInsert.UserImage,
+                                    UserImage: dataUserInsert.userImage,
                                     role: dataUserInsert.role
                                 });
                             })

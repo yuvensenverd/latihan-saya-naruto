@@ -6,26 +6,29 @@ const fs = require('fs')
 
 module.exports = {
     postProject : (req,res) =>{
-        console.log('masuk')
+        console.log('masuk1')
 
         const path = '/post/image/project'; //file save path
         const upload = uploader(path, 'PJT').fields([{ name: 'image'}]); //uploader(path, 'default prefix')
 
         upload(req, res, (err) => {
+
             if(err){
-                console.log("Masuk")
+                console.log('masuk2')
+
                 return res.status(500).json({ message: 'Upload picture failed !', error: err.message });
             }
 
+            console.log('Nama Y')
             const { image } = req.files;
             console.log(image)
-            const imagePath = image ? path + '/' + image[0].filename : null;
+            const imagePath = image ? path + '/' + image[0].filename : '/defaultPhoto/defaultCategory.png';
             console.log(imagePath)
 
             console.log(req.body.data)
             const data = JSON.parse(req.body.data);
             
-            console.log(data)
+            console.log(data.shareDescription)
 
             sequelize.transaction(function(t){
                 return (
@@ -36,7 +39,8 @@ module.exports = {
                         projectCreated : data.projectCreated,
                         projectEnded : data.projectEnded,
                         projectImage : imagePath,
-                        userId : 2
+                        shareDescription: data.shareDescription,
+                        userId : req.user.userId
 
                     }, { transaction : t})
                     .then((result) => {
@@ -54,6 +58,46 @@ module.exports = {
         })
     },
     getProject : (req,res) =>{
+        //tambahin where untuk rolenya adalah USER ADMIN dan didapat dari props dan idnya bisa dikirim lwt body atau
+        // bisa dari token juga (req.user.userId)
+
+        console.log('masik')
+        sequelize.transaction(function(t){
+            return (
+                Project.findAll({
+                    attributes : [
+                        ["name", "projectName"],
+                        ["id", "projectId"],
+                        "description",
+                        "projectCreated",
+                        "projectEnded",
+                        "totalTarget",
+                        "projectImage"
+                    ],
+                  
+
+                    where : {
+                        isDeleted : 0,
+                    },
+                    include : [{
+                        model : User,
+                        attributes : [
+                            ["nama", "projectCreator"]
+                        ]
+                    }]
+
+                })
+                .then((result)=>{
+                    console.log(result)
+                    return res.status(200).send({message : 'success get projects', result})
+                })
+                .catch((err)=>{
+                    return res.status(500).send({message : err})
+                })
+            )
+        })
+    },
+    getAllProject : (req,res) =>{
         console.log('masik')
         sequelize.transaction(function(t){
             return (
@@ -168,6 +212,39 @@ module.exports = {
 
         })
         .catch((err)=>{
+            return res.status(500).send({message : err})
+        })
+    },
+
+    getDetailProject: (req, res) => {
+        Project.findAll({
+            attributes : [
+                ["name", "projectName"],
+                ["id", "projectId"],
+                "description",
+                "projectCreated",
+                "projectEnded",
+                "totalTarget",
+                "projectImage"
+            ],
+
+            where: {
+                id: req.query.id,
+                isDeleted: 0
+            },
+
+            include : [{
+                model : User,
+                attributes : [
+                    ["nama", "projectCreator"]
+                ]
+            }]
+        })
+        .then((results) => {
+            console.log(results)
+            return res.status(200).send({message : 'success get projects', results})
+        })
+        .catch((err) => {
             return res.status(500).send({message : err})
         })
     }
