@@ -418,11 +418,12 @@ module.exports = {
 
         User.findOne({
             where: {
+                email: req.body.email,
                 password: oldPw
             }
         })
         .then((results) => {
-            if(results.dataValues) {
+            if(results) {
                 User.update({
                     password: newPw
 
