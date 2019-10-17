@@ -24,14 +24,10 @@ module.exports = {
         allowNull: false
       },
       isGoogle: {
-        type: Sequelize.INTEGER,
-        defaultValue : 0,
-        allowNull: false
+        type: Sequelize.STRING
       },
       isFacebook: {
-        type: Sequelize.INTEGER,
-        defaultValue : 0,
-        allowNull: false
+        type: Sequelize.STRING
       },
       userImage: {
         type: Sequelize.STRING,
