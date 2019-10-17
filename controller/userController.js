@@ -9,12 +9,6 @@ const { createJWTToken, createForgotPasswordToken } = require('../helpers/jwtoke
 const transporter = require('../helpers/mailer')
 
 module.exports = {
-    getUserData :  (req,res) =>{
-
-    },
-    postUser : (req,res) =>{
-        
-    },
 
     //Register, Login, KeepLogin, Reset Password / Forgot Password, Change Password, Login Gmail, Login Facebook
     registerUser : (req, res) => {
