@@ -424,6 +424,7 @@ module.exports = {
 
         User.findOne({
             where: {
+                email: req.body.email,
                 password: oldPw
             }
         })
