@@ -9,12 +9,6 @@ const { createJWTToken, createForgotPasswordToken } = require('../helpers/jwtoke
 const transporter = require('../helpers/mailer')
 
 module.exports = {
-    getUserData :  (req,res) =>{
-
-    },
-    postUser : (req,res) =>{
-        
-    },
 
     //Register, Login, KeepLogin, Reset Password / Forgot Password, Change Password, Login Gmail, Login Facebook
     registerUser : (req, res) => {
@@ -123,7 +117,7 @@ module.exports = {
                                         email: dataUser.dataValues.email,
                                         token: tokenJwt,
                                         verified: dataUser.dataValues.verified,
-                                        UserImage: dataUser.dataValues.UserImage,
+                                        UserImage: dataUser.dataValues.userImage,
                                         role: dataUser.dataValues.role
                                     });
 
@@ -185,7 +179,7 @@ module.exports = {
                             email: dataUser.dataValues.email,
                             token: tokenJwt,
                             verified: dataUser.dataValues.verified,
-                            UserImage: dataUser.dataValues.UserImage,
+                            UserImage: dataUser.dataValues.userImage,
                             role: dataUser.dataValues.role
                         });
                         
@@ -242,7 +236,7 @@ module.exports = {
                         email: dataUser.dataValues.email,
                         token: tokenJwt,
                         verified: dataUser.dataValues.verified,
-                        UserImage: dataUser.dataValues.UserImage,
+                        UserImage: dataUser.dataValues.userImage,
                         role: dataUser.dataValues.role
                     });
 
@@ -271,7 +265,7 @@ module.exports = {
                     email: dataUser.dataValues.email,
                     token: tokenJwt,
                     verified: dataUser.dataValues.verified,
-                    UserImage: dataUser.dataValues.UserImage,
+                    UserImage: dataUser.dataValues.userImage,
                     role: dataUser.dataValues.role
                 });
 
@@ -319,7 +313,7 @@ module.exports = {
                             email: dataUser.dataValues.email,
                             token: tokenJwt,
                             verified: dataUser.dataValues.verified,
-                            UserImage: dataUser.dataValues.UserImage,
+                            UserImage: dataUser.dataValues.userImage,
                             role: dataUser.dataValues.role
                         });
                     })
@@ -495,7 +489,7 @@ module.exports = {
                             email: dataUser.email,
                             token: tokenJwt,
                             verified: dataUser.verified,
-                            UserImage: dataUser.UserImage,
+                            UserImage: dataUser.userImage,
                             role: dataUser.role
                         });
                     } else {
@@ -525,7 +519,7 @@ module.exports = {
                                     email: dataUserInsert.email,
                                     token: tokenJwt,
                                     verified: dataUserInsert.verified,
-                                    UserImage: dataUserInsert.UserImage,
+                                    UserImage: dataUserInsert.userImage,
                                     role: dataUserInsert.role
                                 });
                             })
@@ -583,7 +577,7 @@ module.exports = {
                             email: dataUser.email,
                             token: tokenJwt,
                             verified: dataUser.verified,
-                            UserImage: dataUser.UserImage,
+                            UserImage: dataUser.userImage,
                             role: dataUser.role
                         });
                     } else {
@@ -613,7 +607,7 @@ module.exports = {
                                     email: dataUserInsert.email,
                                     token: tokenJwt,
                                     verified: dataUserInsert.verified,
-                                    UserImage: dataUserInsert.UserImage,
+                                    UserImage: dataUserInsert.userImage,
                                     role: dataUserInsert.role
                                 });
                             })
@@ -634,6 +628,30 @@ module.exports = {
         })
         .catch((err) => {
             return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
+        })
+    },
+    getSubscription : (req,res) => {
+        User.findOne({
+            where: {
+                email: req.body.email
+            },
+            attributes: ['subscriptionStatus', 'subscriptionNominal']
+        }).then((results) => {
+            res.send(results)
+        })
+    },
+    applySubscription : (req,res) => {
+        var { subscriptionNominal, email } = req.body
+        console.log(req.body)
+        User.update({
+            subscriptionStatus: 1,
+            subscriptionNominal 
+        },{
+            where: { email }
+        })
+        .then(() => {
+            console.log('masuk')
+            res.send('success')
         })
     }
 }

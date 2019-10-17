@@ -28,6 +28,11 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull:false
       },
+      shareDescription: {
+        type: Sequelize.STRING,
+        allowNull:false,
+        defaultValue: '-'
+      },
       projectImage: {
         type: Sequelize.STRING,
       },

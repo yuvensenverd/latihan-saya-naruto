@@ -17,4 +17,7 @@ router.get('/userGetResetToken', resetToken, userController.userCheckResetToken)
 router.post('/newPasswordUser', resetToken, userController.userResetPassword);
 router.post('/userChangePassword', auth, userController.userChangePassword);
 
+router.post('/getSubscription', userController.getSubscription)
+router.post('/applySubscription', userController.applySubscription);
+
 module.exports = router
