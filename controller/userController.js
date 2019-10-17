@@ -429,7 +429,7 @@ module.exports = {
             }
         })
         .then((results) => {
-            if(results.dataValues) {
+            if(results) {
                 User.update({
                     password: newPw
 
