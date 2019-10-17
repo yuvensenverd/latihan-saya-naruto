@@ -170,8 +170,7 @@ module.exports = {
             var oldImgPath = results[0].dataValues.pictureReport
             console.log(oldImgPath)
             fs.unlinkSync('./Public' + oldImgPath)
-            StudentDetail.update(
-                {pictureReport: null},
+            StudentDetail.destroy(
                 {where: { id }})
             .then(() => {
                 StudentDetail.findAll({where: {studentId}})
