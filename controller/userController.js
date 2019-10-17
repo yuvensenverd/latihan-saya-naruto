@@ -629,5 +629,29 @@ module.exports = {
         .catch((err) => {
             return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
         })
+    },
+    getSubscription : (req,res) => {
+        User.findOne({
+            where: {
+                email: req.body.email
+            },
+            attributes: ['subscriptionStatus', 'subscriptionNominal']
+        }).then((results) => {
+            res.send(results)
+        })
+    },
+    applySubscription : (req,res) => {
+        var { subscriptionNominal, email } = req.body
+        console.log(req.body)
+        User.update({
+            subscriptionStatus: 1,
+            subscriptionNominal 
+        },{
+            where: { email }
+        })
+        .then(() => {
+            console.log('masuk')
+            res.send('success')
+        })
     }
 }
