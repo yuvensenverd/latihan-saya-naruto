@@ -1,6 +1,6 @@
 const { Student, StudentDetail } = require('../models')
 const fs = require('fs')
-const { uploader } = require('../Support/uploader')
+const { uploader } = require('../helpers/uploader')
 
 module.exports = {
     getStudentData :  (req,res) =>{
@@ -184,6 +184,60 @@ module.exports = {
         })   
     },
     editStudentDetail : (req,res) => {
-        StudentDetail.update({})
+        try { //kalo try ada error langsung masuk ke catch
+            const path = '/student/images'; //file save path
+            const upload = uploader(path, 'RPT').fields([{ name: 'image'}]); //uploader(path, 'default prefix')
+    
+            upload(req, res, (err) => {
+                if(err){
+                    return res.status(500);
+                }
+                const { image } = req.files;
+                const imagePath = image ? path + '/' + image[0].filename : null;
+                const data = JSON.parse(req.body.data);
+                data.imgPath = imagePath;
+                const {
+                    id,
+                    deskripsi, 
+                    studentId, 
+                } = data
+                console.log(data)
+                if(!data.imgPath){
+                    return StudentDetail.update({
+                        deskripsi
+                    },{
+                        where: { id }
+                    }).then(() => {
+                        StudentDetail.findAll({where: {studentId}})
+                        .then((results2) => {
+                            console.log('masuk');
+                            res.send(results2);
+                        })
+                    })
+                }
+                StudentDetail.findAll({where: {studentId}})
+                .then((results2) => {
+                    var oldImgPath = results2[0].dataValues.pictureReport
+                    console.log(oldImgPath)
+                    fs.unlinkSync('./Public' + oldImgPath)
+                    StudentDetail.update({
+                        deskripsi,
+                        pictureReport: imagePath
+                    }, { 
+                        where: {id}
+                     }).then(() => {
+                        StudentDetail.findAll({where: {studentId}})
+                        .then((results3) => {
+                            console.log('masuk');
+                            res.send(results3);
+                        })
+                    })
+                    
+                })
+            })
+        } catch(err) {
+            return res.status(500);
+        }
+        
     }
 }

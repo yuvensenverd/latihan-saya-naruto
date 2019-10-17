@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
 })
 
 app.use("/user", userRouter)
-app.use("/student", studentDetailRouter)
+app.use("/student-detail", studentDetailRouter)
 
 
 app.listen(port, ()=> console.log(` Api aktif di port  ${port} `))
