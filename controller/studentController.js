@@ -191,7 +191,7 @@ module.exports={
             sortMethod='ASC'
         }
         var offset=(page*limit)-limit
-        Student.findAll({
+        Student.findAndCountAll({
             limit:parseInt(limit),
             offset:offset,
             order:[['id',sortMethod]],

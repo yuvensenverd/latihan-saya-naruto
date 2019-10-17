@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
     )
 })
 
-const {userRouter,studentRouter,studentDetailRouter} = require('./router')
+const {userRouter,studentRouter,studentDetailRouter,projectRouter} = require('./router')
 app.use("/user", userRouter)
 app.use('/student',studentRouter)
 app.use("/project", projectRouter)
