@@ -1,4 +1,4 @@
-const { Sequelize, sequelize, Payment } = require('../models')
+const { Sequelize, sequelize, Payment, User, Project } = require('../models')
 const midtransClient                    = require('midtrans-client')
 const moment                            = require('moment')
 
@@ -26,15 +26,13 @@ module.exports = {
             console.log('transactionToken: ', transactionToken)
             //######## INSERT DATABASE 
             Payment.create({
-                paymentType: '-',
+                paymentType: 'pending',
                 nominal: gross_amount,
-                statusPayment: '-',
+                statusPayment: 'pending',
                 projectId: projectId,
                 userId: userId,
                 isRefund: '0',
                 isDeleted: '0',
-                createAt: Date,
-                updateAt : Date,
                 order_id: order_id,
                 komentar: komentar,
                 isAnonim: anonim
@@ -136,7 +134,37 @@ module.exports = {
         .catch((err) => {
             console.log(err)
         })
+    },
+    getHistory: (req, res) => {
+        console.log('masuk history')
+        let {userId} = req.body
+        console.log(req.body)
+        Payment.findAll({
+            attributes: ['nominal', 'statusPayment', 'updatedAt', 'isAnonim', 'komentar'],
+            where: { userId },
+            include: [
+                {
+                    model: User,
+                    attributes: ['nama']
+                },
+                {
+                    model: Project,
+                    attributes: [
+                        ['name', 'projectName'],
+                        'projectImage'
+                    ]
+                }
+            ]
+        })
+        .then((result)=>{
+            console.log(result)
+            res.send(result)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
     }
+
     
 
 }
