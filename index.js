@@ -11,14 +11,14 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(bearerToken())
 
-const {userRouter, projectRouter} = require('./router')
+
 app.get('/', (req, res) => {
     res.status(200).send(
         `<h3>Welcome to Kasih Nusantara API</h3>`
     )
 })
 
-const {userRouter,studentRouter,} = require('./router')
+const {userRouter,studentRouter, projectRouter} = require('./router')
 app.use("/user", userRouter)
 app.use('/student',studentRouter)
 app.use("/project", projectRouter)
