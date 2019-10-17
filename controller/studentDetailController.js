@@ -168,6 +168,7 @@ module.exports = {
         StudentDetail.findAll({ where: {id} })
         .then((results) =>{
             var oldImgPath = results[0].dataValues.pictureReport
+            console.log(oldImgPath)
             fs.unlinkSync('./Public' + oldImgPath)
             StudentDetail.update(
                 {pictureReport: null},
