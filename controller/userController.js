@@ -7,8 +7,8 @@ var moment = require('moment');
 
 const { uploader } = require('../helpers/uploader');
 const { createJWTToken, createForgotPasswordToken } = require('../helpers/jwtoken');
-const transporter = require('../helpers/mailer')
-
+const { transporter } = require('../helpers/mailer')
+const { testcontroller } = require('../controller/index')
 module.exports = {
 
     //Register, Login, KeepLogin, Reset Password / Forgot Password, Change Password, Login Gmail, Login Facebook
@@ -26,8 +26,6 @@ module.exports = {
                 // Setelah upload berhasil
                 // proses parse data JSON karena kita ngirim file gambar
                 const data = JSON.parse(req.body.data);
-                console.log(data)
-
                 /* 
                  `createdAt` default value ?, 
                 `updatedAt` default value */
@@ -648,8 +646,26 @@ module.exports = {
                 ]
             }
         })
-        .then((res)=>{
-            
+        .then( async (res)=>{
+            var res  = await User.findAll({where: {
+                [Op.and] : [
+                    sequelize.where(sequelize.fn('datediff', sequelize.col('reminderDate') ,  sequelize.fn("NOW")), {
+                        [Op.gte] : 30 // OR [Op.gt] : 5
+                    }),
+                    {
+                        subscriptionStatus : 1
+                    }
+                ]
+            },
+   
+            attributes : ['nama', 'id']})
+            // console.log(res)
+            var listname = res.map((val) =>{
+                return val.dataValues
+            })
+            console.log(listname)
+            // var listname = res[0].dataValues
+            // console.log(listname)
         })
         .catch((err)=>{
             console.log(err)
