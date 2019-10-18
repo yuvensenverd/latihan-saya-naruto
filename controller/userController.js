@@ -113,8 +113,12 @@ module.exports = {
                                     }
 
                                     return res.status(200).send({
-                                        dataUser: dataUser.dataValues,
-                                        token: tokenJwt
+                                        name: dataUser.dataValues.nama,
+                                        email: dataUser.dataValues.email,
+                                        token: tokenJwt,
+                                        verified: dataUser.dataValues.verified,
+                                        UserImage: dataUser.dataValues.userImage,
+                                        role: dataUser.dataValues.role
                                     });
 
                                 })
@@ -171,8 +175,12 @@ module.exports = {
                         console.log(dataUser)
 
                         return res.status(200).send({
-                            dataUser: dataUser.dataValues,
-                            token: tokenJwt
+                            name: dataUser.dataValues.nama,
+                            email: dataUser.dataValues.email,
+                            token: tokenJwt,
+                            verified: dataUser.dataValues.verified,
+                            UserImage: dataUser.dataValues.userImage,
+                            role: dataUser.dataValues.role
                         });
                         
                     })
@@ -224,8 +232,12 @@ module.exports = {
                     }
 
                     return res.status(200).send({
-                        dataUser: dataUser.dataValues,
+                        name: dataUser.dataValues.nama,
+                        email: dataUser.dataValues.email,
                         token: tokenJwt,
+                        verified: dataUser.dataValues.verified,
+                        UserImage: dataUser.dataValues.userImage,
+                        role: dataUser.dataValues.role
                     });
 
                 })
@@ -249,8 +261,12 @@ module.exports = {
                 const tokenJwt = createJWTToken({ userId: dataUser.dataValues.id, email: dataUser.dataValues.email })
 
                 return res.status(200).send({
-                    dataUser: dataUser.dataValues,
+                    name: dataUser.dataValues.nama,
+                    email: dataUser.dataValues.email,
                     token: tokenJwt,
+                    verified: dataUser.dataValues.verified,
+                    UserImage: dataUser.dataValues.userImage,
+                    role: dataUser.dataValues.role
                 });
 
             } else {
@@ -292,9 +308,13 @@ module.exports = {
                     .then((dataUser) => {
                         const tokenJwt = createJWTToken({ userId: dataUser.dataValues.id, email: dataUser.dataValues.email })
 
-                        return res.status(200).send( {
-                            dataUser: dataUser.dataValues,
-                            token: tokenJwt
+                        return res.status(200).send({
+                            name: dataUser.dataValues.nama,
+                            email: dataUser.dataValues.email,
+                            token: tokenJwt,
+                            verified: dataUser.dataValues.verified,
+                            UserImage: dataUser.dataValues.userImage,
+                            role: dataUser.dataValues.role
                         });
                     })
                     .catch((err) => {
@@ -429,6 +449,7 @@ module.exports = {
     },
 
     userCheckResetToken: (req, res) => {
+        console.log('test123')
         let email = req.resetToken.email
 
         return res.status(200).send(email)
@@ -464,8 +485,12 @@ module.exports = {
                         const tokenJwt = createJWTToken({ userId: dataUser.id, email: dataUser.email })
 
                         return res.status(200).send({
-                            dataUser,
+                            name: dataUser.nama,
+                            email: dataUser.email,
                             token: tokenJwt,
+                            verified: dataUser.verified,
+                            UserImage: dataUser.userImage,
+                            role: dataUser.role
                         });
                     } else {
                         // Jika belum ada
@@ -490,8 +515,12 @@ module.exports = {
                                 const tokenJwt = createJWTToken({ userId: dataUserInsert.id, email: dataUserInsert.email })
 
                                 return res.status(200).send({
-                                    dataUser: dataUserInsert,
-                                    token: tokenJwt
+                                    name: dataUserInsert.nama,
+                                    email: dataUserInsert.email,
+                                    token: tokenJwt,
+                                    verified: dataUserInsert.verified,
+                                    UserImage: dataUserInsert.userImage,
+                                    role: dataUserInsert.role
                                 });
                             })
                             .catch((err) => {
@@ -543,10 +572,13 @@ module.exports = {
                         // Jika ada
                         const tokenJwt = createJWTToken({ userId: dataUser.id, email: dataUser.email })
 
-                        
                         return res.status(200).send({
-                            dataUser,
+                            name: dataUser.nama,
+                            email: dataUser.email,
                             token: tokenJwt,
+                            verified: dataUser.verified,
+                            UserImage: dataUser.userImage,
+                            role: dataUser.role
                         });
                     } else {
                         // Jika belum ada
@@ -571,8 +603,12 @@ module.exports = {
                                 const tokenJwt = createJWTToken({ userId: dataUserInsert.id, email: dataUserInsert.email })
 
                                 return res.status(200).send({
-                                    dataUser: dataUserInsert,
+                                    name: dataUserInsert.nama,
+                                    email: dataUserInsert.email,
                                     token: tokenJwt,
+                                    verified: dataUserInsert.verified,
+                                    UserImage: dataUserInsert.userImage,
+                                    role: dataUserInsert.role
                                 });
                             })
                             .catch((err) => {
@@ -604,7 +640,6 @@ module.exports = {
             res.send(results)
         })
     },
-
     applySubscription : (req,res) => {
         var { subscriptionNominal, email } = req.body
         console.log(req.body)
