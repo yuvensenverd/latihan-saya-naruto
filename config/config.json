@@ -1,8 +1,8 @@
 {
   "development": {
-    "username": "lianeddy",
-    "password": "asd123",
-    "database": "sequelizedb",
+    "username": "reza_db",
+    "password": "reza_db10071997",
+    "database": "kasihnusantara",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
