@@ -28,7 +28,7 @@ module.exports = {
             console.log(req.body.data)
             const data = JSON.parse(req.body.data);
             
-            console.log(data.shareDescription)
+            console.log(data)
 
             sequelize.transaction(function(t){
                 return (
