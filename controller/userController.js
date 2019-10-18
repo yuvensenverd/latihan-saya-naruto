@@ -239,17 +239,21 @@ module.exports = {
     },
 
     keepLogin: (req, res) => {
+        console.log('Test Keep Login')
         User.findOne({
             where: {
                 id: req.user.userId 
             }
         })
         .then((dataUser) => {
-            if(dataUser.dataValues) {
-                const tokenJwt = createJWTToken({ userId: dataUser.dataValues.id, email: dataUser.dataValues.email })
+            console.log('Masuk')
+            if(dataUser) {
+                console.log(dataUser)
+                const tokenJwt = createJWTToken({ userId: dataUser.id, email: dataUser.email })
 
+                console.log(dataUser)
                 return res.status(200).send({
-                    dataUser: dataUser.dataValues,
+                    dataUser,
                     token: tokenJwt,
                 });
 
@@ -464,7 +468,9 @@ module.exports = {
                         console.log(dataUser.id)
                         console.log(dataUser.email)
                         const tokenJwt = createJWTToken({ userId: dataUser.id, email: dataUser.email })
-                        console.log(tokenJwt)
+
+                        console.log(dataUser.id)
+
                         return res.status(200).send({
                             dataUser,
                             token: tokenJwt,
