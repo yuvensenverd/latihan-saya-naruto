@@ -28,6 +28,11 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull:false
       },
+      shareDescription: {
+        type: Sequelize.STRING,
+        allowNull:false,
+        defaultValue: '-'
+      },
       projectImage: {
         type: Sequelize.STRING,
       },
@@ -40,11 +45,15 @@ module.exports = {
       },
       isCancelled: {
         type: Sequelize.INTEGER,
-        allowNull:false
+        defaultValue : 0
       },
       cancelledDate: {
         type: Sequelize.DATE,
         defaultValue:null
+      },
+      isDeleted : {
+        type : Sequelize.INTEGER,
+        defaultValue : 0
       },
       createdAt: {
         allowNull: false,
