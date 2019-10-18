@@ -141,7 +141,8 @@ module.exports = {
                         "projectCreated",
                         "projectEnded",
                         "totalTarget",
-                        "projectImage"
+                        "projectImage",
+                        "shareDescription"
                     ],
                     where : {
                         isDeleted : 0,
