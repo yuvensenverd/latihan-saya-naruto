@@ -62,9 +62,18 @@ module.exports = {
         // bisa dari token juga (req.user.userId)
 
         console.log('masik')
+        var { page, limit, sortMethod} = req.query;
+        if(!sortMethod){
+            sortMethod='ASC'
+        }
+        var offset=(page*limit)-limit
+
         sequelize.transaction(function(t){
             return (
                 Project.findAll({
+                    limit:parseInt(limit),
+                    offset:offset,
+                    order:[['id',sortMethod]],
                     attributes : [
                         ["name", "projectName"],
                         ["id", "projectId"],
@@ -88,8 +97,22 @@ module.exports = {
 
                 })
                 .then((result)=>{
-                    console.log(result)
-                    return res.status(200).send({message : 'success get projects', result})
+                    Project.count(
+                        {where : {
+                            isDeleted : 0
+                        }}
+                    ).then((resultdua) => {
+                        var total = resultdua
+                        
+
+                        return res.status(200).send({message : 'success get projects', result, total})
+                    })
+                    .catch((err)=>{
+                        return res.status(500).send({message : err})
+                    })
+                    // console.log('aishdiashdiashd')
+                    // console.log(a)
+                    // return res.status(200).send({message : 'success get projects', result})
                 })
                 .catch((err)=>{
                     return res.status(500).send({message : err})
