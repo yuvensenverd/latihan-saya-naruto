@@ -141,8 +141,7 @@ module.exports = {
                         "projectCreated",
                         "projectEnded",
                         "totalTarget",
-                        "projectImage",
-                        "shareDescription"
+                        "projectImage"
                     ],
                     where : {
                         isDeleted : 0,
@@ -264,7 +263,8 @@ module.exports = {
                 "projectCreated",
                 "projectEnded",
                 "totalTarget",
-                "projectImage"
+                "projectImage",
+                "shareDescription"
             ],
 
             where: {
