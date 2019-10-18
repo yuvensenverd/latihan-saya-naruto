@@ -1,8 +1,8 @@
 var express = require('express')
 var router = express.Router();
 var { auth, resetToken } = require('../helpers/auth')
-
-const { userController} = require('../controller/index')
+const { userController} = require('../controller')
+// const { userController} = require('../controller/index')
 
 router.post('/register', userController.registerUser);
 router.put('/emailVerification', auth, userController.emailVerification);
