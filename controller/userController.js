@@ -629,8 +629,8 @@ module.exports = {
         })
     },
     reminderInvoice : (req,res) =>{ // RUN SEKALI / HARI
-        console.log('reminderINvoice')
-
+        // console.log('reminderINvoice')
+        // console.log(req)
         User.update(
         {
             reminderDate : moment().add(1, 'M').format('YYYY-MM-DD') // 1 bulan dari sekarang 

@@ -14,21 +14,19 @@ app.use(bearerToken())
 
 require('./scheduler/schedulers')
 
+const {userRouter, paymentRouter,studentRouter,studentDetailRouter,projectRouter,testRouter} = require('./router')
+app.use("/user", userRouter)
+app.use('/payment', paymentRouter)
+app.use("/user", userRouter)
+app.use('/student',studentRouter)
+app.use("/project", projectRouter)
+app.use("/studentdetail", studentDetailRouter)
+app.use('/test',testRouter)
+
 app.get('/', (req, res) => {
     res.status(200).send(
         `<h3>Welcome to Kasih Nusantara API</h3>`
     )
 })
-
-
-
-const {userRouter,studentRouter,studentDetailRouter,projectRouter} = require('./router')
-app.use("/user", userRouter)
-app.use('/student',studentRouter)
-app.use("/project", projectRouter)
-app.use("/studentdetail", studentDetailRouter)
-
-
-
 
 app.listen(port, ()=> console.log(` Api aktif di port  ${port} `))
