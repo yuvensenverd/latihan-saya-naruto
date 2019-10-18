@@ -3,6 +3,7 @@ const { User, Sequelize, sequelize } = require('../models');
 const Op = Sequelize.Op
 const Crypto = require('crypto');
 const fs = require('fs');
+var moment = require('moment');
 
 const { uploader } = require('../helpers/uploader');
 const { createJWTToken, createForgotPasswordToken } = require('../helpers/jwtoken');
@@ -625,6 +626,33 @@ module.exports = {
         .then(() => {
             console.log('masuk')
             res.send('success')
+        })
+    },
+    reminderInvoice : (req,res) =>{ // RUN SEKALI / HARI
+        console.log('reminderINvoice')
+
+        User.update(
+        {
+            reminderDate : moment().add(1, 'M').format('YYYY-MM-DD') // 1 bulan dari sekarang 
+        }
+        ,
+        {
+            where: {
+                [Op.and] : [
+                    sequelize.where(sequelize.fn('datediff', sequelize.col('reminderDate') ,  sequelize.fn("NOW")), {
+                        [Op.gte] : 30 // OR [Op.gt] : 5
+                    }),
+                    {
+                        subscriptionStatus : 1
+                    }
+                ]
+            }
+        })
+        .then((res)=>{
+            
+        })
+        .catch((err)=>{
+            console.log(err)
         })
     }
 }
