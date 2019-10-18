@@ -291,7 +291,7 @@ module.exports = {
                     })
                     .then((dataUser) => {
                         const tokenJwt = createJWTToken({ userId: dataUser.dataValues.id, email: dataUser.dataValues.email })
-
+                        // ada
                         return res.status(200).send( {
                             dataUser: dataUser.dataValues,
                             token: tokenJwt
@@ -461,8 +461,10 @@ module.exports = {
                 .then((dataUser) => {
                     if(dataUser !== null) {
                         // Jika ada
+                        console.log(dataUser.id)
+                        console.log(dataUser.email)
                         const tokenJwt = createJWTToken({ userId: dataUser.id, email: dataUser.email })
-
+                        console.log(tokenJwt)
                         return res.status(200).send({
                             dataUser,
                             token: tokenJwt,
