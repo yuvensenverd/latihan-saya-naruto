@@ -3,11 +3,12 @@ const { User, Sequelize, sequelize } = require('../models');
 const Op = Sequelize.Op
 const Crypto = require('crypto');
 const fs = require('fs');
+var moment = require('moment');
 
 const { uploader } = require('../helpers/uploader');
 const { createJWTToken, createForgotPasswordToken } = require('../helpers/jwtoken');
-const transporter = require('../helpers/mailer')
-
+const { transporter } = require('../helpers/mailer')
+const { testcontroller } = require('../controller/index')
 module.exports = {
 
     //Register, Login, KeepLogin, Reset Password / Forgot Password, Change Password, Login Gmail, Login Facebook
@@ -25,8 +26,6 @@ module.exports = {
                 // Setelah upload berhasil
                 // proses parse data JSON karena kita ngirim file gambar
                 const data = JSON.parse(req.body.data);
-                console.log(data)
-
                 /* 
                  `createdAt` default value ?, 
                 `updatedAt` default value */
@@ -295,7 +294,7 @@ module.exports = {
                     })
                     .then((dataUser) => {
                         const tokenJwt = createJWTToken({ userId: dataUser.dataValues.id, email: dataUser.dataValues.email })
-
+                        // ada
                         return res.status(200).send( {
                             dataUser: dataUser.dataValues,
                             token: tokenJwt
@@ -465,6 +464,8 @@ module.exports = {
                 .then((dataUser) => {
                     if(dataUser !== null) {
                         // Jika ada
+                        console.log(dataUser.id)
+                        console.log(dataUser.email)
                         const tokenJwt = createJWTToken({ userId: dataUser.id, email: dataUser.email })
 
                         console.log(dataUser.id)
@@ -598,6 +599,76 @@ module.exports = {
         })
         .catch((err) => {
             return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
+        })
+    },
+    getSubscription : (req,res) => {
+        User.findOne({
+            where: {
+                email: req.body.email
+            },
+            attributes: ['subscriptionStatus', 'subscriptionNominal']
+        }).then((results) => {
+            res.send(results)
+        })
+    },
+
+    applySubscription : (req,res) => {
+        var { subscriptionNominal, email } = req.body
+        console.log(req.body)
+        User.update({
+            subscriptionStatus: 1,
+            subscriptionNominal 
+        },{
+            where: { email }
+        })
+        .then(() => {
+            console.log('masuk')
+            res.send('success')
+        })
+    },
+    reminderInvoice : (req,res) =>{ // RUN SEKALI / HARI
+        // console.log('reminderINvoice')
+        // console.log(req)
+        User.update(
+        {
+            reminderDate : moment().add(1, 'M').format('YYYY-MM-DD') // 1 bulan dari sekarang 
+        }
+        ,
+        {
+            where: {
+                [Op.and] : [
+                    sequelize.where(sequelize.fn('datediff', sequelize.col('reminderDate') ,  sequelize.fn("NOW")), {
+                        [Op.gte] : 30 // OR [Op.gt] : 5
+                    }),
+                    {
+                        subscriptionStatus : 1
+                    }
+                ]
+            }
+        })
+        .then( async (res)=>{
+            var res  = await User.findAll({where: {
+                [Op.and] : [
+                    sequelize.where(sequelize.fn('datediff', sequelize.col('reminderDate') ,  sequelize.fn("NOW")), {
+                        [Op.gte] : 30 // OR [Op.gt] : 5
+                    }),
+                    {
+                        subscriptionStatus : 1
+                    }
+                ]
+            },
+   
+            attributes : ['nama', 'id']})
+            // console.log(res)
+            var listname = res.map((val) =>{
+                return val.dataValues
+            })
+            console.log(listname)
+            // var listname = res[0].dataValues
+            // console.log(listname)
+        })
+        .catch((err)=>{
+            console.log(err)
         })
     }
 }

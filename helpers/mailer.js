@@ -3,17 +3,7 @@ const fs=require('fs')
 const handlebars=require('handlebars')
 
 // Tergantung dari email yang ingin digunakan
-// let transporter = nodemailer.createTransport({
-//     service: 'gmail',
-//     secure:true,
-//     auth: {
-//         user: 'rezardiansyah1997@gmail.com',
-//         pass: 'yzrztjnpnbapuukb'
-//     },
-//     tls: {
-//         rejectUnauthorized: false
-//     }
-// })
+
 
 module.exports = {
     emailer(to,subject,html,replacements,attachments){
@@ -65,5 +55,18 @@ module.exports = {
                 });
             }
         })
-    }
+    },
+    transporter : 
+    nodemailer.createTransport({
+        service: 'gmail',
+        secure:true,
+        auth: {
+            user: 'rezardiansyah1997@gmail.com',
+            pass: 'yzrztjnpnbapuukb'
+        },
+        tls: {
+            rejectUnauthorized: false
+        }
+    })
+    
 };

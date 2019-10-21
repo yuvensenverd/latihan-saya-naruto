@@ -5,7 +5,6 @@ const projectController = require('./projectController')
 const studentDetailController = require('./studentDetailController')
 const testcontroller=require('./testpdf')
 
-
 module.exports = {
     userController,
     paymentController,
