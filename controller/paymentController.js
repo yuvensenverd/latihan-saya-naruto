@@ -1,6 +1,6 @@
-const { Sequelize, sequelize, Payment, User, Project } = require('../models')
-const midtransClient                    = require('midtrans-client')
-const moment                            = require('moment')
+const { Sequelize, sequelize, Payment, User, Project }  = require('../models')
+const midtransClient                                    = require('midtrans-client')
+const moment                                            = require('moment')
 
 const snap = new midtransClient.Snap({
     isProduction    : false,
@@ -161,6 +161,32 @@ module.exports = {
             res.send(result)
         })
         .catch((err) => {
+            console.log(err)
+        })
+    },
+    getDonasiProject: (req,res) => {
+        // console.log('masuk getDonasiProject')
+        let { projectId } = req.body
+        // console.log(req.body)
+        Payment.findAll({
+            attributes: ['nominal','updatedAt', 'komentar', 'isAnonim'],
+            where: { 
+                projectId,
+                statusPayment: 'settlement'
+             },
+            include: [
+                {
+                    model: User,
+                    attributes: ['nama']
+                }
+            ]
+        })
+        .then((result) => {
+            // console.log('===========>>>>>>>')
+            // console.log(result)
+            res.send(result)
+        })
+        .catch((err)=>{
             console.log(err)
         })
     }
