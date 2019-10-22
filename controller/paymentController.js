@@ -171,24 +171,30 @@ module.exports = {
             },
             attributes: ['subscriptionStatus', 'subscriptionNominal']
         }).then((results) => {
-            res.send(results)
+            res.status(200).send(results)
         })
     },
     applySubscription : (req,res) => {
-        var { subscriptionNominal, email } = req.body
+        var { subscriptionNominal, email, reminderDate } = req.body
+        console.log('--------------------------------------------------------------------')
+        console.log(req.body)
         if(!email){
             return null
         }
         console.log(req.body)
         User.update({
             subscriptionStatus: 1,
-            subscriptionNominal 
+            subscriptionNominal,
+            reminderDate
         },{
             where: { email }
         })
-        .then(() => {
+        .then((result) => {
             console.log('masuk')
-            res.send('success')
+            res.status(200).send(result)
+        })
+        .catch((err) => {
+            console.log(err)
         })
     }
 
