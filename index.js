@@ -29,10 +29,7 @@ app.get('/', (req, res) => {
     )
 })
 
-<<<<<<< Updated upstream
-=======
 
 
 
->>>>>>> Stashed changes
 app.listen(port, ()=> console.log(` Api aktif di port  ${port} `))

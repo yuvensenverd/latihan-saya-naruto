@@ -140,7 +140,7 @@ module.exports = {
         let {userId} = req.body
         console.log(req.body)
         Payment.findAll({
-            attributes: ['nominal', 'statusPayment', 'updatedAt', 'isAnonim', 'komentar'],
+            attributes: ['nominal', 'statusPayment', 'updatedAt', 'isAnonim', 'komentar', 'createdAt', 'order_id', 'paymentType'],
             where: { userId },
             include: [
                 {

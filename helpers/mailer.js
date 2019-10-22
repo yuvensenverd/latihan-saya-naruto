@@ -19,6 +19,7 @@ module.exports = {
             }
         })
         // read and parse HTML template field
+        console.log('email function')
         fs.readFile(html, {encoding: 'utf-8'}, (err, readHTML) => {
             if(err){
                 console.log(err)
