@@ -97,31 +97,6 @@ const mailInvoice = async (obj, PDF_STREAM) => {
 
         let attachments = [
             {
-                filename: 'logo.png',
-                path: './emails/supports/logo.png',
-                cid: 'logo'
-            },
-            {
-                filename: 'instagram.png',
-                path: './emails/supports/instagram.png',
-                cid: 'instagramlogo'
-            },
-            {
-                filename: 'facebook.png',
-                path: './emails/supports/facebook.png',
-                cid: 'facebooklogo'
-            },
-            {
-                filename: 'youtube.png',
-                path: './emails/supports/youtube.png',
-                cid: 'youtubelogo'
-            },
-            {
-                filename: 'twitter_icon.png',
-                path: './emails/supports/twitter_icon.png',
-                cid: 'twitterlogo'
-            },
-            {
                 filename: `paymentreceipt.pdf`,
                 content: PDF_STREAM
             }
@@ -753,9 +728,53 @@ module.exports = {
             res.send('success')
         })
     },
-    reminderInvoice : (req,results) =>{ // RUN SEKALI / HARI
+    reminderInvoice : async (req,results) =>{ // RUN SEKALI / HARI
         // console.log('reminderINvoice')
         // console.log(req)
+
+        var res  = await User.findAll({where: {
+            [Op.and] : [
+                sequelize.where(sequelize.fn('datediff', sequelize.col('reminderDate') ,  sequelize.fn("NOW")), {
+                    [Op.eq] : 0 // OR [Op.gt] : 5
+                }),
+                {
+                    subscriptionStatus : 1
+                }
+            ]
+        },
+    
+        attributes : ['nama', 'id', 'subscriptionNominal', 'email']})
+
+        var listname = res.map((val) =>{
+            // return val.dataValues
+            return {...val.dataValues, date : new Date(), deadline : new Date()}
+        })
+
+        console.log(listname)
+
+
+        const loop = async() =>{
+            console.log('start')
+            for(var i = 0; i<listname.length ; i++){
+                console.log(listname[i])
+                
+                await createPdf(listname[i], async (PDF_STREAM, obj) => {
+                    console.log('async')
+                    await mailInvoice(obj, PDF_STREAM)
+                })
+                console.log('finish user ', i )
+                
+                // console.log(listname[i].email)
+         
+                // testcontroller.getemail(listname[i].email)
+                // testcontroller.getemail(listname[i].email)
+            }
+            console.log('end')
+        }
+        await loop()
+        console.log('asd--asd--asd--')
+
+
         User.update(
         {
             reminderDate : moment().add(1, 'M').format('YYYY-MM-DD') // 1 bulan dari sekarang 
@@ -765,7 +784,7 @@ module.exports = {
             where: {
                 [Op.and] : [
                     sequelize.where(sequelize.fn('datediff', sequelize.col('reminderDate') ,  sequelize.fn("NOW")), {
-                        [Op.gte] : 29 // OR [Op.gt] : 5
+                        [Op.eq] : 0 // today is the user reminder date
                     }),
                     {
                         subscriptionStatus : 1
@@ -773,47 +792,12 @@ module.exports = {
                 ]
             }
         })
-        .then( async (res)=>{
-            var res  = await User.findAll({where: {
-                [Op.and] : [
-                    sequelize.where(sequelize.fn('datediff', sequelize.col('reminderDate') ,  sequelize.fn("NOW")), {
-                        [Op.lte] : 30 // OR [Op.gt] : 5
-                    }),
-                    {
-                        subscriptionStatus : 1
-                    }
-                ]
-            },
-            attributes : ['nama', 'id', 'subscriptionNominal', 'email']})
+        .then((res)=>{
+            console.log(res)
+            console.log('------------------********************* finish success')
+  
             // console.log(res)
-            var listname = res.map((val) =>{
-                // return val.dataValues
-                return {...val.dataValues, date : new Date(), deadline : new Date()}
-            })
-
-            console.log(listname)
-
-    
-            const loop = async() =>{
-                console.log('start')
-                for(var i = 0; i<listname.length ; i++){
-                    console.log(listname[i])
-                    
-                    await createPdf(listname[i], async (PDF_STREAM, obj) => {
-                        console.log('async')
-                        await mailInvoice(obj, PDF_STREAM)
-                    })
-                    console.log('finish user ', i )
-                    
-                    // console.log(listname[i].email)
-             
-                    // testcontroller.getemail(listname[i].email)
-                    // testcontroller.getemail(listname[i].email)
-                }
-                console.log('end')
-            }
-            await loop()
-            console.log('asd--asd--asd--')
+           
 
 
             //----------------------------------------------------------------------------------------------------------
@@ -833,3 +817,5 @@ module.exports = {
         })
     }
 }
+
+

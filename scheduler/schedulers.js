@@ -1,11 +1,11 @@
-const {projectController, studentDetailController, stundentController , userController} 
-= require('../controller')
+// const {projectController, studentDetailController, stundentController , userController} 
+// = require('../controller')
 
-console.log('masuk')
+// console.log('masuk')
 
-const schedule = require('node-schedule');
+// const schedule = require('node-schedule');
 
-// var schedulerInvoice = schedule.scheduleJob('*/10 * * * * *', function(){
+// var schedulerInvoice = schedule.scheduleJob(' * * *', function(){
 //     userController.reminderInvoice() //params
 // });
 
