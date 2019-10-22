@@ -24,7 +24,7 @@ const createPdf = async (obj, cb) => {
     
 
     var { email , nama, id , subscriptionNominal, date} = obj
-    console.log(obj)
+    // console.log(obj)
     try{ 
         const replacements = {
             PaymentReceiptNumber: id,
@@ -44,7 +44,7 @@ const createPdf = async (obj, cb) => {
             youtubelogo: 'file:///' +  path.resolve('./emails') + '/supports/youtube_icon.png',
         }
 
-        console.log(replacements)
+        // console.log(replacements)
 
         const options = { 
             format: 'A5', 
@@ -72,9 +72,9 @@ const mailInvoice = async (obj, PDF_STREAM) => {
         // const { transaction, voucher } = paymentObj
         // const { programSales, subscriptionSales, serviceSales } = transaction
         var { email , nama, id , subscriptionNominal, date} = obj
-        console.log(obj)
+        // console.log(obj)
         console.log('---------------------------------------------------------')
-        console.log(subscriptionNominal)
+        // console.log(subscriptionNominal)
 
         let subject = "Payment Receipt kasihnusantara"
         let InvoiceNumber =012334556
@@ -115,7 +115,7 @@ module.exports = {
 
     //Register, Login, KeepLogin, Reset Password / Forgot Password, Change Password, Login Gmail, Login Facebook
     registerUser : (req, res) => {
-        console.log(req.body)
+        // console.log(req.body)
         try {
             let path = `/users`; //file save path
             const upload = uploader(path, 'KasihNusantara').fields([{ name: 'imageUser' }]); //uploader(path, 'default prefix')
@@ -183,8 +183,8 @@ module.exports = {
                             })
                             .then(dataUser => {
                                 console.log('Get data user')
-                                console.log(dataUser.dataValues)
-                                console.log(dataUser.dataValues.id)
+                                // console.log(dataUser.dataValues)
+                                // console.log(dataUser.dataValues.id)
                                 // Ketika sudah daftar kirim link verification dan create jwtToken
                                 const tokenJwt = createJWTToken({ userId: dataUser.dataValues.id, email: dataUser.dataValues.email })
 
@@ -248,7 +248,7 @@ module.exports = {
             }
         })
         .then((results) => {
-            console.log(results)
+            // console.log(results)
             if(results.length === 0) {
                 return res.status(500).send({ status: 'error', message: 'User not found' });
             } else {
@@ -262,14 +262,14 @@ module.exports = {
                     }
                 )
                 .then((resultUpdate) => {
-                    console.log(resultUpdate)
+                    //console.log(resultUpdate)
                     User.findOne({
                         where: {
                             id: req.user.userId
                         }
                     })
                     .then((dataUser) => {
-                        console.log(dataUser)
+                       // console.log(dataUser)
 
                         return res.status(200).send({
                             dataUser: dataUser.dataValues,
@@ -349,10 +349,10 @@ module.exports = {
         .then((dataUser) => {
             console.log('Masuk')
             if(dataUser) {
-                console.log(dataUser)
+                //console.log(dataUser)
                 const tokenJwt = createJWTToken({ userId: dataUser.id, email: dataUser.email })
 
-                console.log(dataUser)
+                // console.log(dataUser)
                 return res.status(200).send({
                     dataUser,
                     token: tokenJwt,
@@ -370,7 +370,7 @@ module.exports = {
     userLogin: (req, res) => {
         let hashPassword = Crypto.createHmac('sha256', 'kasihnusantara_api')
             .update(req.body.password).digest('hex');
-        console.log(req.body)
+        //console.log(req.body)
         User.findOne({
             where: {
                 email: req.body.email,
@@ -553,7 +553,7 @@ module.exports = {
                 // login lewat gmail, maka muncul errornya
                 return res.status(500).send({ status: 'error', message: `Anda sudah pernah mendaftar dengan Email = ${req.body.data.email}`})
             } else {
-                console.log('Testing')
+                // console.log('Testing')
                 let encryptGoogleId = Crypto.createHmac('sha256', 'kasihnusantaraGoogleId_api')
                                     .update(req.body.data.googleId).digest('hex')
                 
@@ -566,8 +566,8 @@ module.exports = {
                 .then((dataUser) => {
                     if(dataUser !== null) {
                         // Jika ada
-                        console.log(dataUser.id)
-                        console.log(dataUser.email)
+                        // console.log(dataUser.id)
+                        // console.log(dataUser.email)
                         const tokenJwt = createJWTToken({ userId: dataUser.id, email: dataUser.email })
 
                         console.log(dataUser.id)
@@ -632,7 +632,7 @@ module.exports = {
             }
         })
         .then((results) => {
-            console.log(results)
+           // console.log(results)
             if(results !== null) {
                 // Kalo sudah pernah mendaftar dengan email google, dan user ingin mencoba
                 // login lewat gmail, maka muncul errornya
@@ -715,11 +715,12 @@ module.exports = {
     },
 
     applySubscription : (req,res) => {
-        var { subscriptionNominal, email } = req.body
-        console.log(req.body)
+        var { subscriptionNominal, email, reminderDate } = req.body
+        // console.log(req.body)
         User.update({
             subscriptionStatus: 1,
-            subscriptionNominal 
+            subscriptionNominal,
+            reminderDate
         },{
             where: { email }
         })
