@@ -1,21 +1,23 @@
-const express = require('express')
-const http = require('http')
+var express = require('express'),
+    http = require('http');
+var app = express();
+var server = http.createServer(app);
+var io = require('socket.io').listen(server);
 const port = 1998
-
 const bodyParser = require('body-parser')
 const cors = require('cors')
 
 const bearerToken = require('express-bearer-token');
 
 require('./scheduler/schedulers')
-const app = express()
-const socketIO = require('socket.io').listen(app.listen(port))
+
+
 
 app.use(bodyParser.json())
 app.use(cors())
 
-// const server = http.createServer(app)
-const io = socketIO(server)
+
+
 
 
 
@@ -65,4 +67,5 @@ app.get('/', (req, res) => {
 
 
 
-app.listen(port, ()=> console.log(` Api aktif di port  ${port} `))
+
+server.listen(port, ()=>console.log('listen on port ' + port));
