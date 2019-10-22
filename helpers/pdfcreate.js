@@ -4,8 +4,9 @@ const pdf=require('html-pdf')
 
 
 module.exports={
-    pdfcreate: (html, replacements, options, cb) => {
+    pdfcreate: (html, replacements, options,obj, cb) => {
         //reads html file
+        console.log('pdfcreate')
         fs.readFile(html, {encoding: 'utf-8'}, async (err, readHTML) => {
             if(err){
                 // console.log(err)
@@ -17,13 +18,14 @@ module.exports={
                 let htmlToPdf = template(replacements);
 
                 // creates pdf stream from html
+                console.log('finishpds')
                 return pdf.create(htmlToPdf, options).toStream(async (err, stream) => {
                     if(err){
                         // console.log(err)
                         throw err
                     }
                     else{
-                        return cb(stream)
+                        return cb(stream, obj)
                     }
                 });
             }

@@ -4,6 +4,8 @@ const {emailer}=require('../helpers/mailer')
 const {pdfcreate}=require('../helpers/pdfcreate')
 const {Student}=require('./../models')
 const moment=require('moment')
+
+
 const createPaymentReceiptPdf = async (payment, cb) => {
     // let paymentObj = JSON.parse(JSON.stringify(payment)) //Forces get of Datavalues
     try{ 
@@ -48,6 +50,8 @@ const paymentReceiptMailer = async (payment, PDF_STREAM) => {
     try{
         // const { transaction, voucher } = paymentObj
         // const { programSales, subscriptionSales, serviceSales } = transaction
+        console.log(payment)
+        var email = payment
 
         let subject = "Payment Receipt kasihnusantara"
         let InvoiceNumber =012334556
@@ -99,7 +103,9 @@ const paymentReceiptMailer = async (payment, PDF_STREAM) => {
                 content: PDF_STREAM
             }
         ]  
-        await emailer('aldinorahman36@gmail.com', subject, "./emails/PaymentReceiptEmail.html", emailReplacements, attachments)
+        console.log(email)
+        console.log('asuhdaushduahsduahsduahsduahsdush')
+        await emailer(email, subject, "./emails/PaymentReceiptEmail.html", emailReplacements, attachments)
     }
     catch(err){
         console.log(err)
@@ -107,13 +113,14 @@ const paymentReceiptMailer = async (payment, PDF_STREAM) => {
 }
 module.exports={
     getemail(req,res){
+        console.log('req is '+ req)
         Student.findAll()
         .then(async  (result) => {
             //Send payment receipt email. May fail even if payment is confirmed.
             try{
-                await createPaymentReceiptPdf(null, async (PDF_STREAM) => {
-                    await paymentReceiptMailer(null, PDF_STREAM)
-                    return res.status(200).send(result)
+                await createPaymentReceiptPdf(req, async (PDF_STREAM) => {
+                    await paymentReceiptMailer(req, PDF_STREAM)
+                    // return res.status(200).send(result)
                 })
             }
             catch(err){

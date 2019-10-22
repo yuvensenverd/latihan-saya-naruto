@@ -8,4 +8,7 @@ router.post('/getSnapMd', paymentController.getSnapMd)
 router.post('/updatePayment', paymentController.updatePayment)
 router.post('/getHistory', paymentController.getHistory)
 
+router.get('/getSubscription', paymentController.getSubscription)
+router.post('/applySubscription', paymentController.applySubscription);
+
 module.exports = router;

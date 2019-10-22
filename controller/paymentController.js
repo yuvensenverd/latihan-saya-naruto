@@ -41,6 +41,7 @@ module.exports = {
                 .then((result)=>{
                     console.log(result)
                     res.send(result)
+
                 })
             }).catch((err)=>{
                 console.log(err)
@@ -53,14 +54,14 @@ module.exports = {
         
         const {order_id} = req.body
         console.log('========masuk getStatus =============')
-        console.log(order_id)
+
 
         snap.transaction.status(order_id)
         .then((Response)=>{
             console.log('=======masuk status=========')
-            console.log(Response)
+            console.log( Response.transaction_status)
             req.app.io.emit('status_transaction', Response.transaction_status)
-            console.log(Response)
+ 
             mockNotificationJson = Response     
             snap.transaction.notification(Response)
                 .then((statusResponse)=>{
@@ -74,19 +75,19 @@ module.exports = {
                     let msg = `Transaction notification received. Order ID: ${orderId}. Transaction status: ${transactionStatus}. Fraud status: ${fraudStatus}`
 
                     if(transactionStatus == 'settlement'){
-                        console.log(transactionStatus)
+                  
                         if(fraudStatus == 'challenge'){
-                            console.log(fraudStatus)
+                      
                             return res.status(200).send(msg)
                         }else if(fraudStatus == 'accept'){
-                            console.log(fraudStatus)
+                      
                             return res.status(200).send(msg)
                         }
                     }else if(transactionStatus == 'cancel' || transactionStatus == 'failure'){
-                        console.log(transactionStatus)
+               
                         return res.status(200).send(msg)
                     }else if(transactionStatus == 'pending'){
-                        console.log(transactionStatus)
+             
                         return res.status(200).send(msg)
                     }
                 })      
@@ -140,7 +141,7 @@ module.exports = {
         let {userId} = req.body
         console.log(req.body)
         Payment.findAll({
-            attributes: ['nominal', 'statusPayment', 'updatedAt', 'isAnonim', 'komentar'],
+            attributes: ['nominal', 'statusPayment', 'updatedAt', 'isAnonim', 'komentar', 'createdAt', 'order_id', 'paymentType'],
             where: { userId },
             include: [
                 {
@@ -159,6 +160,39 @@ module.exports = {
         .then((result)=>{
             console.log(result)
             res.send(result)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    },
+    getSubscription : (req,res) => {
+        User.findOne({
+            where: {
+                email: req.body.email
+            },
+            attributes: ['subscriptionStatus', 'subscriptionNominal']
+        }).then((results) => {
+            res.status(200).send(results)
+        })
+    },
+    applySubscription : (req,res) => {
+        var { subscriptionNominal, email, reminderDate } = req.body
+        console.log('--------------------------------------------------------------------')
+        console.log(req.body)
+        if(!email){
+            return null
+        }
+        console.log(req.body)
+        User.update({
+            subscriptionStatus: 1,
+            subscriptionNominal,
+            reminderDate
+        },{
+            where: { email }
+        })
+        .then((result) => {
+            console.log('masuk')
+            res.status(200).send(result)
         })
         .catch((err) => {
             console.log(err)

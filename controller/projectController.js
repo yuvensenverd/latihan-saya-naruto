@@ -28,7 +28,7 @@ module.exports = {
             console.log(req.body.data)
             const data = JSON.parse(req.body.data);
             
-            console.log(data.shareDescription)
+            console.log(data)
 
             sequelize.transaction(function(t){
                 return (
@@ -81,27 +81,30 @@ module.exports = {
                         "projectCreated",
                         "projectEnded",
                         "totalTarget",
-                        "projectImage"
+                        "projectImage",
                     ],
                   
 
                     where : {
                         isDeleted : 0,
-                        id: req.user.userId,
-                        role: 'User Admin'
                     },
                     include : [{
                         model : User,
                         attributes : [
                             ["nama", "projectCreator"]
-                        ]
+                        ],
+                        where : {
+                            id: req.user.userId,
+                            role: 'User Admin'
+                        }
                     }]
 
                 })
                 .then((result)=>{
                     Project.count(
                         {where : {
-                            isDeleted : 0
+                            isDeleted : 0,
+                            userId: req.user.userId
                         }}
                     ).then((resultdua) => {
                         var total = resultdua
