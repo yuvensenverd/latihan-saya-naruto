@@ -2,11 +2,114 @@
 const { User, Sequelize, sequelize } = require('../models');
 const Op = Sequelize.Op
 const Crypto = require('crypto');
-const fs = require('fs');
+
+
 
 const { uploader } = require('../helpers/uploader');
 const { createJWTToken, createForgotPasswordToken } = require('../helpers/jwtoken');
-const transporter = require('../helpers/mailer')
+const { transporter } = require('../helpers/mailer')
+const  testcontroller  = require('./testpdf')
+
+// FOR EMAILER
+const path=require('path')
+const fs =require('fs')
+const {emailer}=require('../helpers/mailer')
+const {pdfcreate}=require('../helpers/pdfcreate')
+
+const moment=require('moment')
+
+
+const createPdf = async (obj, cb) => {
+    // let objObj = JSON.parse(JSON.stringify(obj)) //Forces get of Datavalues
+    
+
+    var { email , nama, id , subscriptionNominal, date} = obj
+    console.log(obj)
+    try{ 
+        const replacements = {
+            PaymentReceiptNumber: id,
+            PaymentReceiptDate: new Date(date).toLocaleDateString('id-IND'),
+            PaymentMethod: 'dadasd',
+            FullName: `${nama}`,
+            InvoiceNumber: 012334556,
+            Description: ['dsadasda','dadasdasda'],
+            PayTo: `Kasih Nusantara`,
+            NumberDetails: 123456,
+            Nominal:subscriptionNominal.toString().toLocaleString(),
+
+            logo: 'file:///' +  path.resolve('./emails') + '/supports/logowithtext.png',
+            instagramlogo: 'file:///' +  path.resolve('./emails') + '/supports/instagram_icon.png',
+            facebooklogo: 'file:///' +  path.resolve('./emails') + '/supports/facebook_icon.png',
+            twitterlogo: 'file:///' +  path.resolve('./emails') + '/supports/twitter_icon.png',
+            youtubelogo: 'file:///' +  path.resolve('./emails') + '/supports/youtube_icon.png',
+        }
+
+        console.log(replacements)
+
+        const options = { 
+            format: 'A5', 
+            orientation: "landscape",
+            border : {
+                top: "0.5in",
+                left: "0.5in",
+                right: "0.5in",
+                bottom: "0.5in"
+            }
+        }
+        
+        await pdfcreate("./emails/PaymentReceipt.html", replacements, options,obj, cb)
+    }
+    catch(err){
+        console.log('asdasda')
+        console.log(err)
+    }
+}
+
+const mailInvoice = async (obj, PDF_STREAM) => {
+    // let paymentObj = JSON.parse(JSON.stringify(payment)) //Forces get of Datavalues
+    console.log('---------------------------', obj, '--------------------------------------------------')
+    try{
+        // const { transaction, voucher } = paymentObj
+        // const { programSales, subscriptionSales, serviceSales } = transaction
+        var { email , nama, id , subscriptionNominal, date} = obj
+        console.log(obj)
+        console.log('---------------------------------------------------------')
+        console.log(subscriptionNominal)
+
+        let subject = "Payment Receipt kasihnusantara"
+        let InvoiceNumber =012334556
+        let NumberDetails = `ACC: ${12345} - ${12333}` //nomr bisa diganti
+        let Description = ['dadsasd','dadadasd']
+
+
+
+        let emailReplacements = {
+            PaymentReceiptNumber: id,
+            PaymentReceiptDate: moment('20190208').format("DD MMMM YYYY"),
+            PaymentMethod: 'dadasd',
+            FullName: `${nama}`,
+            InvoiceNumber: InvoiceNumber,
+            Description: Description,
+            PayTo: `Kasih Nusantara`,
+            NumberDetails: NumberDetails,
+            Nominal:subscriptionNominal.toString().toLocaleString(),
+        }
+
+        let attachments = [
+            {
+                filename: `paymentreceipt.pdf`,
+                content: PDF_STREAM
+            }
+        ]  
+        console.log('email is ' + email)
+        await emailer(email, subject, "./emails/PaymentReceiptEmail.html", emailReplacements, attachments)
+    }
+    catch(err){
+        console.log(err)
+    }
+}
+
+
 
 module.exports = {
 
@@ -25,8 +128,6 @@ module.exports = {
                 // Setelah upload berhasil
                 // proses parse data JSON karena kita ngirim file gambar
                 const data = JSON.parse(req.body.data);
-                console.log(data)
-
                 /* 
                  `createdAt` default value ?, 
                 `updatedAt` default value */
@@ -239,17 +340,21 @@ module.exports = {
     },
 
     keepLogin: (req, res) => {
+        console.log('Test Keep Login')
         User.findOne({
             where: {
                 id: req.user.userId 
             }
         })
         .then((dataUser) => {
-            if(dataUser.dataValues) {
-                const tokenJwt = createJWTToken({ userId: dataUser.dataValues.id, email: dataUser.dataValues.email })
+            console.log('Masuk')
+            if(dataUser) {
+                console.log(dataUser)
+                const tokenJwt = createJWTToken({ userId: dataUser.id, email: dataUser.email })
 
+                console.log(dataUser)
                 return res.status(200).send({
-                    dataUser: dataUser.dataValues,
+                    dataUser,
                     token: tokenJwt,
                 });
 
@@ -291,7 +396,7 @@ module.exports = {
                     })
                     .then((dataUser) => {
                         const tokenJwt = createJWTToken({ userId: dataUser.dataValues.id, email: dataUser.dataValues.email })
-
+                        // ada
                         return res.status(200).send( {
                             dataUser: dataUser.dataValues,
                             token: tokenJwt
@@ -461,7 +566,11 @@ module.exports = {
                 .then((dataUser) => {
                     if(dataUser !== null) {
                         // Jika ada
+                        console.log(dataUser.id)
+                        console.log(dataUser.email)
                         const tokenJwt = createJWTToken({ userId: dataUser.id, email: dataUser.email })
+
+                        console.log(dataUser.id)
 
                         return res.status(200).send({
                             dataUser,
@@ -618,5 +727,95 @@ module.exports = {
             console.log('masuk')
             res.send('success')
         })
+    },
+    reminderInvoice : async (req,results) =>{ // RUN SEKALI / HARI
+        // console.log('reminderINvoice')
+        // console.log(req)
+
+        var res  = await User.findAll({where: {
+            [Op.and] : [
+                sequelize.where(sequelize.fn('datediff', sequelize.col('reminderDate') ,  sequelize.fn("NOW")), {
+                    [Op.eq] : 0 // OR [Op.gt] : 5
+                }),
+                {
+                    subscriptionStatus : 1
+                }
+            ]
+        },
+    
+        attributes : ['nama', 'id', 'subscriptionNominal', 'email']})
+
+        var listname = res.map((val) =>{
+            // return val.dataValues
+            return {...val.dataValues, date : new Date(), deadline : new Date()}
+        })
+
+        console.log(listname)
+
+
+        const loop = async() =>{
+            console.log('start')
+            for(var i = 0; i<listname.length ; i++){
+                console.log(listname[i])
+                
+                await createPdf(listname[i], async (PDF_STREAM, obj) => {
+                    console.log('async')
+                    await mailInvoice(obj, PDF_STREAM)
+                })
+                console.log('finish user ', i )
+                
+                // console.log(listname[i].email)
+         
+                // testcontroller.getemail(listname[i].email)
+                // testcontroller.getemail(listname[i].email)
+            }
+            console.log('end')
+        }
+        await loop()
+        console.log('asd--asd--asd--')
+
+
+        User.update(
+        {
+            reminderDate : moment().add(1, 'M').format('YYYY-MM-DD') // 1 bulan dari sekarang 
+        }
+        ,
+        {
+            where: {
+                [Op.and] : [
+                    sequelize.where(sequelize.fn('datediff', sequelize.col('reminderDate') ,  sequelize.fn("NOW")), {
+                        [Op.eq] : 0 // today is the user reminder date
+                    }),
+                    {
+                        subscriptionStatus : 1
+                    }
+                ]
+            }
+        })
+        .then((res)=>{
+            console.log(res)
+            console.log('------------------********************* finish success')
+  
+            // console.log(res)
+           
+
+
+            //----------------------------------------------------------------------------------------------------------
+            // for(var i = 0; i<listname.length ; i++){
+            //     console.log(listname[i])
+            //     testcontroller.getemail(listname[i].email)
+            // }
+            
+            // // var listname = res[0].dataValues
+            // // console.log(listname)
+            // console.log('success')
+            // //scheduler
+            // return results.status(200).send('success')
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
     }
 }
+
+

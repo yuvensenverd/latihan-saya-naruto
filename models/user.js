@@ -12,7 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     verified: DataTypes.INTEGER,
     role: DataTypes.STRING,
     subscriptionStatus: DataTypes.INTEGER,
-    subscriptionNominal: DataTypes.INTEGER
+    subscriptionNominal: DataTypes.INTEGER,
+    reminderDate : DataTypes.DATE
   }, {});
   User.associate = function(models) {
     // associations can be defined here
