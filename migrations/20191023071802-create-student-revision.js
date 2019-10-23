@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Students', {
+    return queryInterface.createTable('StudentRevisions', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -9,37 +9,28 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: Sequelize.STRING
       },
       pendidikanTerakhir: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: Sequelize.STRING
       },
       gender: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: Sequelize.STRING
       },
       status: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: Sequelize.STRING
       },
       alamat: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: Sequelize.STRING
       },
       tanggalLahir: {
-        type: Sequelize.DATE,
-        allowNull: false,
+        type: Sequelize.DATE
       },
       studentImage: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: Sequelize.STRING
       },
       isDeleted: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue : 0
+        type: Sequelize.INTEGER
       },
       userId: {
         type: Sequelize.INTEGER,
@@ -50,8 +41,7 @@ module.exports = {
         }
       },
       story: {
-        type: Sequelize.STRING,
-        allowNull : false
+        type: Sequelize.STRING
       },
       schoolId: {
         type: Sequelize.INTEGER,
@@ -72,6 +62,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Students');
+    return queryInterface.dropTable('StudentRevisions');
   }
 };

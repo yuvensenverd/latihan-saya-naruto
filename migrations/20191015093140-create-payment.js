@@ -50,6 +50,20 @@ module.exports = {
         allowNull : false,
         defaultValue : 0
       },
+      order_id: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      komentar: {
+        type: Sequelize.STRING,
+        defaultValue: null,
+        allowNull: true
+      },
+      isAnonim: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -57,19 +71,6 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
-      },
-      order_id: {
-        allowNull: false,
-        type: Sequelize.STRING
-      },
-      komentar: {
-        allowNull: true,
-        type: Sequelize.STRING
-      },
-      isAnonim: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue: 0
       }
     });
   },

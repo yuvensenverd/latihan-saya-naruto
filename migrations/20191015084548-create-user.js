@@ -13,7 +13,8 @@ module.exports = {
         allowNull: false
       },
       password: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        defaultValue: null
       },
       email: {
         type: Sequelize.STRING,
@@ -24,10 +25,12 @@ module.exports = {
         allowNull: false
       },
       isGoogle: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        defaultValue: null
       },
       isFacebook: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        defaultValue: null
       },
       userImage: {
         type: Sequelize.STRING,
@@ -54,6 +57,10 @@ module.exports = {
       subscriptionNominal: {
         type: Sequelize.INTEGER,
         defaultValue : 0
+      },
+      reminderDate: {
+        type: Sequelize.DATE,
+        defaultValue: null
       },
       createdAt: {
         allowNull: false,

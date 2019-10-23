@@ -191,8 +191,9 @@ module.exports = {
                                 console.log(tokenJwt)
 
                                 let linkVerifikasi = `http://localhost:3000/verified/${tokenJwt}`;
+                                
                                 //untuk live
-                                //let linkVerifikasi = `https://testingui4.herokuapp.com/verified/${tokenJwt}`
+                                //let linkVerifikasi = `https://sharex.purwadhikax.com/verified/${tokenJwt}`
                         
                                 let mailOptions = {
                                     from: 'KasihNusantara Admin <rezardiansyah1997@gmail.com>',
@@ -303,7 +304,7 @@ module.exports = {
                 const tokenJwt = createJWTToken({ userId: dataUser.dataValues.id, email: dataUser.dataValues.email })
                 let linkVerifikasi = `http://localhost:3000/verified/${tokenJwt}`;
                 //untuk live
-                //let linkVerifikasi = `https://testingui4.herokuapp.com/verified/${tokenJwt}`
+                //let linkVerifikasi = `https://sharex.purwadhikax.com/verified/${tokenJwt}`
         
                 let mailOptions = {
                     from: 'KasihNusantara Admin <rezardiansyah1997@gmail.com>',
@@ -440,7 +441,7 @@ module.exports = {
 
                 let linkVerifikasi = `http://localhost:3000/verifiedReset?token=${tokenPassword}`;
                 //untuk live
-                //let linkVerifikasi = `https://testingui4.herokuapp.com/verifiedReset?token=${tokenPassword}`
+                //let linkVerifikasi = `https://sharex.purwadhikax.com/verifiedReset?token=${tokenPassword}`
 
                 let mailOptions = {
                     from: 'TestingUi Admin <rezardiansyah1997@gmail.com>',
