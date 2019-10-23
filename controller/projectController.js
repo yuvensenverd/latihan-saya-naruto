@@ -1,4 +1,5 @@
 const { Sequelize, sequelize, User, Project } = require('../models')
+const Op = Sequelize.Op
 const {uploader} = require('../helpers/uploader')
 const fs = require('fs')
 
@@ -285,5 +286,36 @@ module.exports = {
         .catch((err) => {
             return res.status(500).send({message : err})
         })
+    },
+
+    searchProject : (req,res) =>{
+
+        // -----------BACA--------------
+        // formatbody : {
+        //     name : 'namaProject',
+        //     date : 'desc / asc',
+        //     page : '1',
+        //     limit : '3'
+        // }
+
+        var { page, limit, name, date} = req.body;
+  
+        var offset=(page*limit)-limit
+        
+        Project.findAll({
+            limit:parseInt(limit),
+            offset:offset,
+            where : {
+                name : {
+                    [Op.like] : `%${name}%`
+                },
+              
+            },
+            order : !date ? [['id', 'asc']] : [['projectCreated', `${date}`]]
+        })
+        .then((results)=>{
+            return res.status(200).send({message : 'success get projects', results})
+        })
+
     }
 }
