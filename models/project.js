@@ -11,12 +11,11 @@ module.exports = (sequelize, DataTypes) => {
     userId: DataTypes.INTEGER,
     isCancelled: DataTypes.INTEGER,
     cancelledDate: DataTypes.DATE,
-    isDeleted : DataTypes.INTEGER
+    isDeleted: DataTypes.INTEGER
   }, {});
   Project.associate = function(models) {
     // associations can be defined here
     Project.hasMany(models.Payment, { foreignKey : 'projectId' })
-    
     Project.belongsTo(models.User, { foreignKey : 'userId'})
   };
   return Project;

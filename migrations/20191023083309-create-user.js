@@ -13,8 +13,7 @@ module.exports = {
         allowNull: false
       },
       password: {
-        type: Sequelize.STRING,
-        defaultValue: null
+        type: Sequelize.STRING
       },
       email: {
         type: Sequelize.STRING,
@@ -22,15 +21,14 @@ module.exports = {
       },
       phoneNumber: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        defaultValue: '-'
       },
       isGoogle: {
-        type: Sequelize.STRING,
-        defaultValue: null
+        type: Sequelize.STRING
       },
       isFacebook: {
-        type: Sequelize.STRING,
-        defaultValue: null
+        type: Sequelize.STRING
       },
       userImage: {
         type: Sequelize.STRING,
@@ -42,8 +40,8 @@ module.exports = {
       },
       verified: {
         type: Sequelize.INTEGER,
-        defaultValue : 0,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
       },
       role: {
         type: Sequelize.STRING,
@@ -51,12 +49,12 @@ module.exports = {
       },
       subscriptionStatus: {
         type: Sequelize.INTEGER,
-        defaultValue : 0,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
       },
       subscriptionNominal: {
         type: Sequelize.INTEGER,
-        defaultValue : 0
+        defaultValue: 0
       },
       reminderDate: {
         type: Sequelize.DATE,

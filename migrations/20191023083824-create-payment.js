@@ -10,19 +10,18 @@ module.exports = {
       },
       paymentType: {
         type: Sequelize.STRING,
-        allowNull : false
+        allowNull: false
       },
       nominal: {
         type: Sequelize.INTEGER,
-        allowNull : false
+        allowNull: false
       },
       statusPayment: {
         type: Sequelize.STRING,
-        allowNull : false
+        allowNull: false
       },
       projectId: {
         type: Sequelize.INTEGER,
-        allowNull : false,
         references : {
           model : 'Projects',
           key : 'id'
@@ -30,34 +29,31 @@ module.exports = {
       },
       userId: {
         type: Sequelize.INTEGER,
-        allowNull : false,
         references : {
           model : 'Users',
           key : 'id'
-        }
+        },
       },
       isRefund: {
         type: Sequelize.INTEGER,
-        allowNull : false,
-        defaultValue : 0
+        allowNull: false,
+        defaultValue: 0
       },
       refundDate: {
-        type: Sequelize.DATE,
-        defaultValue : null
+        type: Sequelize.INTEGER,
+        defaultValue: null
       },
       isDeleted: {
         type: Sequelize.INTEGER,
-        allowNull : false,
-        defaultValue : 0
+        allowNull: false,
+        defaultValue: 0
       },
       order_id: {
-        allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       komentar: {
-        type: Sequelize.STRING,
-        defaultValue: null,
-        allowNull: true
+        type: Sequelize.STRING
       },
       isAnonim: {
         type: Sequelize.INTEGER,

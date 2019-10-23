@@ -14,52 +14,50 @@ module.exports = {
       },
       pendidikanTerakhir: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
       },
       gender: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
       },
       status: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
       },
       alamat: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
       },
       tanggalLahir: {
         type: Sequelize.DATE,
-        allowNull: false,
+        allowNull: false
       },
       studentImage: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
       },
       isDeleted: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        defaultValue : 0
+        defaultValue: 0
       },
       userId: {
         type: Sequelize.INTEGER,
-        allowNull : false,
         references : {
           model : 'Users',
           key : 'id'
-        }
+        },
       },
       story: {
         type: Sequelize.STRING,
-        allowNull : false
+        allowNull: true
       },
       schoolId: {
         type: Sequelize.INTEGER,
-        allowNull : false,
         references : {
           model : 'Schools',
           key : 'id'
-        }
+        },
       },
       createdAt: {
         allowNull: false,

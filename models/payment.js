@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     projectId: DataTypes.INTEGER,
     userId: DataTypes.INTEGER,
     isRefund: DataTypes.INTEGER,
-    refundDate: DataTypes.DATE,
+    refundDate: DataTypes.INTEGER,
     isDeleted: DataTypes.INTEGER,
     order_id: DataTypes.STRING,
     komentar: DataTypes.STRING,
