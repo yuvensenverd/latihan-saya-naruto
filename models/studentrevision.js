@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Student = sequelize.define('Student', {
+  const StudentRevision = sequelize.define('StudentRevision', {
     name: DataTypes.STRING,
     pendidikanTerakhir: DataTypes.STRING,
     gender: DataTypes.STRING,
@@ -13,11 +13,10 @@ module.exports = (sequelize, DataTypes) => {
     story: DataTypes.STRING,
     schoolId: DataTypes.INTEGER
   }, {});
-  Student.associate = function(models) {
+  StudentRevision.associate = function(models) {
     // associations can be defined here
-    Student.belongsTo(models.School, { foreignKey: 'schoolId'})
-    Student.hasMany(models.StudentDetail, {foreignKey : 'schoolId'})
-    Student.belongsTo(models.User, {foreignKey : 'userId'})
+    StudentRevision.belongsTo(models.User, {foreignKey: 'userId'})
+    StudentRevision.hasOne(models.School, {foreignKey : 'sekolahId'})
   };
-  return Student;
+  return StudentRevision;
 };

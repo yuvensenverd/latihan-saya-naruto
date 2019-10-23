@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     studentId: DataTypes.INTEGER
   }, {});
   StudentDetail.associate = function(models) {
+    // associations can be defined here
     StudentDetail.belongsTo(models.Student, {foreignKey : 'studentId'})
   };
   return StudentDetail;

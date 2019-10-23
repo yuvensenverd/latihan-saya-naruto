@@ -9,22 +9,26 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       pictureReport: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       deskripsi: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       studentId: {
         type: Sequelize.INTEGER,
         references : {
           model : 'Students',
           key : 'id'
-        }
+        },
       },
       createdAt: {
+        allowNull: false,
         type: Sequelize.DATE
       },
       updatedAt: {
+        allowNull: false,
         type: Sequelize.DATE
       }
     });
