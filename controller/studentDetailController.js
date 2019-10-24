@@ -25,7 +25,8 @@ module.exports = {
                 }
             })
             .then((results) => {
-                res.send(results);
+                console.log(results[0])
+                return res.status(200).send(results);
             })
             .catch((err) => {
                 console.log(err);

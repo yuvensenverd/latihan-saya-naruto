@@ -3,7 +3,7 @@ var express = require('express'),
 var app = express();
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
-const port = 2019
+const port = 1998
 const bodyParser = require('body-parser')
 const cors = require('cors')
 
@@ -34,7 +34,7 @@ app.use(bearerToken())
 
 
 
-const {userRouter, paymentRouter,studentRouter,studentDetailRouter,projectRouter,testRouter} = require('./router')
+const {userRouter, paymentRouter,studentRouter,studentDetailRouter,projectRouter,testRouter, studentRevisionRouter} = require('./router')
 app.use("/user", userRouter)
 app.use('/payment', paymentRouter)
 app.use("/user", userRouter)
@@ -42,6 +42,7 @@ app.use('/student',studentRouter)
 app.use("/project", projectRouter)
 app.use("/studentdetail", studentDetailRouter)
 app.use('/test',testRouter)
+app.use('/studentrev', studentRevisionRouter)
 
 
 console.log('masuk io')

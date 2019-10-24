@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   StudentRevision.associate = function(models) {
     // associations can be defined here
     StudentRevision.belongsTo(models.User, {foreignKey: 'userId'})
-    StudentRevision.hasOne(models.School, {foreignKey : 'sekolahId'})
+    StudentRevision.belongsTo(models.School, {foreignKey : 'schoolId'})
   };
   return StudentRevision;
 };
