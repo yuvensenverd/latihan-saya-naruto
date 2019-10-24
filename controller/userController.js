@@ -553,7 +553,7 @@ module.exports = {
                 // login lewat gmail, maka muncul errornya
                 return res.status(500).send({ status: 'error', message: `Anda sudah pernah mendaftar dengan Email = ${req.body.data.email}`})
             } else {
-                console.log('Testing')
+                // console.log('Testing')
                 let encryptGoogleId = Crypto.createHmac('sha256', 'kasihnusantaraGoogleId_api')
                                     .update(req.body.data.googleId).digest('hex')
                 
@@ -566,11 +566,11 @@ module.exports = {
                 .then((dataUser) => {
                     if(dataUser !== null) {
                         // Jika ada
-                        console.log(dataUser.id)
-                        console.log(dataUser.email)
+                        // console.log(dataUser.id)
+                        // console.log(dataUser.email)
                         const tokenJwt = createJWTToken({ userId: dataUser.id, email: dataUser.email })
 
-                        console.log(dataUser.id)
+                        // console.log(dataUser.id)
 
                         return res.status(200).send({
                             dataUser,
@@ -724,7 +724,7 @@ module.exports = {
             where: { email }
         })
         .then(() => {
-            console.log('masuk')
+            // console.log('masuk')
             res.send('success')
         })
     },
@@ -750,19 +750,19 @@ module.exports = {
             return {...val.dataValues, date : new Date(), deadline : new Date()}
         })
 
-        console.log(listname)
+        // console.log(listname)
 
 
         const loop = async() =>{
-            console.log('start')
+            // console.log('start')
             for(var i = 0; i<listname.length ; i++){
                 console.log(listname[i])
                 
                 await createPdf(listname[i], async (PDF_STREAM, obj) => {
-                    console.log('async')
+                    // console.log('async')
                     await mailInvoice(obj, PDF_STREAM)
                 })
-                console.log('finish user ', i )
+                // console.log('finish user ', i )
                 
                 // console.log(listname[i].email)
          

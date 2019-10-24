@@ -24,6 +24,7 @@ module.exports = {
         .then((transaction)=>{
             transactionToken = transaction.token;
             console.log('transactionToken: ', transactionToken)
+
             //######## INSERT DATABASE 
             Payment.create({
                 paymentType: 'pending',
@@ -60,8 +61,26 @@ module.exports = {
         .then((Response)=>{
             console.log('=======masuk status=========')
             console.log( Response.transaction_status)
-            req.app.io.emit('status_transaction', Response.transaction_status)
- 
+            let status = {
+                order_id : Response.order_id,
+                transaction_status : Response.transaction_status
+            }
+            
+            //kirim respond status payment ke ui payment page dari push notification midtrans lewat socket io
+            req.app.io.emit('status_transaction', status)
+            
+            //update payment status on database
+            Payment.update({
+                paymentType : Response.payment_type,
+                statusPayment : Response.transaction_status,
+                updateAt: Response.transaction_time
+            },
+            {
+                where : {
+                    order_id : Response.order_id
+                }
+            })
+
             mockNotificationJson = Response     
             snap.transaction.notification(Response)
                 .then((statusResponse)=>{
@@ -168,7 +187,7 @@ module.exports = {
     getDonasiProject: (req,res) => {
         // console.log('masuk getDonasiProject')
         let { projectId } = req.body
-        // console.log(req.body)
+        console.log(req.body)
         Payment.findAll({
             attributes: ['nominal','updatedAt', 'komentar', 'isAnonim'],
             where: { 

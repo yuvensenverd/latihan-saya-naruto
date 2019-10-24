@@ -21,14 +21,14 @@ module.exports = {
 
             console.log('Nama Y')
             const { image } = req.files;
-            console.log(image)
+            // console.log(image)
             const imagePath = image ? path + '/' + image[0].filename : '/defaultPhoto/defaultCategory.png';
-            console.log(imagePath)
+            // console.log(imagePath)
 
-            console.log(req.body.data)
+            // console.log(req.body.data)
             const data = JSON.parse(req.body.data);
             
-            console.log(data.shareDescription)
+            // console.log(data.shareDescription)
 
             sequelize.transaction(function(t){
                 return (
@@ -61,7 +61,7 @@ module.exports = {
         //tambahin where untuk rolenya adalah USER ADMIN dan didapat dari props dan idnya bisa dikirim lwt body atau
         // bisa dari token juga (req.user.userId)
 
-        console.log('masik')
+        // console.log('masik')
         var { page, limit, sortMethod} = req.query;
         if(!sortMethod){
             sortMethod='ASC'
@@ -173,7 +173,7 @@ module.exports = {
         })
     },
     editProject : (req,res) =>{
-        console.log(req.params.id)
+        // console.log(req.params.id)
         const path = '/post/image/project'; //file save path
         const upload = uploader(path, 'PJT').fields([{ name: 'image'}]); //uploader(path, 'default prefix')
         upload(req, res, (err) => {
@@ -183,17 +183,17 @@ module.exports = {
             }
             
             const { image } = req.files;
-            console.log(image)
+            // console.log(image)
             const imagePath = image ? path + '/' + image[0].filename : null;
-            console.log(imagePath)
+            // console.log(imagePath)
             
-            console.log(req.body.data)
+            // console.log(req.body.data)
             const data = JSON.parse(req.body.data);
-            console.log(data)
+            // console.log(data)
             if(data.changeImage){
                 fs.unlinkSync('./public' + data.oldimg);
             }
-            console.log('test')
+            // console.log('test')
 
             Project.update({
                 name: data.name,
@@ -210,7 +210,7 @@ module.exports = {
                 return res.status(200).send({message : 'oke', result})
             })
             .catch((err)=>{
-                console.log('asd')
+                // console.log('asd')
                 return res.status(500).send({message : err})
             })
         })
@@ -230,7 +230,7 @@ module.exports = {
                 id : id
             }
         }).then((result)=>{
-            console.log(result.projectImage)
+            // console.log(result.projectImage)
 
             //DELETE IMAGE
             if(result.projectImage){
@@ -279,7 +279,7 @@ module.exports = {
             }]
         })
         .then((results) => {
-            console.log(results)
+            // console.log(results)
             return res.status(200).send({message : 'success get projects', results})
         })
         .catch((err) => {
