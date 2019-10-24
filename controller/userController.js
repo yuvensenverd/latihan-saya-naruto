@@ -1,5 +1,5 @@
 
-const { User, Sequelize, sequelize } = require('../models');
+const { User, Sequelize, sequelize, School } = require('../models');
 const Op = Sequelize.Op
 const Crypto = require('crypto');
 
@@ -486,6 +486,18 @@ module.exports = {
         })
         .catch((err) => {
             return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
+        })
+    },
+    getSchool:(req,res)=>{
+        School.findAll({
+            attributes:[
+                "nama",
+                "id"
+            ]
+
+        })
+        .then((result)=>{
+            return res.status(200).send({ message : 'getschool success', result : result})
         })
     },
 
