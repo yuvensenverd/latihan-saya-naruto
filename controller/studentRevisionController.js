@@ -50,7 +50,8 @@ module.exports = {
             console.log(req.body.data)
             const data = JSON.parse(req.body.data);
             console.log(data)
-            data.result[1].studentImage = imagePath
+            // need revision, udah bener ga kalau ga ganti gambar datanya masih ttp ada di studentrev
+            data.result[1].changeimage ? data.result[1].studentImage = imagePath : data.result[1].studentImage = data.result[0].studentImage
        
             // if(data.changeImage){
             //     fs.unlinkSync('./public' + data.oldimg);
