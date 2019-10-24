@@ -21,7 +21,8 @@ module.exports = {
       },
       phoneNumber: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        defaultValue: '-'
       },
       isGoogle: {
         type: Sequelize.STRING
@@ -39,8 +40,8 @@ module.exports = {
       },
       verified: {
         type: Sequelize.INTEGER,
-        defaultValue : 0,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
       },
       role: {
         type: Sequelize.STRING,
@@ -48,12 +49,16 @@ module.exports = {
       },
       subscriptionStatus: {
         type: Sequelize.INTEGER,
-        defaultValue : 0,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
       },
       subscriptionNominal: {
         type: Sequelize.INTEGER,
-        defaultValue : 0
+        defaultValue: 0
+      },
+      reminderDate: {
+        type: Sequelize.DATE,
+        defaultValue: null
       },
       createdAt: {
         allowNull: false,

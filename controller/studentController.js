@@ -1,5 +1,7 @@
+
 const { Sequelize, sequelize,  Student} = require('../models')
 const Moment=require('moment')
+const Op = Sequelize.Op
 const {uploader}=require('../helpers/uploader')
 const fs=require('fs')
 module.exports={
@@ -186,26 +188,36 @@ module.exports={
         })
     },
     getStudentdatapaging(req,res){
-        var { page, limit, sortMethod} = req.query;
-        if(!sortMethod){
-            sortMethod='ASC'
-        }
+        console.log(req.body)
+
+        var { page, limit, sekolah,  pendidikan} = req.body;
+        var listpendidikan = ['SMA', 'SMK', 'S1', 'SD', 'SMP', 'TK']
+   
         var offset=(page*limit)-limit
         Student.findAndCountAll({
             limit:parseInt(limit),
             offset:offset,
-            order:[['id',sortMethod]],
+            order:[['id','asc']],
             attributes:{
                 exclude:['createdAt','updatedAt']
             },
             where:{
-                isDeleted:0
+                isDeleted:0,
+                sekolah : {
+                    [Op.like] : `%${sekolah ? sekolah : ''}%`
+                },
+                pendidikanTerakhir : {
+                    [Op.in] : pendidikan ? pendidikan : listpendidikan
+                }         
             }
         })
         .then((result)=>{
+            console.log(result)
             return res.status(200).send(result)
         }).catch((err)=>{
-            res.status(500).send({message:'error post', error:err})
+            return res.status(500).send({message:'error post', error:err})
         })
-    }
+    },
+
+
 }

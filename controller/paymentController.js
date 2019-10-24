@@ -208,6 +208,40 @@ module.exports = {
         })
         .catch((err)=>{
             console.log(err)
+        }
+        )
+    },
+    getSubscription : (req,res) => {
+        User.findOne({
+            where: {
+                email: req.body.email
+            },
+            attributes: ['subscriptionStatus', 'subscriptionNominal']
+        }).then((results) => {
+            res.status(200).send(results)
+        })
+    },
+    applySubscription : (req,res) => {
+        var { subscriptionNominal, email, reminderDate } = req.body
+        console.log('--------------------------------------------------------------------')
+        console.log(req.body)
+        if(!email){
+            return null
+        }
+        console.log(req.body)
+        User.update({
+            subscriptionStatus: 1,
+            subscriptionNominal,
+            reminderDate
+        },{
+            where: { email }
+        })
+        .then((result) => {
+            console.log('masuk')
+            res.status(200).send(result)
+        })
+        .catch((err) => {
+            console.log(err)
         })
     }
 

@@ -1,4 +1,5 @@
 const { Sequelize, sequelize, User, Project } = require('../models')
+const Op = Sequelize.Op
 const {uploader} = require('../helpers/uploader')
 const fs = require('fs')
 
@@ -29,6 +30,7 @@ module.exports = {
             const data = JSON.parse(req.body.data);
             
             // console.log(data.shareDescription)
+            console.log(data)
 
             sequelize.transaction(function(t){
                 return (
@@ -68,59 +70,59 @@ module.exports = {
         }
         var offset=(page*limit)-limit
 
-        sequelize.transaction(function(t){
-            return (
-                Project.findAll({
-                    limit:parseInt(limit),
-                    offset:offset,
-                    order:[['id',sortMethod]],
-                    attributes : [
-                        ["name", "projectName"],
-                        ["id", "projectId"],
-                        "description",
-                        "projectCreated",
-                        "projectEnded",
-                        "totalTarget",
-                        "projectImage"
-                    ],
-                  
+      
+        Project.findAll({
+            limit:parseInt(limit),
+            offset:offset,
+            order:[['id',sortMethod]],
+            attributes : [
+                ["name", "projectName"],
+                ["id", "projectId"],
+                "description",
+                "projectCreated",
+                "projectEnded",
+                "totalTarget",
+                "projectImage"
+            ],
+            
 
-                    where : {
-                        isDeleted : 0,
-                        id: req.user.userId,
-                        role: 'User Admin'
-                    },
-                    include : [{
-                        model : User,
-                        attributes : [
-                            ["nama", "projectCreator"]
-                        ]
-                    }]
+            where : {
+                isDeleted : 0
+            },
+            include : [{
+                model : User,
+                attributes : [
+                    ["nama", "projectCreator"]
+                ],
+                where : {
+                    id: req.user.userId,
+                    role: 'User Admin'
+                }
+            }]
 
-                })
-                .then((result)=>{
-                    Project.count(
-                        {where : {
-                            isDeleted : 0
-                        }}
-                    ).then((resultdua) => {
-                        var total = resultdua
-                        
-
-                        return res.status(200).send({message : 'success get projects', result, total})
-                    })
-                    .catch((err)=>{
-                        return res.status(500).send({message : err})
-                    })
-                    // console.log('aishdiashdiashd')
-                    // console.log(a)
-                    // return res.status(200).send({message : 'success get projects', result})
-                })
-                .catch((err)=>{
-                    return res.status(500).send({message : err})
-                })
-            )
         })
+        .then((result)=>{
+            Project.count(
+                {where : {
+                    isDeleted : 0
+                }}
+            ).then((resultdua) => {
+                var total = resultdua
+                
+
+                return res.status(200).send({message : 'success get projects', result, total})
+            })
+            .catch((err)=>{
+                return res.status(500).send({message : err})
+            })
+            // console.log('aishdiashdiashd')
+            // console.log(a)
+            // return res.status(200).send({message : 'success get projects', result})
+        })
+        .catch((err)=>{
+            return res.status(500).send({message : err})
+        })
+
     },
     getAllProject : (req,res) =>{
         var { page, limit, sortMethod} = req.query;
@@ -141,7 +143,8 @@ module.exports = {
                         "projectCreated",
                         "projectEnded",
                         "totalTarget",
-                        "projectImage"
+                        "projectImage",
+                        "shareDescription"
                     ],
                     where : {
                         isDeleted : 0,
@@ -285,5 +288,36 @@ module.exports = {
         .catch((err) => {
             return res.status(500).send({message : err})
         })
+    },
+
+    searchProject : (req,res) =>{
+
+        // -----------BACA--------------
+        // formatbody : {
+        //     name : 'namaProject',
+        //     date : 'desc / asc',
+        //     page : '1',
+        //     limit : '3'
+        // }
+
+        var { page, limit, name, date} = req.body;
+  
+        var offset=(page*limit)-limit
+        
+        Project.findAll({
+            limit:parseInt(limit),
+            offset:offset,
+            where : {
+                name : {
+                    [Op.like] : `%${name}%`
+                },
+              
+            },
+            order : !date ? [['id', 'asc']] : [['projectCreated', `${date}`]]
+        })
+        .then((results)=>{
+            return res.status(200).send({message : 'success get projects', results})
+        })
+
     }
 }

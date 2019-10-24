@@ -10,4 +10,7 @@ router.post('/getHistory', paymentController.getHistory)
 router.post('/getDonasiProject', paymentController.getDonasiProject)
 router.post('/getStatus', paymentController.getStatus)
 
+router.get('/getSubscription', paymentController.getSubscription)
+router.post('/applySubscription', paymentController.applySubscription);
+
 module.exports = router;
