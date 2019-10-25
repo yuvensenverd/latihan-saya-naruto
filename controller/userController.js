@@ -820,6 +820,136 @@ module.exports = {
         .catch((err)=>{
             console.log(err)
         })
+    },
+    getDataUser : (req,res) => {
+        let { id } = req.params
+        User.findAll({
+            where: {
+                id
+            },
+            attributes: {
+                exclude: ['createdAt', 'updatedAt', 'password', 'isGoogle', 'isFacebook', 'lastLogin']
+            }
+        })
+        .then((results) => {
+            res.send(results)
+        })
+    },
+    updateProfilePic : (req,res) => {
+        var { id } = req.params
+        // console.log(id)
+        // console.log(req)
+        try { //kalo try ada error langsung masuk ke catch
+            const path = '/users'; //file save path
+            const upload = uploader(path, 'KasihNusantara').fields([{ name: 'imageUser'}]); //uploader(path, 'default prefix')
+            
+            upload(req, res, (err) => {
+                if(err){
+                    // console.log('req.files', req.files)
+                    return res.status(500);
+                }
+                // console.log(req.files)
+                const { imageUser } = req.files;
+                const imagePath = imageUser ? path + '/' + imageUser[0].filename : null;
+                // const data = JSON.parse(req.body.data);
+                // data.imgPath = imagePath;
+                // console.log(imageUser)
+                console.log(imagePath)
+                User.findOne({where: { id }})
+                .then((results2) => {
+                    console.log(results2.dataValues.userImage)
+                    let oldImgPath = results2.dataValues.userImage
+                    if(oldImgPath === '/defaultPhoto/defaultUser.png'){
+                        User.update({
+                            userImage: imagePath
+                        }, { 
+                            where: {id}
+                         }).then(() => {
+                            User.findAll({
+                                where: {
+                                    id
+                                },
+                                attributes: {
+                                    exclude: [
+                                        'createdAt', 
+                                        'updatedAt', 
+                                        'password', 
+                                        'isGoogle', 
+                                        'isFacebook', 
+                                        'lastLogin'
+                                    ]
+                                }
+                            })
+                            .then((results) => {
+                                res.send(results)
+                                console.log('success')
+                            })
+                        })
+                    }else{
+                        // console.log(results2)
+                        console.log(oldImgPath)
+                        fs.unlinkSync('./Public' + oldImgPath)
+                        console.log('asdasdmasuk')
+                        User.update({
+                            userImage: imagePath
+                        }, { 
+                            where: {id}
+                        }).then(() => {
+                            User.findAll({
+                                where: {
+                                    id
+                                },
+                                attributes: {
+                                    exclude: [
+                                        'createdAt', 
+                                        'updatedAt', 
+                                        'password', 
+                                        'isGoogle', 
+                                        'isFacebook', 
+                                        'lastLogin'
+                                    ]
+                                }
+                            })
+                            .then((results) => {
+                                res.send(results)
+                                console.log('success')
+                            })
+                        })
+                    }
+                })
+            })
+        } catch(err) {
+            return res.status(500);
+        }
+    },
+    editPhoneNumber : (req,res) => {
+        let { id } = req.params
+        let { phoneNumber } = req.body
+        User.update({
+            phoneNumber
+        },{
+            where: { id }
+        })
+        .then(() => {
+            User.findAll({
+                where: {
+                    id
+                },
+                attributes: {
+                    exclude: [
+                        'createdAt', 
+                        'updatedAt', 
+                        'password', 
+                        'isGoogle', 
+                        'isFacebook', 
+                        'lastLogin'
+                    ]
+                }
+            })
+            .then((results) => {
+                res.send(results)
+            })
+        })
     }
 }
 

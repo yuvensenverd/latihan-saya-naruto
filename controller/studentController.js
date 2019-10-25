@@ -21,6 +21,7 @@ module.exports={
         })
     },
     postStudentdata(req,res){
+        console.log(req.files)
         try {
             const path = '/student/images'; //file save path
             const upload = uploader(path, 'STD').fields([{ name: 'image'}]);

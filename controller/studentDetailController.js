@@ -88,6 +88,7 @@ module.exports = {
         })   
     },
     editStudentDetail : (req,res) => {
+        console.log(req.files)
         try { //kalo try ada error langsung masuk ke catch
             const path = '/student/images'; //file save path
             const upload = uploader(path, 'RPT').fields([{ name: 'image'}]); //uploader(path, 'default prefix')
