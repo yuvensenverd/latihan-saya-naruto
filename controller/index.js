@@ -4,6 +4,8 @@ const stundentController=require('./studentController')
 const projectController = require('./projectController')
 const studentDetailController = require('./studentDetailController')
 const testcontroller=require('./testpdf')
+const studentRevisionController = require('./studentRevisionController')
+
 
 module.exports = {
     userController,
@@ -12,5 +14,6 @@ module.exports = {
     stundentController,
     projectController,
     studentDetailController,
-    testcontroller
+    testcontroller,
+    studentRevisionController
 }

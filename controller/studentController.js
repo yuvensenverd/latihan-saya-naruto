@@ -1,5 +1,5 @@
 
-const { Sequelize, sequelize,  Student} = require('../models')
+const { Sequelize, sequelize,  Student, School} = require('../models')
 const Moment=require('moment')
 const Op = Sequelize.Op
 const {uploader}=require('../helpers/uploader')
@@ -36,7 +36,7 @@ module.exports={
                 console.log(data)
                 data.studentImage=imagePath
                 // data.tanggalLahir=Moment(data.tanggalLahir)
-                const {name,pendidikanTerakhir,gender,status,alamat,tanggalLahir,userId,story,sekolah,studentImage}=data
+                const {name,pendidikanTerakhir,gender,status,alamat,tanggalLahir,userId,story,schoolId,studentImage}=data
                 console.log(name)
                 return sequelize.transaction(function (t){
                     return Student.create({
@@ -48,8 +48,9 @@ module.exports={
                         tanggalLahir:Moment(tanggalLahir),
                         userId,
                         story,
-                        sekolah,
-                        studentImage
+                        schoolId,
+                        studentImage,
+                        dataStatus : 'Unverified'
                     },{transaction:t})
                     .then((result)=>{
                         return result
@@ -170,25 +171,16 @@ module.exports={
                 id:id
             }
         }).then((result)=>{
-            Student.findAll({
-                attributes:{
-                    exclude:['createdAt','updatedAt']
-                },
-                where:{
-                    isDeleted:0
-                }
-            })
-            .then((result1)=>{
-                return res.status(200).send(result1)
-            }).catch((err)=>{
-                res.status(500).send({message:'error post', error:err})
-            })
+          
+            return res.status(200).send(result)
+          
         }).catch((err)=>{
-            res.status(500).send({message:'error post', error:err})
+            return res.status(500).send({message:'error post', error:err})
         })
     },
-    getStudentdatapaging(req,res){
+    getStudentdatapaging(req,res){ // DUPLIKAT FUNCTION INI UNTUK HOME ( TAPI GA ADA FILTERING BERDASARKAN ID )
         console.log(req.body)
+        console.log('masukdatapaging')
 
         var { page, limit, sekolah,  pendidikan} = req.body;
         var listpendidikan = ['SMA', 'SMK', 'S1', 'SD', 'SMP', 'TK']
@@ -201,11 +193,27 @@ module.exports={
             attributes:{
                 exclude:['createdAt','updatedAt']
             },
+            include : [
+                {
+                    model : School,
+                    required : true,
+                    attributes : [['nama', 'schoolName']],
+                    where : {
+                        nama : {
+                            [Op.like] : `%${sekolah ? sekolah : ''}%`
+                        },
+                  
+                    },
+               
+                }
+            ],
             where:{
                 isDeleted:0,
                 pendidikanTerakhir : {
                     [Op.in] : pendidikan ? pendidikan : listpendidikan
-                }         
+                },
+                userId : req.user.userId
+                // [School.nama] : `%${sekolah ? sekolah : ''}%`
             }
         })
         .then((result)=>{

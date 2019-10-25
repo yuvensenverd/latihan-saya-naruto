@@ -5,6 +5,7 @@ const { uploader } = require('../helpers/uploader')
 module.exports = {
     getStudentDetail : (req,res) => {
         const { id } = req.params
+        console.log(id)
             Student.findAll({
                 where: {
                     id: id,
@@ -21,11 +22,12 @@ module.exports = {
                     }
                 ],
                 attributes: {
-                    exclude: ['createdAt', 'updatedAt']
+                    exclude: ['createdAt', 'updatedAt', 'sekolah']
                 }
             })
             .then((results) => {
-                res.send(results);
+                console.log(results[0])
+                return res.status(200).send(results);
             })
             .catch((err) => {
                 console.log(err);
