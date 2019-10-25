@@ -148,31 +148,4 @@ module.exports = {
         
     },
 
-    getStudentUnverified: (req, res) => {
-        Student.findAll({
-            include: [
-                {
-                    model: StudentDetail,
-                    require: true,
-                    // attributes: ['name']
-                    // separate:true,
-                    where : {
-                        dataStatus: 0
-                    },
-                    attributes: {
-                        exclude: ['createdAt', 'updatedAt']
-                    }
-                }
-            ],
-            attributes: {
-                exclude: ['createdAt', 'updatedAt']
-            }
-        })
-        .then((results) => {
-            res.send(results);
-        })
-        .catch((err) => {
-            console.log(err);
-        }) 
-    }
 }
