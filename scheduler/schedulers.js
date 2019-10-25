@@ -9,9 +9,9 @@ const schedule = require('node-schedule');
 //     userController.reminderInvoice() //params
 // });
 
-module.export = {
-    schedulerInvoice
-}
+// module.export = {
+//     schedulerInvoice
+// }
 
 
 

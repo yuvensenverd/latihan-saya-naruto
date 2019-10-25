@@ -203,9 +203,6 @@ module.exports={
             },
             where:{
                 isDeleted:0,
-                sekolah : {
-                    [Op.like] : `%${sekolah ? sekolah : ''}%`
-                },
                 pendidikanTerakhir : {
                     [Op.in] : pendidikan ? pendidikan : listpendidikan
                 }         

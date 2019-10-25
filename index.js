@@ -16,12 +16,7 @@ require('./scheduler/schedulers')
 app.use(bodyParser.json())
 app.use(cors())
 
-
-
-
 app.io = io
-
-
 
 app.use(bodyParser.urlencoded({extended : false}))
 app.use(express.static('public')) 
@@ -61,9 +56,5 @@ app.get('/', (req, res) => {
         `<h3>Welcome to Kasih Nusantara API</h3>`
     )
 })
-
-
-
-
 
 server.listen(port, ()=>console.log('listen on port ' + port));

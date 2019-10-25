@@ -44,14 +44,20 @@ module.exports = {
                 const imagePath = image ? path + '/' + image[0].filename : null;
                 const data = JSON.parse(req.body.data);
                 data.imgPath = imagePath;
+
                 const {
                     deskripsi, 
                     studentId, 
+                    dataStatus,
+                    kelas
                 } = data
+
                 StudentDetail.create({
                     pictureReport: imagePath,
                     deskripsi,
-                    studentId
+                    studentId,
+                    dataStatus,
+                    class: kelas
                 })
                 .then(() => {
                     StudentDetail.findAll({where: {studentId}})
@@ -138,5 +144,33 @@ module.exports = {
             return res.status(500);
         }
         
+    },
+
+    getStudentUnverified: (req, res) => {
+        Student.findAll({
+            include: [
+                {
+                    model: StudentDetail,
+                    require: true,
+                    // attributes: ['name']
+                    // separate:true,
+                    where : {
+                        dataStatus: 0
+                    },
+                    attributes: {
+                        exclude: ['createdAt', 'updatedAt']
+                    }
+                }
+            ],
+            attributes: {
+                exclude: ['createdAt', 'updatedAt']
+            }
+        })
+        .then((results) => {
+            res.send(results);
+        })
+        .catch((err) => {
+            console.log(err);
+        }) 
     }
 }
