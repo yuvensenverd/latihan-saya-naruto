@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     School.hasMany(models.Student, {foreignKey : 'schoolId'})
     School.hasMany(models.StudentRevision, {foreignKey : 'schoolId'})
-
+    School.hasMany(models.scholarship, {foreignKey: 'schoolId'})
   };
   return School;
 };
