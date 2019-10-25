@@ -6,29 +6,136 @@ const fs = require('fs')
 
 module.exports = {
     adminGetStudent : (req,res)=>{
+        console.log('masuesk')
+        var value = ''
+
+        if(req.query.type === 'new'){
+            value = 'Unverified'
+        }else if(req.query.type === 'update'){
+            value = 'Update Unverified'
+        }
+
         Student.findAll({
             attributes:{
                 exclude:['createdAt','updatedAt']
             },
             where:{
                 isDeleted:0,
-                dataStatus : 'Unverified'
+                dataStatus : value
             },
             include : [
                 {
                     model : School,
                     attributes: 
                        [ 'bank', 'alamat', 'namaPemilikRekening', 'nomorRekening', 'telepon', ['nama', 'schoolName']]
-                    
                 }
             ]
         })
         .then((result)=>{
-            console.log(result[0])
             return res.status(200).send(result)
         }).catch((err)=>{
             res.status(500).send({message:'error post', error:err})
         })
+    },
+    updateApprove : (req,res) =>{
+        // body : {
+        //     revid : 2,
+        //     studentid : 1,
+
+        // }
+        console.log('update approve')
+        return sequelize.transaction(function (t){
+            return StudentRevision.update({
+                isDeleted : 1
+            }, {
+                where : {
+                    id : req.body.revid
+                }
+            },{ transaction : t })
+            .then((result)=>{
+                Student.update({
+                    dataStatus : 'Approved'
+                },{
+                    where : {
+                        id : req.body.studentid
+                    }
+                }, {transaction : t})
+                .then((result2)=>{
+                    console.log('success update verified')
+                  
+                })
+            })
+        })
+        .then((resultt)=>{
+       
+            return res.status(200).send({message : 'success update'})
+        })
+        .catch((errtrans)=>{
+            return res.status(500).send({ message : 'admin error', error : errtrans.message})
+        })
+    },
+    updateReject : (req,res)=>{
+        // body : {
+        //     revid : 2,
+        //     studentid : 1,
+        //     message : 'asdjaisdja'
+        // }
+        console.log('update reject')
+        return sequelize.transaction(function (t){
+            return StudentRevision.update({
+                isDeleted : 1
+            }, {
+                where : {
+                    id : req.body.revid
+                }
+            },{ transaction : t })
+            .then((result)=>{
+                Student.update({
+                    dataStatus : 'Rejected',
+                    statusNote : req.body.message
+                },{
+                    where : {
+                        id : req.body.studentid
+                    }
+                }, {transaction : t})
+                .then((result2)=>{
+                    console.log('success update verified')
+                  
+                })
+            })
+        })
+        .then((resultt)=>{
+       
+            return res.status(200).send({message : 'success update'})
+        })
+        .catch((errtrans)=>{
+            return res.status(500).send({ message : 'admin error', error : errtrans.message})
+        })
+    },
+    getStudentRevisions : async (req,res) =>{
+        console.log('find revision')
+        try {
+
+            var result = await StudentRevision.findAll({
+                attributes : {
+                    exclude : ['createdAt', 'updatedAt']
+                },
+                where :{
+                    studentId : req.params.id
+                },
+                include : [
+                    {
+                        model : School,
+                        attributes: 
+                           [ ['nama', 'schoolName']]
+                    }
+                ]
+            })
+            return res.status(200).send({ message : 'success get revision', result})
+        }
+        catch(err){
+            return res.status(500).send({ message : 'error admin', err : err.message})
+        }
     },
 
    
@@ -47,17 +154,26 @@ module.exports = {
             const imagePath = image ? path + '/' + image[0].filename : null;
             console.log(imagePath)
       
-            console.log(req.body.data)
+
             const data = JSON.parse(req.body.data);
-            console.log(data)
+         
+  
             // need revision, udah bener ga kalau ga ganti gambar datanya masih ttp ada di studentrev
-            data.result[1].changeimage ? data.result[1].studentImage = imagePath : data.result[1].studentImage = data.result[0].studentImage
+            console.log('---------changeimage---------------')
+            console.log(data.result[1].changeImage)
+            if(data.result[1].changeImage){
+                data.result[1].studentImage = imagePath
+            }else{
+                data.result[1].studentImage = data.result[0].studentImage
+            }
+            console.log(data.result[0].changeImage)
+            console.log(data.result[1].changeImage)
        
             // if(data.changeImage){
             //     fs.unlinkSync('./public' + data.oldimg);
             // }
            
-            const {name,pendidikanTerakhir,gender,status,alamat,tanggalLahir,userId,story,schoolId,studentImage}=data.result[0]
+            const {name,pendidikanTerakhir,gender,status,alamat,tanggalLahir,userId,story,schoolId,studentImage,studentId}=data.result[0]
             console.log(name)
             return sequelize.transaction(function (t){
                 return StudentRevision.create({
@@ -70,7 +186,8 @@ module.exports = {
                     userId,
                     story,
                     schoolId,
-                    studentImage
+                    studentImage,
+                    studentId
                 },{transaction:t})
                 .then((result)=>{
                     console.log('insert student transaction success')
@@ -150,5 +267,50 @@ module.exports = {
             console.log('asd')
             return res.status(500).send({message : err})
         })
+    },
+    studentRejectRevert : async (req,res) =>{
+        console.log('revert changes')
+
+        try { 
+            var result = await StudentRevision.findOne({
+                attributes : {
+                    exclude : ['createdAt, updatedAt']
+                },
+                where : {
+                    studentId : req.params.id,
+                    
+                },
+                order : [['createdAt', 'desc']]  // data terbaru
+               
+            })
+            console.log(result.dataValues)
+            var olddata = result.dataValues
+    
+            await Student.update({
+                name : olddata.name,
+                pendidikanTerakhir : olddata.pendidikanTerakhir,
+                gender : olddata.gender,
+                status : olddata.status,
+                alamat : olddata.alamat,
+                tanggalLahir : olddata.tanggalLahir,
+                studentImage : olddata.studentImage,
+                isDeleted : 0,
+                story : olddata.story,
+                schoolId : olddata.schoolId,
+                dataStatus : 'Approved',
+                statusNote : ''
+            },{
+                where : {
+                    id : req.params.id
+                }
+            })
+    
+            console.log('berhasil update')
+            res.status(200).send({message : 'Success Revert'})
+        }
+        catch(err){
+            res.status(200).send({message : err})
+        }
+            
     }
 }

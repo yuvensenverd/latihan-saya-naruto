@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     Student.belongsTo(models.School, { foreignKey: 'schoolId'})
     Student.hasMany(models.StudentDetail, {foreignKey : 'studentId'})
     Student.belongsTo(models.User, {foreignKey : 'userId'})
+    Student.hasMany(models.StudentRevision, {foreignKey : 'studentId'})
   };
   return Student;
 };
