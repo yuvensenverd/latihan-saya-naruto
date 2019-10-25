@@ -59,6 +59,14 @@ module.exports = {
           key : 'id'
         },
       },
+      dataStatus: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      statusNote: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

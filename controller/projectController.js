@@ -125,17 +125,15 @@ module.exports = {
 
     },
     getAllProject : (req,res) =>{
-        var { page, limit, sortMethod} = req.query;
-        if(!sortMethod){
-            sortMethod='ASC'
-        }
+        var { page, limit} = req.query;
+
         var offset=(page*limit)-limit
         sequelize.transaction(function(t){
             return (
                 Project.findAll({
                     limit:parseInt(limit),
                     offset:offset,
-                    order:[['id',sortMethod]],
+                    order:[['id', 'asc']],
                     attributes : [
                         ["name", "projectName"],
                         ["id", "projectId"],
@@ -302,11 +300,22 @@ module.exports = {
 
         var { page, limit, name, date} = req.body;
   
-        var offset=(page*limit)-limit
+        var offset = (page * limit) - limit
+        console.log(req.body)
         
         Project.findAll({
             limit:parseInt(limit),
             offset:offset,
+            attributes : [
+                ["name", "projectName"],
+                ["id", "projectId"],
+                "description",
+                "projectCreated",
+                "projectEnded",
+                "totalTarget",
+                "projectImage",
+                "shareDescription"
+            ],
             where : {
                 name : {
                     [Op.like] : `%${name}%`
@@ -316,8 +325,24 @@ module.exports = {
             order : !date ? [['id', 'asc']] : [['projectCreated', `${date}`]]
         })
         .then((results)=>{
-            return res.status(200).send({message : 'success get projects', results})
+            Project.count({
+                where: {
+                    name: {
+                    [Op.like] : `%${name}%`
+                    }
+                }
+            })
+            .then((resultsTotalProject) => {
+                console.log(results)
+                let total = resultsTotalProject
+                return res.status(200).send({message : 'success get projects', results, total})
+            })
+            .catch((err) => {
+                return res.status(500).send({message : err})
+            })
         })
-
+        .catch((err) => {
+            return res.status(500).send({message : err})
+        })
     }
 }

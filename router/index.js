@@ -6,6 +6,7 @@ const studentDetailRouter = require('./studentDetailRouter')
 const testRouter=require('./testrouter')
 const studentRevisionRouter = require('./studentRevisionRouter')
 const scholarshipRouter = require('./scholarshipRouter')
+const studentDetailRevisionRouter = require('./studentDetailRevisionRouter');
 
 module.exports = {
     userRouter,
@@ -16,5 +17,6 @@ module.exports = {
     studentDetailRouter,
     testRouter,
     studentRevisionRouter,
-    scholarshipRouter
+    scholarshipRouter,
+    studentDetailRevisionRouter
 }

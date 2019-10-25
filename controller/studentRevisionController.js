@@ -6,99 +6,235 @@ const fs = require('fs')
 
 module.exports = {
     adminGetStudent : (req,res)=>{
+        console.log('masuesk')
+        var value = ''
+
+        if(req.query.type === 'new'){
+            value = 'Unverified'
+        }else if(req.query.type === 'update'){
+            value = 'Update Unverified'
+        }
+
         Student.findAll({
             attributes:{
                 exclude:['createdAt','updatedAt']
             },
             where:{
                 isDeleted:0,
-                dataStatus : 'Unverified'
+                dataStatus : value
             },
             include : [
                 {
                     model : School,
                     attributes: 
                        [ 'bank', 'alamat', 'namaPemilikRekening', 'nomorRekening', 'telepon', ['nama', 'schoolName']]
-                    
                 }
             ]
         })
         .then((result)=>{
-            console.log(result[0])
             return res.status(200).send(result)
         }).catch((err)=>{
             res.status(500).send({message:'error post', error:err})
         })
     },
+    updateApprove : (req,res) =>{
+        // body : {
+        //     revid : 2,
+        //     studentid : 1,
+
+        // }
+        console.log('update approve')
+        return sequelize.transaction(function (t){
+            return StudentRevision.update({
+                isDeleted : 1
+            }, {
+                where : {
+                    id : req.body.revid,
+                    isDeleted : 0
+                }
+            },{ transaction : t })
+            .then((result)=>{
+                Student.update({
+                    dataStatus : 'Approved'
+                },{
+                    where : {
+                        id : req.body.studentid,
+                    }
+                }, {transaction : t})
+                .then((result2)=>{
+                    console.log('success update verified')
+                  
+                })
+            })
+        })
+        .then((resultt)=>{
+       
+            return res.status(200).send({message : 'success update'})
+        })
+        .catch((errtrans)=>{
+            return res.status(500).send({ message : 'admin error', error : errtrans.message})
+        })
+    },
+    updateReject : (req,res)=>{
+        // body : {
+        //     revid : 2,
+        //     studentid : 1,
+        //     message : 'asdjaisdja'
+        // }
+        console.log('update reject')
+        return sequelize.transaction(function (t){
+            return StudentRevision.update({
+                isDeleted : 1
+            }, {
+                where : {
+                    id : req.body.revid,
+                    isDeleted : 0
+                }
+            },{ transaction : t })
+            .then((result)=>{
+                Student.update({
+                    dataStatus : 'Rejected',
+                    statusNote : req.body.message
+                },{
+                    where : {
+                        id : req.body.studentid
+                    }
+                }, {transaction : t})
+                .then((result2)=>{
+                    console.log('success update verified')
+                  
+                })
+            })
+        })
+        .then((resultt)=>{
+       
+            return res.status(200).send({message : 'success update'})
+        })
+        .catch((errtrans)=>{
+            return res.status(500).send({ message : 'admin error', error : errtrans.message})
+        })
+    },
+    getStudentRevisions : async (req,res) =>{
+        console.log('find revision')
+        try {
+
+            var result = await StudentRevision.findAll({
+                attributes : {
+                    exclude : ['createdAt', 'updatedAt']
+                },
+                where :{
+                    studentId : req.params.id,
+                    isDeleted : 0
+                },
+                include : [
+                    {
+                        model : School,
+                        attributes: 
+                           [ ['nama', 'schoolName']]
+                    }
+                ]
+            })
+            return res.status(200).send({ message : 'success get revision', result})
+        }
+        catch(err){
+            return res.status(500).send({ message : 'error admin', err : err.message})
+        }
+    },
 
    
     postStudentRevision : (req,res) =>{
-        try {
-            console.log('upload')
-            const path = '/student/images'; //file save path
-            const upload = uploader(path, 'STD').fields([{ name: 'image'}]);
-            upload(req,res,(err)=>{
-                if(err){
-                    return res.status(500).json({ message: 'Upload picture failed !', error: err.message });
-                }
-                const {image}=req.files;
-                console.log(image)
-                const imagePath = image ? path + '/' + image[0].filename : null;
-                console.log(imagePath)
-                const data = JSON.parse(req.body.data);
-                console.log(data)
-                data.studentImage=imagePath
-                // data.tanggalLahir=Moment(data.tanggalLahir)
-                const {name,pendidikanTerakhir,gender,status,alamat,tanggalLahir,userId,story,schoolId,studentImage}=data
-                console.log(name)
-                return sequelize.transaction(function (t){
-                    return StudentRevision.create({
-                        name:name,
-                        pendidikanTerakhir:pendidikanTerakhir,
-                        gender:gender,
-                        status,
-                        alamat,
-                        tanggalLahir:Moment(tanggalLahir),
-                        userId,
+        const path = '/student/images'; //file save path
+        const upload = uploader(path, 'STD').fields([{ name: 'image'}]); //uploader(path, 'default prefix')
+
+        upload(req, res, (err) => {
+            if(err){
+                console.log("Masuk")
+                return res.status(500).json({ message: 'Upload picture failed !', error: err.message });
+            }
+
+            const { image } = req.files;
+            console.log(image)
+            const imagePath = image ? path + '/' + image[0].filename : null;
+            console.log(imagePath)
+      
+
+            const data = JSON.parse(req.body.data);
+         
+  
+            // need revision, udah bener ga kalau ga ganti gambar datanya masih ttp ada di studentrev
+            console.log('---------changeimage---------------')
+            console.log(data.result[1].changeImage)
+            if(data.result[1].changeImage){
+                data.result[1].studentImage = imagePath
+            }else{
+                data.result[1].studentImage = data.result[0].studentImage
+            }
+            console.log(data.result[0].studentImage)
+            console.log(data.result[1].studentImage)
+       
+            // if(data.changeImage){
+            //     fs.unlinkSync('./public' + data.oldimg);
+            // }
+           
+            const {name,pendidikanTerakhir,gender,status,alamat,tanggalLahir,userId,story,schoolId,studentImage,studentId}=data.result[0]
+            console.log(name)
+            return sequelize.transaction(function (t){
+                return StudentRevision.create({
+                    name:name,
+                    pendidikanTerakhir:pendidikanTerakhir,
+                    gender:gender,
+                    status,
+                    alamat,
+                    tanggalLahir:Moment(tanggalLahir),
+                    userId,
+                    story,
+                    schoolId,
+                    studentImage,
+                    studentId
+                },{transaction:t})
+                .then((result)=>{
+                    console.log('insert student transaction success')
+                    
+                    const {pendidikanTerakhir, story, alamat, status, schoolId, id, studentImage} = data.result[1]
+                    return Student.update({
+                        pendidikanTerakhir,
                         story,
+                        alamat,
+                        status,
                         schoolId,
-                        studentImage
-                    },{transaction:t})
-                    .then((result)=>{
-                        return result
+                        studentImage,
+                        dataStatus : 'Update Unverified'
+                    }, {
+                        where : {
+                            id : id
+                        }
+                    }, {transaction : t}).then((result2)=>{
+                        console.log('berhasuil')
+
+                        // return res.status(200).send({message : 'success'})
                     }).catch((err)=>{
-                        console.log(err.message)
-                        fs.unlinkSync('./public' + imagePath);
-                        return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message })
+                        console.log('err1')
+                        throw new Error();
+                        // return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message })
                     })
-                }).then((result)=>{
-                    // console.log('success upload')
-                    // StudentRevision.findAll({
-                    //     attributes:{
-                    //         exclude:['createdAt','updatedAt']
-                    //     },
-                    //     where:{
-                    //         isDeleted:0
-                    //     }
-                    // })
-                    // .then((result1)=>{
-                    //     return res.status(200).send(result1)
-                    // }).catch((err)=>{
-                    //     res.status(500).send({message:'error post', error:err})
-                    // })
-                    return res.status(200).send(result)
-                }).catch((err)=>{
-                    console.log(err.message)
-                    fs.unlinkSync('./public' + imagePath);
-                    return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message })
-                })
-            })
             
-        } catch (error) {
-            console.log(err.message)
-            fs.unlinkSync('./public' + imagePath);
-            return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
-        }
+                }).catch((err)=>{
+                    console.log('err2')
+                    throw new Error();
+                    // return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message })
+                })
+            }).then((result)=>{
+                console.log('masukmasuk,asuk')
+                return res.status(200).send(result)
+            }).catch((err)=>{
+                console.log(err.message)
+                return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message })
+            })
+
+        })
+    
+            
+        
     },
     newStudentApprove : (req,res) =>{
         console.log('student approve')
@@ -134,5 +270,50 @@ module.exports = {
             console.log('asd')
             return res.status(500).send({message : err})
         })
+    },
+    studentRejectRevert : async (req,res) =>{
+        console.log('revert changes')
+
+        try { 
+            var result = await StudentRevision.findOne({
+                attributes : {
+                    exclude : ['createdAt, updatedAt']
+                },
+                where : {
+                    studentId : req.params.id,
+                    
+                },
+                order : [['createdAt', 'desc']]  // data terbaru
+               
+            })
+            console.log(result.dataValues)
+            var olddata = result.dataValues
+    
+            await Student.update({
+                name : olddata.name,
+                pendidikanTerakhir : olddata.pendidikanTerakhir,
+                gender : olddata.gender,
+                status : olddata.status,
+                alamat : olddata.alamat,
+                tanggalLahir : olddata.tanggalLahir,
+                studentImage : olddata.studentImage,
+                isDeleted : 0,
+                story : olddata.story,
+                schoolId : olddata.schoolId,
+                dataStatus : 'Approved',
+                statusNote : ''
+            },{
+                where : {
+                    id : req.params.id
+                }
+            })
+    
+            console.log('berhasil update')
+            res.status(200).send({message : 'Success Revert'})
+        }
+        catch(err){
+            res.status(200).send({message : err})
+        }
+            
     }
 }

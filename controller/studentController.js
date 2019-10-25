@@ -171,26 +171,18 @@ module.exports={
                 id:id
             }
         }).then((result)=>{
-            Student.findAll({
-                attributes:{
-                    exclude:['createdAt','updatedAt']
-                },
-                where:{
-                    isDeleted:0
-                }
-            })
-            .then((result1)=>{
-                return res.status(200).send(result1)
-            }).catch((err)=>{
-                res.status(500).send({message:'error post', error:err})
-            })
+          
+            return res.status(200).send(result)
+          
         }).catch((err)=>{
-            res.status(500).send({message:'error post', error:err})
+            return res.status(500).send({message:'error post', error:err})
         })
     },
     getStudentdatapaging(req,res){ // DUPLIKAT FUNCTION INI UNTUK HOME ( TAPI GA ADA FILTERING BERDASARKAN ID )
         console.log(req.body)
         console.log(req.user)
+        console.log('masukdatapaging')
+
         var { page, limit, sekolah,  pendidikan} = req.body;
         var listpendidikan = ['SMA', 'SMK', 'S1', 'SD', 'SMP', 'TK']
    
