@@ -49,7 +49,8 @@ module.exports = {
                 isDeleted : 1
             }, {
                 where : {
-                    id : req.body.revid
+                    id : req.body.revid,
+                    isDeleted : 0
                 }
             },{ transaction : t })
             .then((result)=>{
@@ -57,7 +58,7 @@ module.exports = {
                     dataStatus : 'Approved'
                 },{
                     where : {
-                        id : req.body.studentid
+                        id : req.body.studentid,
                     }
                 }, {transaction : t})
                 .then((result2)=>{
@@ -86,7 +87,8 @@ module.exports = {
                 isDeleted : 1
             }, {
                 where : {
-                    id : req.body.revid
+                    id : req.body.revid,
+                    isDeleted : 0
                 }
             },{ transaction : t })
             .then((result)=>{
@@ -121,7 +123,8 @@ module.exports = {
                     exclude : ['createdAt', 'updatedAt']
                 },
                 where :{
-                    studentId : req.params.id
+                    studentId : req.params.id,
+                    isDeleted : 0
                 },
                 include : [
                     {
@@ -166,8 +169,8 @@ module.exports = {
             }else{
                 data.result[1].studentImage = data.result[0].studentImage
             }
-            console.log(data.result[0].changeImage)
-            console.log(data.result[1].changeImage)
+            console.log(data.result[0].studentImage)
+            console.log(data.result[1].studentImage)
        
             // if(data.changeImage){
             //     fs.unlinkSync('./public' + data.oldimg);
