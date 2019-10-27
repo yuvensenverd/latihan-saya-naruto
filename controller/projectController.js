@@ -51,10 +51,6 @@ module.exports = {
                     })
                 )}
             )
-
-
-
-
         })
     },
     getProject : (req,res) =>{
@@ -289,5 +285,26 @@ module.exports = {
         .catch((err) => {
             return res.status(500).send({message : err})
         })
+    },
+    generateImgUrlquill(req,res){
+        const path = '/post/image/project/Quill'; //file save path
+        const upload = uploader(path, 'PQuil').fields([{ name: 'image'}]); //uploader(path, 'default prefix')
+
+        upload(req, res, (err) => {
+
+            if(err){
+                console.log('masuk2')
+                return res.status(500).json({ message: 'Upload picture failed !', error: err.message });
+            }
+            const { image } = req.files;
+            console.log(image)
+            const imagePath = image ? path + '/' + image[0].filename : null;
+            console.log(imagePath)
+            if(imagePath){
+                return res.status(200).send(imagePath)
+            }else{
+                return res.status(404).send('error')
+            }
+        })  
     }
 }
