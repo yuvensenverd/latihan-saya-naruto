@@ -12,6 +12,9 @@ router.post('/newStudentDetailApprove/:id', auth, studentDetailRevisionControlle
 router.post('/StudentDetailRejected', auth, studentDetailRevisionController.postStudentDetailRejected);
 
 router.get('/student-detail-compare/:id', auth, studentDetailRevisionController.getStudentDetailRevision);
+router.post('/studentdetail-update-approve', auth, studentDetailRevisionController.approveUpdateDetailRevision);
+router.post('/studentdetail-update-reject', auth, studentDetailRevisionController.rejectUpdateDetailRevision);
+router.get('/revertDetail/:id', auth, studentDetailRevisionController.detailRevertChange);
 
 
 module.exports = router

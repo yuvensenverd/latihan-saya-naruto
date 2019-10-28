@@ -142,6 +142,7 @@ module.exports = {
                         deskripsi: oldDeskripsi,
                         kelas: oldKelas,
                         studentId,
+                        detailId: id,
                         isDeleted: 0
                     })
                     .then(() => {
@@ -173,6 +174,7 @@ module.exports = {
                     deskripsi: oldDeskripsi,
                     kelas: oldKelas,
                     studentId,
+                    detailId: id,
                     isDeleted: 0
                 })
                 .then(() => {

@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     deskripsi: DataTypes.STRING,
     kelas: DataTypes.STRING,
     studentId: DataTypes.INTEGER,
+    detailId: DataTypes.INTEGER,
     isDeleted: DataTypes.INTEGER
   }, {});
   StudentDetailRevision.associate = function(models) {

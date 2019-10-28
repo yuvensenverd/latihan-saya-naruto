@@ -155,7 +155,8 @@ module.exports = {
         const { id } = req.params
         StudentDetailRevision.findAll({
             where: {
-                studentId: id
+                detailId: id,
+                isDeleted: 0
             }
         })
         .then((results) => {
@@ -163,6 +164,114 @@ module.exports = {
         })
         .catch((err) => {
             console.log(err)
+        })
+    },
+
+    approveUpdateDetailRevision: (req, res) => {
+        console.log('Update Approved');
+        console.log(req.body.data)
+        // req.body.data =  { idrev dari studentRevision,  idstudentdetail, idstudent}
+
+        return sequelize.transaction( function (t) {
+            return StudentDetailRevision.update({
+                isDeleted: 1,
+            }, {
+                where: {
+                    id: req.body.data.idrev,
+                    detailId: req.body.data.detailId
+                }
+            }, {transaction: t})
+            .then((result) => {
+                StudentDetail.update({
+                    dataStatus: 'Approved'
+                }, {
+                    where: {
+                        id: req.body.data.idStudentDetail
+                    }
+                }, {transaction: t})
+                .then((results2) => {
+                    console.log('success update detail')
+                })
+            })
+        })
+        .then((lastResults) => {
+            console.log(lastResults)
+            return res.status(200).send({message: 'Success Update'})
+        })
+        .catch((err) => {
+            return res.status(500).send({message: 'db error', error: err.message})
+        })
+    },
+
+    rejectUpdateDetailRevision: (req, res) => {
+        console.log('Reject Approved');
+        // req.body.data =  { idrev dari studentRevision,  idstudentdetail, idstudent}
+
+        return sequelize.transaction(function (t) {
+            return StudentDetailRevision.update({
+                isDeleted: 1,
+            }, {
+                where: {
+                    id: req.body.data.idrev,
+                    detailId: req.body.data.detailId,
+                    isDeleted: 0
+                }
+            }, { transaction: t })
+                .then((result) => {
+                    StudentDetail.update({
+                        dataStatus: 'Rejected',
+                        statusNote: req.body.data.statusNote
+                    }, {
+                        where: {
+                            id: req.body.data.idStudentDetail
+                        }
+                    }, { transaction: t })
+                        .then((results2) => {
+                            console.log('success update detail')
+                        })
+                })
+        })
+            .then((lastResults) => {
+                console.log(lastResults)
+                return res.status(200).send({ message: 'Success Update' })
+            })
+            .catch((err) => {
+                return res.status(500).send({ message: 'db error', error: err.message })
+            })
+    },
+
+    detailRevertChange: (req, res) => {
+        const { id } = req.params
+
+        StudentDetailRevision.findOne({
+            attributes: {
+                exclude: ['createdAt, updatedAt']
+            },
+            where: {
+                detailId: id
+            },
+            order: [['createdAt', 'desc']]
+        })
+        .then((results) => {
+            var oldData = results.dataValues
+
+            StudentDetail.update({
+                pictureReport: oldData.pictureReport,
+                kelas: oldData.kelas,
+                deskripsi: oldData.deskripsi,
+                dataStatus: 'Approved',
+                statusNote: ''
+            }, {
+                where: {
+                    id
+                }
+            })
+            .then((results2) => {
+                return res.status(200).send({message: 'Success Revert'})
+            })
+        })
+        .catch((err) => {
+           return res.status(200).send({ message: err })
         })
     }
 }
