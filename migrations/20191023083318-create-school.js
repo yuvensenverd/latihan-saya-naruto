@@ -20,9 +20,17 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      virtualAccount: {
+      namaPemilikRekening: {
         type: Sequelize.STRING,
-        defaultValue: null
+        allowNull: false
+      },
+      nomorRekening: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      bank: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

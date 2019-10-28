@@ -3,7 +3,9 @@ module.exports = (sequelize, DataTypes) => {
   const StudentDetail = sequelize.define('StudentDetail', {
     pictureReport: DataTypes.STRING,
     deskripsi: DataTypes.STRING,
-    studentId: DataTypes.INTEGER
+    class: DataTypes.STRING,
+    studentId: DataTypes.INTEGER,
+    dataStatus: DataTypes.STRING
   }, {});
   StudentDetail.associate = function(models) {
     // associations can be defined here

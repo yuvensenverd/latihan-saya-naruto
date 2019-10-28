@@ -46,14 +46,20 @@ module.exports = {
                 const imagePath = image ? path + '/' + image[0].filename : null;
                 const data = JSON.parse(req.body.data);
                 data.imgPath = imagePath;
+
                 const {
                     deskripsi, 
                     studentId, 
+                    dataStatus,
+                    kelas
                 } = data
+
                 StudentDetail.create({
                     pictureReport: imagePath,
                     deskripsi,
-                    studentId
+                    studentId,
+                    dataStatus,
+                    class: kelas
                 })
                 .then(() => {
                     StudentDetail.findAll({where: {studentId}})
@@ -140,5 +146,6 @@ module.exports = {
             return res.status(500);
         }
         
-    }
+    },
+
 }

@@ -16,12 +16,7 @@ require('./scheduler/schedulers')
 app.use(bodyParser.json())
 app.use(cors())
 
-
-
-
 app.io = io
-
-
 
 app.use(bodyParser.urlencoded({extended : false}))
 app.use(express.static('public')) 
@@ -34,7 +29,7 @@ app.use(bearerToken())
 
 
 
-const {userRouter, paymentRouter,studentRouter,studentDetailRouter,projectRouter,testRouter, studentRevisionRouter} = require('./router')
+const {userRouter, paymentRouter,studentRouter,studentDetailRouter,projectRouter,testRouter, studentRevisionRouter, studentDetailRevisionRouter} = require('./router')
 app.use("/user", userRouter)
 app.use('/payment', paymentRouter)
 app.use("/user", userRouter)
@@ -43,6 +38,7 @@ app.use("/project", projectRouter)
 app.use("/studentdetail", studentDetailRouter)
 app.use('/test',testRouter)
 app.use('/studentrev', studentRevisionRouter)
+app.use('/studentdetailrev', studentDetailRevisionRouter);
 
 
 console.log('masuk io')
@@ -62,9 +58,5 @@ app.get('/', (req, res) => {
         `<h3>Welcome to Kasih Nusantara API</h3>`
     )
 })
-
-
-
-
 
 server.listen(port, ()=>console.log('listen on port ' + port));
