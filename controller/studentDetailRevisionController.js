@@ -1,11 +1,10 @@
-const { Sequelize, sequelize, StudentRevision, School, Student } = require('../models')
+const { Sequelize, sequelize, StudentRevision, School, Student, StudentDetail } = require('../models')
 const Op = Sequelize.Op
 const Moment=require('moment')
 const {uploader} = require('../helpers/uploader')
 const fs = require('fs')
 
 module.exports = {
-    
     getStudentUnverified: (req, res) => {
         Student.findAll({
             where : {

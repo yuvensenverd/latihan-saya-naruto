@@ -37,7 +37,8 @@ const {
     projectRouter,
     testRouter, 
     studentRevisionRouter,
-    scholarshipRouter
+    scholarshipRouter,
+    studentDetailRevisionRouter
 } = require('./router')
 
 app.use("/user", userRouter)
@@ -49,7 +50,7 @@ app.use("/studentdetail", studentDetailRouter)
 app.use('/test',testRouter)
 app.use('/studentrev', studentRevisionRouter)
 app.use('/scholarship', scholarshipRouter)
-
+app.use('/studentdetailrev', studentDetailRevisionRouter);
 
 
 console.log('masuk io')
