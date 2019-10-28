@@ -1,4 +1,4 @@
-const { Student, StudentDetail } = require('../models')
+const { Student, StudentDetail, School } = require('../models')
 const fs = require('fs')
 const { uploader } = require('../helpers/uploader')
 
@@ -19,10 +19,14 @@ module.exports = {
                         attributes: {
                             exclude: ['createdAt', 'updatedAt']
                         }
+                    },
+                    {
+                        model: School,
+                        attributes: ['id',['nama', 'namaSekolah']]
                     }
                 ],
                 attributes: {
-                    exclude: ['createdAt', 'updatedAt', 'sekolah']
+                    exclude: ['createdAt', 'updatedAt']
                 }
             })
             .then((results) => {

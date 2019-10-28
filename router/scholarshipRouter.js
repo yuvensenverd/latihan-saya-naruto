@@ -5,5 +5,6 @@ const { scholarshipController } = require('../controller')
 
 router.post('/addScholarship', scholarshipController.postScholarship)
 router.get('/getScholarshipPerUser', scholarshipController.getScholarshipPerUser )
+router.get('/getScholarshipDetail', scholarshipController.getScholarshipDetail)
 
 module.exports = router;

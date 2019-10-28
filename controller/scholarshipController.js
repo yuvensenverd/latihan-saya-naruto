@@ -1,4 +1,4 @@
-const { Sequelize, sequelize, User, Student, School, scholarship } = require('../models')
+const { Sequelize, sequelize, User, Student, StudenDetail, School, scholarship } = require('../models')
 const Op = Sequelize.Op
 const moment = require('moment')
 
@@ -52,9 +52,9 @@ module.exports = {
                         "durasi",
                         "description",
                         "studentId",
-                        "shareDescription",
-                        "scholarshipStart",
-                        "scholarshipEnded",
+                        // "shareDescription",
+                        // "scholarshipStart",
+                        // "scholarshipEnded",
                         "isVerified",
                         "isOngoing"
                     ],
@@ -66,13 +66,16 @@ module.exports = {
                         attributes : [
                             ["name", "namaSiswa"]
                         ]
-                    }],
-                    // include : [{
-                    //     model : School,
-                    //     attributes : [
-                    //         ["nama", "namaSekolah"]
-                    //     ]
-                    // }]
+                    },
+                    {
+                        model : School,
+                        attributes : [
+                            ["nama", "namaSekolah"]
+                        ]
+                    },
+                    
+                    ]
+                     
                 })
 
                 .then((result) => {
@@ -84,5 +87,52 @@ module.exports = {
             )
         })
 
+    },
+    getScholarshipDetail:(req,res) => {
+        const {id} = req.query
+        console.log('---------------> masuk secDetail')
+        console.log(req.query)
+        sequelize.transaction(function(t){
+            return(
+                scholarship.findAll({
+                    attributes : [
+                        "judul",
+                        "nominal",
+                        "durasi",
+                        "description",
+                        "studentId",
+                        "shareDescription",
+                        "scholarshipStart",
+                        "scholarshipEnded"
+                    ],
+                    
+                    include : [{
+                        model : Student,
+                        attributes : [
+                            ["name", "namaSiswa"],
+                            "studentImage"
+                        ]
+                    },
+                    {
+                        model : School,
+                        attributes : [
+                            ["nama", "namaSekolah"]
+                        ]
+                    }
+                    ],
+                    where : {
+                        id
+                    },
+                     
+                })
+
+                .then((result) => {
+                    console.log(result)
+                    return res.status(200).send(result)
+                }).catch((err)=>{
+                    return res.status(500).send({message: err})
+                })
+            )
+        })
     }
 }

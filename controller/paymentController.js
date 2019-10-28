@@ -228,7 +228,7 @@ module.exports = {
         if(!email){
             return null
         }
-        console.log(req.body)
+        // console.log(req.body)
         User.update({
             subscriptionStatus: 1,
             subscriptionNominal,
