@@ -1,4 +1,4 @@
-const { Student, StudentDetail } = require('../models')
+const { Student, StudentDetail, StudentDetailRevision } = require('../models')
 const fs = require('fs')
 const { uploader } = require('../helpers/uploader')
 
@@ -54,17 +54,19 @@ module.exports = {
                     kelas
                 } = data
 
+                console.log(data)
+
                 StudentDetail.create({
                     pictureReport: imagePath,
                     deskripsi,
                     studentId,
                     dataStatus,
-                    class: kelas
+                    kelas
                 })
                 .then(() => {
                     StudentDetail.findAll({where: {studentId}})
                     .then((results) => {
-                        res.send(results);
+                       return res.status(200).send(results);
                     })
                     .catch((err) => {
                         console.log(err);
@@ -102,48 +104,126 @@ module.exports = {
                 if(err){
                     return res.status(500);
                 }
-                const { image } = req.files;
-                const imagePath = image ? path + '/' + image[0].filename : null;
                 const data = JSON.parse(req.body.data);
+                const oldData = JSON.parse(req.body.oldData)
+
+                console.log('----------------------------------------------------')
+                console.log(oldData)
+                
+                const { image } = req.files;
+                
+                const imagePath = image ? path + '/' + image[0].filename : null; 
+                
+                // Data terbaru yang bakal disimpan ke Detail Student
                 data.imgPath = imagePath;
+                
                 const {
                     id,
                     deskripsi, 
                     studentId, 
+                    dataStatus,
+                    kelas,
+                    imgPath
                 } = data
+                
+
+                // Data lama yang bakal dimasukkan ke dalam Detail Student Revisi
+                const {
+                    oldDeskripsi,
+                    oldKelas,
+                    oldPictureReport
+                } = oldData
+
+                delete data.image;
+
                 if(!data.imgPath){
-                    return StudentDetail.update({
-                        deskripsi
-                    },{
-                        where: { id }
-                    }).then(() => {
-                        StudentDetail.findAll({where: {studentId}})
-                        .then((results2) => {
-                            res.send(results2);
+                    return StudentDetailRevision.create({
+                        pictureReport: oldPictureReport,
+                        deskripsi: oldDeskripsi,
+                        kelas: oldKelas,
+                        studentId,
+                        isDeleted: 0
+                    })
+                    .then(() => {
+                        StudentDetail.update({
+                            pictureReport: oldPictureReport,
+                            deskripsi,
+                            kelas,
+                            dataStatus
+                        }, {
+                            where: {
+                                id,
+                                studentId
+                            }
                         })
+                        .then((results) => {
+                            return res.status(200).send(results)
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
+                    })
+                    .catch((err) => {
+                        console.log(err)
                     })
                 }
-                StudentDetail.findAll({where: {studentId}})
-                .then((results2) => {
-                    var oldImgPath = results2[0].dataValues.pictureReport
-                    console.log(oldImgPath)
-                    fs.unlinkSync('./Public' + oldImgPath)
-                    StudentDetail.update({
-                        deskripsi,
-                        pictureReport: imagePath
-                    }, { 
-                        where: {id}
-                     }).then(() => {
-                        StudentDetail.findAll({where: {studentId}})
-                        .then((results3) => {
-                            res.send(results3);
-                        })
-                    })
-                    
+
+                StudentDetailRevision.create({
+                    pictureReport: oldPictureReport,
+                    deskripsi: oldDeskripsi,
+                    kelas: oldKelas,
+                    studentId,
+                    isDeleted: 0
                 })
+                .then(() => {
+
+                    StudentDetail.update({
+                        pictureReport: imgPath,
+                        deskripsi,
+                        kelas,
+                        dataStatus
+                    }, {
+                        where: {
+                            id,
+                            studentId
+                        }
+                    })
+                    .then((results) => {
+                        return res.status(200).send(results)
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+
+                // StudentDetail.findAll({
+                //     where: {
+                //         id,
+                //         studentId
+                // }})
+                // .then((results2) => {
+                //     var oldImgPath = results2[0].dataValues.pictureReport
+                //     console.log(oldImgPath)
+                //     fs.unlinkSync('./Public' + oldImgPath)
+                //     StudentDetail.update({
+                //         deskripsi,
+                //         pictureReport: imagePath
+                //     }, { 
+                //         where: {id}
+                //      }).then(() => {
+                //         StudentDetail.findAll({where: {studentId}})
+                //         .then((results3) => {
+                //             res.send(results3);
+                //         })
+                //     })
+                    
+                // })
             })
         } catch(err) {
-            return res.status(500);
+            return res.status(500).send(err);
         }
         
     },

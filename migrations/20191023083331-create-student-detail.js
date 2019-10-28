@@ -16,7 +16,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      class : {
+      kelas : {
         type: Sequelize.STRING,
         allowNull: false
       },
