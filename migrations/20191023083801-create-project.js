@@ -50,6 +50,11 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: null
       },
+      isGoing : {
+        type: Sequelize.INTEGER,
+        allowNull : false,
+        defaultValue :1
+      },
       isDeleted: {
         type: Sequelize.INTEGER,
         allowNull: false,

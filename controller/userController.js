@@ -1,5 +1,5 @@
 
-const { User, Sequelize, sequelize, School } = require('../models');
+const { User, Sequelize, sequelize, School, Project, Payment } = require('../models');
 const Op = Sequelize.Op
 const Crypto = require('crypto');
 
@@ -795,7 +795,10 @@ module.exports = {
                         subscriptionStatus : 1
                     }
                 ]
-            }
+            },
+            include : [
+
+            ]
         })
         .then((res)=>{
       
@@ -820,7 +823,179 @@ module.exports = {
         .catch((err)=>{
             console.log(err)
         })
-    }
+    },
+    projectCheck : (req,results) =>{ 
+        
+        // Project.update(
+        //     {
+        //         isGoing : 0
+        //     },
+        //     {
+        //         include : [
+        //             {
+        //                 model : Payment,
+        //                 require : true,
+        //                 // where : {
+        //                 //     [Op.or] : [
+        //                 //         sequelize.where(sequelize.fn('SUM', sequelize.col('nominal')), {
+        //                 //             [Op.gte] :  sequelize.col('totalTarget')
+        //                 //         })
+        //                 //     ]
+        //                 // },
+        //                 // group : ['projectId']
+        //             }
+                        
+                        
+                    
+        //         ],
+        //         where : {
+        //             // [Op.or] : [
+        //             //     // TANGGAL YANG EXPIRED
+                        // sequelize.where(sequelize.fn('datediff', sequelize.col('projectEnded') ,  sequelize.fn("NOW")), {
+                        //     [Op.lte] : 0 // OR [Op.gt] : 5
+                        // }),
+        //             //     // sequelize.where(sequelize.fn('SUM', sequelize.col('Payment.nominal')), {
+        //             //     //     [Op.gte] :  sequelize.col('totalTarget')
+        //             //     // })
+
+        //             //     // TOTAL SUM PAYMENT PER (PROJECT ID ) lebih besar dari TotalTarget
+                      
+                    
+        //             // ],
+        //             isDeleted : 0,
+        //             isCancelled : 0 
+        //         }, 
+        //         having : 
+                    // sequelize.where(sequelize.fn('SUM', sequelize.col('Payment.nominal')), {
+                    //     [Op.gte]: 5,
+                    //   })
+                
+
+
+              
+        //     },
+            
+            
+        //     ).then((res)=>{
+        //         console.log(res)
+    
+        //         console.log('success Project Check')
+        //     }).catch((err)=>{
+        //         console.log('err')
+        //         console.log(err)
+        //     })
+
+
+        Project.findAll({
+            attributes : ['id',[sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totalNominal'], 'projectEnded', 'totalTarget'],
+            include : [
+                {
+                    model : Payment,
+                    require : true
+                }
+            ],
+            where : {
+                // [Op.or] : [
+                //     sequelize.where(totalTarget, {
+                //         [Op.gte]: sequelize.fn('SUM', sequelize.col('Payments.nominal')),
+                //     })
+                // ],
+                isDeleted : 0,
+                isCancelled : 0,
+                isGoing : 1
+                // totalTarget : {
+                //     [Op.lte] : sequelize.fn('SUM', sequelize.col('Payments.nominal'))
+                // }
+
+
+            },
+            group : ['id'],
+            having : {
+                [Op.or] : [
+                    sequelize.where(sequelize.fn('datediff', sequelize.col('projectEnded') ,  sequelize.fn("NOW")), {
+                        [Op.lte] : 0 // OR [Op.gt] : 5
+                    }),
+                    {
+                        totalTarget : {
+                            [Op.lte] : sequelize.col('totalNominal')
+                            //sequelize.fn('SUM', sequelize.col('Payments.nominal'))
+                        }
+                    }
+                ]
+           
+            }
+        }).then((res)=>{
+            var listproject = res.map((val)=>{
+                return val.dataValues.id
+            })
+            console.log(listproject)
+
+            Project.update({
+                isGoing : 0
+            }, {
+                where : {
+                    id : {
+                        [Op.in] : listproject
+                    }
+                }
+            }).then((res)=>{
+                console.log('success')
+            }).catch((err)=>{
+                console.log('error')
+            })
+        }).catch((err)=>{
+            console.log('errors')
+        })
+
+
+       
+    },
+    
 }
 
 
+
+// Project.findAll({
+//     attributes : 
+//         ['id', 'totalTarget', 'projectEnded']
+//     ,
+//     where : {
+//         isGoing : 1
+//     }
+// }).then((res)=>{
+ 
+// }).catch((err)=>{
+//     console.log(err)
+// })
+
+
+// var listproject = res.map((val)=>{
+//     console.log(moment(val.dataValues.projectEnded).format('YYYY-MM-DD'))
+
+//     val.dataValues.projectEnded = moment(val.dataValues.projectEnded).format('YYYY-MM-DD')
+    
+
+//     return val.dataValues
+// })
+// console.log(listproject)
+// listproject.forEach(project => {
+//     //---------------------------------------------------------------------------------------------
+//     Project.update({
+//         isGoing : 0
+//     },{
+//         where : {
+//             [Op.or] : [
+//                 sequelize.where(sequelize.fn('datediff', project.projectEnded ,  sequelize.fn("NOW")), {
+//                     [Op.gte] : 0 // OR [Op.gt] : 5
+//                 })
+//             ]
+//         }
+//     }).then((res)=>{
+//         console.log('res1')
+
+//     }).catch((err)=>{
+
+//         console.log('err2')
+//     })
+//     //---------------------------------------------------------------------------------------------
+// });
