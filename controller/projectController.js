@@ -306,8 +306,9 @@ module.exports = {
         console.log(req.body)
         
         Project.findAll({
-            limit:parseInt(limit),
+            limit: parseInt(limit),
             offset:offset,
+            subQuery: false,
             attributes : [
                 ["name", "projectName"],
                 ["id", "projectId"],
@@ -318,14 +319,19 @@ module.exports = {
                 "projectImage",
                 "shareDescription",
                 [sequelize.fn('datediff', sequelize.col('projectEnded') ,  sequelize.fn("NOW")), 'SisaHari'],
-
+                [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totalNominal'], 
+                [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'totalDonasi']
 
             ],
             include : [
                 {
                     model : Payment,
-                    require : true,
-                    attributes : [[sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totalNominal'], [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'totalDonasi']]
+                    required : false,
+                    // attributes: [
+                        
+                    // ],
+                    // group: ['projectId']
+                   
                 }
             ],
             where : {
@@ -334,15 +340,12 @@ module.exports = {
                 },
                 isDeleted : 0,
                 isGoing : 1
-       
-              
             },
-            order : !date ? [['id', 'asc']] : [['projectCreated', `${date}`]],
+            // order : !date ? [['id', 'asc']] : [['projectCreated', `${date}`]],
             group : ['id']
         })
         .then((results)=>{
-            console.log(results)
-            console.log('kasdijasidj')
+            console.log(results.length)
             Project.count({
                 where: {
                     name: {
@@ -351,7 +354,7 @@ module.exports = {
                 }
             })
             .then((resultsTotalProject) => {
-                console.log(results)
+                
                 let total = resultsTotalProject
                 return res.status(200).send({message : 'success get projects', results, total})
             })
