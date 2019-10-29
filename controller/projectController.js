@@ -1,4 +1,4 @@
-const { Sequelize, sequelize, User, Project } = require('../models')
+const { Sequelize, sequelize, User, Project, Payment } = require('../models')
 const Op = Sequelize.Op
 const {uploader} = require('../helpers/uploader')
 const fs = require('fs')
@@ -81,7 +81,8 @@ module.exports = {
                 "projectCreated",
                 "projectEnded",
                 "totalTarget",
-                "projectImage"
+                "projectImage",
+                [sequelize.fn('datediff', sequelize.col('projectEnded') ,  sequelize.fn("NOW")), 'SisaHari']
             ],
             
 
@@ -140,7 +141,8 @@ module.exports = {
                         "projectCreated",
                         "projectEnded",
                         "totalTarget",
-                        "projectImage"
+                        "projectImage",
+                        [sequelize.fn('datediff', sequelize.col('projectEnded') ,  sequelize.fn("NOW")), 'SisaHari']
                     ],
                     where : {
                         isDeleted : 0,
@@ -298,6 +300,7 @@ module.exports = {
         // }
 
         var { page, limit, name, date} = req.body;
+        
   
         var offset = (page * limit) - limit
         console.log(req.body)
@@ -313,17 +316,33 @@ module.exports = {
                 "projectEnded",
                 "totalTarget",
                 "projectImage",
-                "shareDescription"
+                "shareDescription",
+                [sequelize.fn('datediff', sequelize.col('projectEnded') ,  sequelize.fn("NOW")), 'SisaHari'],
+
+
+            ],
+            include : [
+                {
+                    model : Payment,
+                    require : true,
+                    attributes : [[sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totalNominal'], [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'totalDonasi']]
+                }
             ],
             where : {
                 name : {
                     [Op.like] : `%${name}%`
                 },
+                isDeleted : 0,
+                isGoing : 1
+       
               
             },
-            order : !date ? [['id', 'asc']] : [['projectCreated', `${date}`]]
+            order : !date ? [['id', 'asc']] : [['projectCreated', `${date}`]],
+            group : ['id']
         })
         .then((results)=>{
+            console.log(results)
+            console.log('kasdijasidj')
             Project.count({
                 where: {
                     name: {
@@ -341,6 +360,8 @@ module.exports = {
             })
         })
         .catch((err) => {
+            console.log('nasuk')
+            console.log(err)
             return res.status(500).send({message : err})
         })
     }

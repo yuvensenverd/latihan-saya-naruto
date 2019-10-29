@@ -1,5 +1,5 @@
 
-const { User, Sequelize, sequelize, School } = require('../models');
+const { User, Sequelize, sequelize, School, Project, Payment, Subscription } = require('../models');
 const Op = Sequelize.Op
 const Crypto = require('crypto');
 
@@ -23,18 +23,18 @@ const createPdf = async (obj, cb) => {
     // let objObj = JSON.parse(JSON.stringify(obj)) //Forces get of Datavalues
     
 
-    var { email , nama, id , subscriptionNominal, date} = obj
+    var { email , username, id , nominalSubscription, date} = obj
     try{ 
         const replacements = {
             PaymentReceiptNumber: id,
             PaymentReceiptDate: new Date(date).toLocaleDateString('id-IND'),
             PaymentMethod: 'dadasd',
-            FullName: `${nama}`,
+            FullName: `${username}`,
             InvoiceNumber: 012334556,
             Description: ['dsadasda','dadasdasda'],
             PayTo: `Kasih Nusantara`,
             NumberDetails: 123456,
-            Nominal:subscriptionNominal.toString().toLocaleString(),
+            Nominal:nominalSubscription.toString().toLocaleString(),
 
             logo: 'file:///' +  path.resolve('./emails') + '/supports/logowithtext.png',
             instagramlogo: 'file:///' +  path.resolve('./emails') + '/supports/instagram_icon.png',
@@ -69,7 +69,7 @@ const mailInvoice = async (obj, PDF_STREAM) => {
     try{
         // const { transaction, voucher } = paymentObj
         // const { programSales, subscriptionSales, serviceSales } = transaction
-        var { email , nama, id , subscriptionNominal, date} = obj
+        var { email , username, id , nominalSubscription, date} = obj
 
         let subject = "Payment Receipt kasihnusantara"
         let InvoiceNumber =012334556
@@ -82,12 +82,12 @@ const mailInvoice = async (obj, PDF_STREAM) => {
             PaymentReceiptNumber: id,
             PaymentReceiptDate: moment('20190208').format("DD MMMM YYYY"),
             PaymentMethod: 'dadasd',
-            FullName: `${nama}`,
+            FullName: `${username}`,
             InvoiceNumber: InvoiceNumber,
             Description: Description,
             PayTo: `Kasih Nusantara`,
             NumberDetails: NumberDetails,
-            Nominal:subscriptionNominal.toString().toLocaleString(),
+            Nominal:nominalSubscription.toString().toLocaleString(),
         }
 
         let attachments = [
@@ -707,120 +707,336 @@ module.exports = {
             return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
         })
     },
-    getSubscription : (req,res) => {
-        User.findOne({
-            where: {
-                email: req.body.email
-            },
-            attributes: ['subscriptionStatus', 'subscriptionNominal']
-        }).then((results) => {
-            res.send(results)
-        })
-    },
+    // getSubscription : (req,res) => {
+    //     User.findOne({
+    //         where: {
+    //             email: req.body.email
+    //         },
+    //         attributes: ['subscriptionStatus', 'subscriptionNominal']
+    //     }).then((results) => {
+    //         res.send(results)
+    //     })
+    // },
 
-    applySubscription : (req,res) => {
-        var { subscriptionNominal, email, reminderDate } = req.body
-        // console.log(req.body)
-        User.update({
-            subscriptionStatus: 1,
-            subscriptionNominal,
-            reminderDate
-        },{
-            where: { email }
-        })
-        .then(() => {
-            console.log('masuk')
-            res.send('success')
-        })
-    },
+    // applySubscription : (req,res) => {
+    //     var { subscriptionNominal, email, reminderDate } = req.body
+    //     // console.log(req.body)
+    //     User.update({
+    //         subscriptionStatus: 1,
+    //         subscriptionNominal,
+    //         reminderDate
+    //     },{
+    //         where: { email }
+    //     })
+    //     .then(() => {
+    //         console.log('masuk')
+    //         res.send('success')
+    //     })
+    // },
     reminderInvoice : async (req,results) =>{ // RUN SEKALI / HARI
         // console.log('reminderINvoice')
         // console.log(req)
-
-        var res  = await User.findAll({where: {
-            [Op.and] : [
-                sequelize.where(sequelize.fn('datediff', sequelize.col('reminderDate') ,  sequelize.fn("NOW")), {
-                    [Op.eq] : 0 // OR [Op.gt] : 5
-                }),
+        try{
+            var res  = await Subscription.findAll(
                 {
-                    subscriptionStatus : 1
-                }
-            ]
-        },
-    
-        attributes : ['nama', 'id', 'subscriptionNominal', 'email']})
-
-        var listname = res.map((val) =>{
-            // return val.dataValues
-            return {...val.dataValues, date : new Date(), deadline : new Date()}
-        })
-
-        console.log(listname)
-
-
-        const loop = async() =>{
-            console.log('start')
-            for(var i = 0; i<listname.length ; i++){
-                console.log(listname[i])
-                
-                await createPdf(listname[i], async (PDF_STREAM, obj) => {
-                    console.log('async')
-                    await mailInvoice(obj, PDF_STREAM)
+                    where: {
+                        [Op.and] : [
+                            sequelize.where(sequelize.fn('datediff', sequelize.col('remainderDate') ,  sequelize.fn("NOW")), {
+                                [Op.eq] : 0 // OR [Op.gt] : 5
+                            }),
+                            {
+                                isCancelled : 0,
+                                monthLeft : {
+                                    [Op.gt] : 0
+                                }
+                            }
+                        ]
+                    },
+            
+                    attributes : ['id', 'scholarshipId', 'nominalSubscription', 'remainderDate', 'monthLeft'],
+                    include : [
+                        {
+                            model : User,
+                            require : true,
+                            attributes : [['nama', 'username'], 'email'],
+                            where : {
+                                verified : 1
+                            }
+                        }
+                    ]
+            
                 })
-                console.log('finish user ', i )
+        
+                // console.log(res[0].dataValues.User.dataValues)
+        
+        
+                var listname = res.map((val) =>{
+                    // return val.dataValues
+                    var results = {...val.dataValues, ...val.dataValues.User.dataValues, date : new Date(), deadline : new Date()}
+                    delete results.User
+                    return results
+                })
+
+                var listid = res.map((val)=>{
+                    return val.id
+                })
+                console.log(listid)
+                console.log('ini list id')
+                console.log(listname)
+        
                 
-                // console.log(listname[i].email)
+        
+                // console.log(listname)
+        
+        
+        
+                // console.log(listname)
+        
+        
+                const loop = async() =>{
+                    console.log('start')
+                    for(var i = 0; i<listname.length ; i++){
+                        console.log(listname[i])
+                        // { email , nama, id , subscriptionNominal, date} = obj
+                        await createPdf(listname[i], async (PDF_STREAM, obj) => {
+                            console.log('async')
+                            await mailInvoice(obj, PDF_STREAM)
+                        })
+                        console.log('finish user ', i )
+                        
+                        // console.log(listname[i].email)
+                 
+                        // testcontroller.getemail(listname[i].email)
+                        // testcontroller.getemail(listname[i].email)
+                    }
          
-                // testcontroller.getemail(listname[i].email)
-                // testcontroller.getemail(listname[i].email)
-            }
- 
+                }
+                await loop()
+           
+        
+        
+                Subscription.update(
+                {
+                    monthLeft : sequelize.literal('monthLeft - 1')
+                }
+                ,
+                {
+                    where: {
+                        // [Op.and] : [
+                        //     sequelize.where(sequelize.fn('datediff', sequelize.col('reminderDate') ,  sequelize.fn("NOW")), {
+                        //         [Op.eq] : 0 // today is the user reminder date
+                        //     }),
+                        //     {
+                                isCancelled : 0,
+                                id : {
+                                    [Op.in] : listid
+                                }
+
+                        //     }
+                        // ]
+                    },
+                })
+                .then((res)=>{
+              
+                    console.log('------------------********************* finish success')
+          
+                    // console.log(res)
+                   
+        
+        
+                    // ----------------------------------------------------------------------------------------------------------
+                    // for(var i = 0; i<listname.length ; i++){
+                    //     console.log(listname[i])
+                    //     testcontroller.getemail(listname[i].email)
+                    // }
+                    
+                    // // var listname = res[0].dataValues
+                    // // console.log(listname)
+                    // console.log('success')
+                    // //scheduler
+                    // return results.status(200).send('success')
+                })
+                .catch((err)=>{
+                    console.log(err)
+                })
         }
-        await loop()
-   
+        catch(err){
+            console.log(err)
+        }
+        
+    },
+    projectCheck : (req,results) =>{ 
+        
+        // Project.update(
+        //     {
+        //         isGoing : 0
+        //     },
+        //     {
+        //         include : [
+        //             {
+        //                 model : Payment,
+        //                 require : true,
+        //                 // where : {
+        //                 //     [Op.or] : [
+        //                 //         sequelize.where(sequelize.fn('SUM', sequelize.col('nominal')), {
+        //                 //             [Op.gte] :  sequelize.col('totalTarget')
+        //                 //         })
+        //                 //     ]
+        //                 // },
+        //                 // group : ['projectId']
+        //             }
+                        
+                        
+                    
+        //         ],
+        //         where : {
+        //             // [Op.or] : [
+        //             //     // TANGGAL YANG EXPIRED
+                        // sequelize.where(sequelize.fn('datediff', sequelize.col('projectEnded') ,  sequelize.fn("NOW")), {
+                        //     [Op.lte] : 0 // OR [Op.gt] : 5
+                        // }),
+        //             //     // sequelize.where(sequelize.fn('SUM', sequelize.col('Payment.nominal')), {
+        //             //     //     [Op.gte] :  sequelize.col('totalTarget')
+        //             //     // })
+
+        //             //     // TOTAL SUM PAYMENT PER (PROJECT ID ) lebih besar dari TotalTarget
+                      
+                    
+        //             // ],
+        //             isDeleted : 0,
+        //             isCancelled : 0 
+        //         }, 
+        //         having : 
+                    // sequelize.where(sequelize.fn('SUM', sequelize.col('Payment.nominal')), {
+                    //     [Op.gte]: 5,
+                    //   })
+                
 
 
-        User.update(
-        {
-            reminderDate : moment().add(1, 'M').format('YYYY-MM-DD') // 1 bulan dari sekarang 
-        }
-        ,
-        {
-            where: {
-                [Op.and] : [
-                    sequelize.where(sequelize.fn('datediff', sequelize.col('reminderDate') ,  sequelize.fn("NOW")), {
-                        [Op.eq] : 0 // today is the user reminder date
+              
+        //     },
+            
+            
+        //     ).then((res)=>{
+        //         console.log(res)
+    
+        //         console.log('success Project Check')
+        //     }).catch((err)=>{
+        //         console.log('err')
+        //         console.log(err)
+        //     })
+
+
+        Project.findAll({
+            attributes : ['id',[sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totalNominal'], 'projectEnded', 'totalTarget'],
+            include : [
+                {
+                    model : Payment,
+                    require : true
+                }
+            ],
+            where : {
+                // [Op.or] : [
+                //     sequelize.where(totalTarget, {
+                //         [Op.gte]: sequelize.fn('SUM', sequelize.col('Payments.nominal')),
+                //     })
+                // ],
+                isDeleted : 0,
+                isCancelled : 0,
+                isGoing : 1
+                // totalTarget : {
+                //     [Op.lte] : sequelize.fn('SUM', sequelize.col('Payments.nominal'))
+                // }
+
+
+            },
+            group : ['id'],
+            having : {
+                [Op.or] : [
+                    sequelize.where(sequelize.fn('datediff', sequelize.col('projectEnded') ,  sequelize.fn("NOW")), {
+                        [Op.lte] : 0 // OR [Op.gt] : 5
                     }),
                     {
-                        subscriptionStatus : 1
+                        totalTarget : {
+                            [Op.lte] : sequelize.col('totalNominal')
+                            //sequelize.fn('SUM', sequelize.col('Payments.nominal'))
+                        }
                     }
                 ]
-            }
-        })
-        .then((res)=>{
-      
-            console.log('------------------********************* finish success')
-  
-            // console.log(res)
            
+            }
+        }).then((res)=>{
+            var listproject = res.map((val)=>{
+                return val.dataValues.id
+            })
+            console.log(listproject)
+
+            Project.update({
+                isGoing : 0
+            }, {
+                where : {
+                    id : {
+                        [Op.in] : listproject
+                    }
+                }
+            }).then((res)=>{
+                console.log('success')
+            }).catch((err)=>{
+                console.log('error')
+            })
+        }).catch((err)=>{
+            console.log('errors')
+        })
 
 
-            //----------------------------------------------------------------------------------------------------------
-            // for(var i = 0; i<listname.length ; i++){
-            //     console.log(listname[i])
-            //     testcontroller.getemail(listname[i].email)
-            // }
-            
-            // // var listname = res[0].dataValues
-            // // console.log(listname)
-            // console.log('success')
-            // //scheduler
-            // return results.status(200).send('success')
-        })
-        .catch((err)=>{
-            console.log(err)
-        })
-    }
+       
+    },
+    
 }
 
 
+
+// Project.findAll({
+//     attributes : 
+//         ['id', 'totalTarget', 'projectEnded']
+//     ,
+//     where : {
+//         isGoing : 1
+//     }
+// }).then((res)=>{
+ 
+// }).catch((err)=>{
+//     console.log(err)
+// })
+
+
+// var listproject = res.map((val)=>{
+//     console.log(moment(val.dataValues.projectEnded).format('YYYY-MM-DD'))
+
+//     val.dataValues.projectEnded = moment(val.dataValues.projectEnded).format('YYYY-MM-DD')
+    
+
+//     return val.dataValues
+// })
+// console.log(listproject)
+// listproject.forEach(project => {
+//     //---------------------------------------------------------------------------------------------
+//     Project.update({
+//         isGoing : 0
+//     },{
+//         where : {
+//             [Op.or] : [
+//                 sequelize.where(sequelize.fn('datediff', project.projectEnded ,  sequelize.fn("NOW")), {
+//                     [Op.gte] : 0 // OR [Op.gt] : 5
+//                 })
+//             ]
+//         }
+//     }).then((res)=>{
+//         console.log('res1')
+
+//     }).catch((err)=>{
+
+//         console.log('err2')
+//     })
+//     //---------------------------------------------------------------------------------------------
+// });
