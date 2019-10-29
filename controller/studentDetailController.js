@@ -150,7 +150,7 @@ module.exports = {
                             pictureReport: oldPictureReport,
                             deskripsi,
                             kelas,
-                            dataStatus
+                            dataStatus: dataStatus === 'Register Rejected' ? 'Unverified' : 'Update Unverified'
                         }, {
                             where: {
                                 id,
@@ -183,7 +183,7 @@ module.exports = {
                         pictureReport: imgPath,
                         deskripsi,
                         kelas,
-                        dataStatus
+                        dataStatus: dataStatus === 'Register Rejected' ? 'Unverified' : 'Update Unverified'
                     }, {
                         where: {
                             id,

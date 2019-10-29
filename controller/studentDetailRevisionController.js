@@ -135,7 +135,7 @@ module.exports = {
     postStudentDetailRejected: (req, res) => {
         console.log(req.body)
         StudentDetail.update({
-            dataStatus: 'Rejected',
+            dataStatus: 'Register Rejected',
             statusNote: req.body.text
         }, {
             where: {
