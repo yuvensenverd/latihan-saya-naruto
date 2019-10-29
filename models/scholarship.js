@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     scholarship.belongsTo(models.School, { foreignKey : 'schoolId'})
     scholarship.belongsTo(models.User, { foreignKey : 'userId'})
-    scholarship.hasOne(models.Student, { foreignKey : 'id'})
+    scholarship.belongsTo(models.Student, { foreignKey : 'studentId'})
   };
   return scholarship;
 };
