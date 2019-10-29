@@ -47,19 +47,19 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      subscriptionStatus: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue: 0
-      },
-      subscriptionNominal: {
-        type: Sequelize.INTEGER,
-        defaultValue: 0
-      },
-      reminderDate: {
-        type: Sequelize.DATE,
-        defaultValue: null
-      },
+      // subscriptionStatus: {
+      //   type: Sequelize.INTEGER,
+      //   allowNull: false,
+      //   defaultValue: 0
+      // },
+      // subscriptionNominal: {
+      //   type: Sequelize.INTEGER,
+      //   defaultValue: 0
+      // },
+      // reminderDate: {
+      //   type: Sequelize.DATE,
+      //   defaultValue: null
+      // },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

@@ -325,7 +325,7 @@ module.exports = {
                 {
                     model : Payment,
                     require : true,
-                    attributes : [[sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totalNominal']]
+                    attributes : [[sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totalNominal'], [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'totalDonasi']]
                 }
             ],
             where : {
