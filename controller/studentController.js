@@ -227,7 +227,8 @@ module.exports={
     },
     getStudentPerUser : (req, res) => {
         console.log('masuk sini')
-        const {userId} = req.body
+        // const {userId} = req.body
+        // pake auth jadinya. req.user.userId
         console.log(req.query)
         Student.findAll({
             attributes: [
@@ -236,7 +237,8 @@ module.exports={
                 'pendidikanTerakhir',
             ],
             where : {
-                userId: req.query.id
+                userId: req.user.userId,
+                isDeleted: 0
             }
         })
         .then((result) => {

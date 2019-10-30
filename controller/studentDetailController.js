@@ -17,6 +17,9 @@ module.exports = {
                         require: true,
                         // attributes: ['name']
                         // separate:true,
+                        // where: {
+                        //     dataStatus: 'Approved'
+                        // },
                         attributes: {
                             exclude: ['createdAt', 'updatedAt']
                         }
@@ -66,7 +69,7 @@ module.exports = {
                     deskripsi,
                     studentId,
                     dataStatus,
-                    kelas
+                    class: kelas
                 })
                 .then(() => {
                     StudentDetail.findAll({where: {studentId}})
@@ -145,7 +148,7 @@ module.exports = {
                     return StudentDetailRevision.create({
                         pictureReport: oldPictureReport,
                         deskripsi: oldDeskripsi,
-                        kelas: oldKelas,
+                        class: oldKelas,
                         studentId,
                         detailId: id,
                         isDeleted: 0
@@ -154,7 +157,7 @@ module.exports = {
                         StudentDetail.update({
                             pictureReport: oldPictureReport,
                             deskripsi,
-                            kelas,
+                            class: kelas,
                             dataStatus: dataStatus === 'Register Rejected' ? 'Unverified' : 'Update Unverified'
                         }, {
                             where: {
@@ -177,7 +180,7 @@ module.exports = {
                 StudentDetailRevision.create({
                     pictureReport: oldPictureReport,
                     deskripsi: oldDeskripsi,
-                    kelas: oldKelas,
+                    class: oldKelas,
                     studentId,
                     detailId: id,
                     isDeleted: 0
@@ -187,7 +190,7 @@ module.exports = {
                     StudentDetail.update({
                         pictureReport: imgPath,
                         deskripsi,
-                        kelas,
+                        class: kelas,
                         dataStatus: dataStatus === 'Register Rejected' ? 'Unverified' : 'Update Unverified'
                     }, {
                         where: {

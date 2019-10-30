@@ -303,7 +303,6 @@ module.exports = {
 
         var { page, limit, name, date} = req.body;
         
-  
         var offset = (page * limit) - limit
         console.log(req.body)
         console.log(offset)
@@ -325,8 +324,6 @@ module.exports = {
                 [sequelize.fn('datediff', sequelize.col('projectEnded') ,  sequelize.fn("NOW")), 'SisaHari'],
                 [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totalNominal'],
                 [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'totalDonasi']
-
-
             ],
             include : 
                 {

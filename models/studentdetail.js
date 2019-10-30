@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const StudentDetail = sequelize.define('StudentDetail', {
     pictureReport: DataTypes.STRING,
     deskripsi: DataTypes.STRING,
-    kelas: DataTypes.STRING,
+    class: DataTypes.STRING,
     studentId: DataTypes.INTEGER,
     dataStatus: DataTypes.STRING,
     statusNote: DataTypes.STRING

@@ -8,5 +8,6 @@ router.get('/getScholarshipPerUser', scholarshipController.getScholarshipPerUser
 router.get('/getScholarshipDetail', scholarshipController.getScholarshipDetail)
 router.put('/putScholarship', scholarshipController.putScholarship)
 router.put('/cancelScholarship', scholarshipController.cancelScholarship)
+router.post('/getAllScholarship', scholarshipController.getAllScholarship)
 
 module.exports = router;
