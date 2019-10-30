@@ -226,7 +226,7 @@ module.exports={
         })
     },
     getStudentPerUser : (req, res) => {
-        console.log('masuk sini')
+        console.log('-----------------------------> masuk student per user')
         const {userId} = req.body
         console.log(req.query)
         Student.findAll({
