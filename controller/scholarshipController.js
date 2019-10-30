@@ -14,10 +14,11 @@ module.exports = {
             userId, 
             nominal, 
             durasi, 
-            desctiption, 
+            description, 
             shareDescription,
         } = req.body
         // console.log(req.body)
+        var end = moment().add(durasi, 'month').format("YYYY-MM-DD h:mm:ss")
 
         scholarship.create({
             judul,
@@ -26,9 +27,10 @@ module.exports = {
             userId,
             nominal,
             durasi,
-            desctiption,
+            description,
             shareDescription,
-            scholarshipStart: Date
+            scholarshipStart: Date,
+            scholarshipEnded: end
         }).then(() => {
             scholarship.findAll()
             .then((result) => {
