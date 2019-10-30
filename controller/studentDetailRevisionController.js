@@ -31,7 +31,7 @@ module.exports = {
                         dataStatus: value
                     },
                     attributes: {
-                        exclude: ['createdAt', 'updatedAt', 'deskripsi', 'id', 'kelas', 'pictureReport', 'studentId']
+                        exclude: ['createdAt', 'updatedAt', 'deskripsi', 'id', 'class', 'pictureReport', 'studentId']
                     }
                 },
                 {
@@ -257,7 +257,7 @@ module.exports = {
 
             StudentDetail.update({
                 pictureReport: oldData.pictureReport,
-                kelas: oldData.kelas,
+                class: oldData.kelas,
                 deskripsi: oldData.deskripsi,
                 dataStatus: 'Approved',
                 statusNote: ''

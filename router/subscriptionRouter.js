@@ -3,7 +3,7 @@ var router = express.Router()
 
 const { subscriptionController } = require('../controller')
 
-// router.post('/poststudentrev', studentRevisionController.postStudentRevision)
+router.post('/usersubscribe', subscriptionController.userSubscribe)
 
 
 

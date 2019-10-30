@@ -1,4 +1,4 @@
-const { Sequelize, sequelize, User, Payment, Student, StudenDetail, School, scholarship, Subscription } = require('../models')
+const { Sequelize, sequelize, User, Student, StudenDetail, School, scholarship, Subscription } = require('../models')
 const Op = Sequelize.Op
 const moment = require('moment')
 
@@ -19,6 +19,7 @@ module.exports = {
         } = req.body
         let end = moment().add(durasi, 'month').format('YYYY-MM-DD h:mm:ss');
         // console.log(req.body)
+        var end = moment().add(durasi, 'month').format('YYYY-MM-DD h:mm:ss')
 
         scholarship.create({
             judul,
@@ -30,14 +31,13 @@ module.exports = {
             description,
             shareDescription,
             scholarshipStart: Date,
-            scholarshipEnded: end
-        }).then(() => {
-            scholarship.findAll()
-            .then((result) => {
-                // console.log(result)
-                res.send(result)
-            })
+            scholarshipEnded : end
+        }).then((result) => {
+         
+            return res.status(200).send(result)
+
         }).catch((err) => {
+            return res.status(500).send(err.message)
             console.log(err)
         })
     },
@@ -133,7 +133,8 @@ module.exports = {
                         "studentId",
                         "shareDescription",
                         "scholarshipStart",
-                        "scholarshipEnded"
+                        "scholarshipEnded",
+        
                     ],
                     
                     include : [{
@@ -148,11 +149,65 @@ module.exports = {
                         attributes : [
                             ["nama", "namaSekolah"]
                         ]
-                    }
+                    },
                     ],
                     where : {
                         id
                     },
+                     
+                })
+
+                .then((result) => {
+                    // console.log(result)
+                    return res.status(200).send(result)
+                }).catch((err)=>{
+                    return res.status(500).send({message: err})
+                })
+            )
+        })
+    },
+    // DI PAGE SUBSCRIPTION UI
+    getAllScholarshipList : (req,res) =>{
+        sequelize.transaction(function(t){
+            return(
+                scholarship.findAll({
+                    attributes : [
+                        "id",
+                        "judul",
+                        "nominal",
+                        "durasi",
+                        "description",
+                        "studentId",
+                        "shareDescription",
+                        "scholarshipStart",
+                        "scholarshipEnded",
+                        [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],
+                        [sequelize.fn('SUM', sequelize.col('Subscriptions.nominalSubscription')), 'currentSubs'],
+                        [sequelize.fn('COUNT', sequelize.col('Subscriptions.id')), 'totalDonasi']
+                    ],
+                    
+                    include : [{
+                        model : Student,
+                        attributes : [
+                            ["name", "namaSiswa"],
+                            "studentImage"
+                        ]
+                    },
+                    {
+                        model : School,
+                        attributes : [
+                            ["nama", "namaSekolah"]
+                        ]
+                    },
+                    {
+                        model : Subscription,
+                        attributes : []
+                    }
+                    ],
+                    where : {
+                        isOngoing : 1
+                    },
+                    group : ['id']
                      
                 })
 
