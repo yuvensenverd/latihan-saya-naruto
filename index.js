@@ -29,7 +29,19 @@ app.use(bearerToken())
 
 
 
-const {userRouter, paymentRouter,studentRouter,studentDetailRouter,projectRouter,testRouter, studentRevisionRouter, studentDetailRevisionRouter, subscriptionRouter} = require('./router')
+const {
+    userRouter, 
+    paymentRouter,
+    studentRouter,
+    studentDetailRouter,
+    projectRouter,
+    testRouter, 
+    studentRevisionRouter,
+    scholarshipRouter,
+    studentDetailRevisionRouter,
+    subscriptionRouter
+} = require('./router')
+
 app.use("/user", userRouter)
 app.use('/payment', paymentRouter)
 app.use("/user", userRouter)
@@ -38,6 +50,7 @@ app.use("/project", projectRouter)
 app.use("/studentdetail", studentDetailRouter)
 app.use('/test',testRouter)
 app.use('/studentrev', studentRevisionRouter)
+app.use('/scholarship', scholarshipRouter)
 app.use('/studentdetailrev', studentDetailRevisionRouter);
 app.use('/subscription', subscriptionRouter);
 

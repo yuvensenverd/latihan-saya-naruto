@@ -557,6 +557,7 @@ module.exports = {
                 // login lewat gmail, maka muncul errornya
                 return res.status(500).send({ status: 'error', message: `Anda sudah pernah mendaftar dengan Email = ${req.body.data.email}`})
             } else {
+                // console.log('Testing')
             
                 let encryptGoogleId = Crypto.createHmac('sha256', 'kasihnusantaraGoogleId_api')
                                     .update(req.body.data.googleId).digest('hex')
@@ -574,7 +575,7 @@ module.exports = {
                         // console.log(dataUser.email)
                         const tokenJwt = createJWTToken({ userId: dataUser.id, email: dataUser.email })
 
-                        console.log(dataUser.id)
+                        // console.log(dataUser.id)
 
                         return res.status(200).send({
                             dataUser,
@@ -707,32 +708,32 @@ module.exports = {
             return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
         })
     },
-    // getSubscription : (req,res) => {
-    //     User.findOne({
-    //         where: {
-    //             email: req.body.email
-    //         },
-    //         attributes: ['subscriptionStatus', 'subscriptionNominal']
-    //     }).then((results) => {
-    //         res.send(results)
-    //     })
-    // },
+    getSubscription : (req,res) => {
+        User.findOne({
+            where: {
+                email: req.body.email
+            },
+            attributes: ['subscriptionStatus', 'subscriptionNominal']
+        }).then((results) => {
+            res.send(results)
+        })
+    },
 
-    // applySubscription : (req,res) => {
-    //     var { subscriptionNominal, email, reminderDate } = req.body
-    //     // console.log(req.body)
-    //     User.update({
-    //         subscriptionStatus: 1,
-    //         subscriptionNominal,
-    //         reminderDate
-    //     },{
-    //         where: { email }
-    //     })
-    //     .then(() => {
-    //         console.log('masuk')
-    //         res.send('success')
-    //     })
-    // },
+    applySubscription : (req,res) => {
+        var { subscriptionNominal, email, reminderDate } = req.body
+        // console.log(req.body)
+        User.update({
+            subscriptionStatus: 1,
+            subscriptionNominal,
+            reminderDate
+        },{
+            where: { email }
+        })
+        .then(() => {
+            // console.log('masuk')
+            res.send('success')
+        })
+    },
     reminderInvoice : async (req,results) =>{ // RUN SEKALI / HARI
         // console.log('reminderINvoice')
         // console.log(req)
@@ -912,6 +913,7 @@ module.exports = {
                     //   })
                 
 
+        // console.log(listname)
 
               
         //     },
@@ -926,6 +928,26 @@ module.exports = {
         //         console.log(err)
         //     })
 
+        const loop = async() =>{
+            // console.log('start')
+            for(var i = 0; i<listname.length ; i++){
+                console.log(listname[i])
+                
+                await createPdf(listname[i], async (PDF_STREAM, obj) => {
+                    // console.log('async')
+                    await mailInvoice(obj, PDF_STREAM)
+                })
+                // console.log('finish user ', i )
+                
+                // console.log(listname[i].email)
+         
+                // testcontroller.getemail(listname[i].email)
+                // testcontroller.getemail(listname[i].email)
+            }
+ 
+        }
+        await loop()
+   
 
         Project.findAll({
             attributes : ['id',[sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totalNominal'], 'projectEnded', 'totalTarget'],

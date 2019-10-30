@@ -179,17 +179,18 @@ module.exports={
         })
     },
     getStudentdatapaging(req,res){ // DUPLIKAT FUNCTION INI UNTUK HOME ( TAPI GA ADA FILTERING BERDASARKAN ID )
-        console.log(req.body)
         console.log('masukdatapaging')
+        console.log(req.body)
+        console.log(req.user)
 
         var { page, limit, sekolah,  pendidikan} = req.body;
         var listpendidikan = ['SMA', 'SMK', 'S1', 'SD', 'SMP', 'TK']
    
         var offset=(page*limit)-limit
         Student.findAndCountAll({
-            limit:parseInt(limit),
-            offset:offset,
-            order:[['id','asc']],
+            // limit:parseInt(limit),
+            // offset:offset,
+            // order:[['id','asc']],
             attributes:{
                 exclude:['createdAt','updatedAt']
             },
@@ -207,22 +208,44 @@ module.exports={
                
                 }
             ],
-            where:{
-                isDeleted:0,
-                pendidikanTerakhir : {
-                    [Op.in] : pendidikan ? pendidikan : listpendidikan
-                },
-                userId : req.user.userId
-                // [School.nama] : `%${sekolah ? sekolah : ''}%`
-            }
+            // where:{
+            //     isDeleted:0,
+            //     // pendidikanTerakhir : {
+            //     //     [Op.in] : pendidikan ? pendidikan : listpendidikan
+            //     // },
+            //     userId : req.user.userId
+            //     // [School.nama] : `%${sekolah ? sekolah : ''}%`
+            // }
         })
         .then((result)=>{
+            console.log('======> hasilnya')
             console.log(result)
             return res.status(200).send(result)
         }).catch((err)=>{
             return res.status(500).send({message:'error post', error:err})
         })
     },
+    getStudentPerUser : (req, res) => {
+        console.log('masuk sini')
+        const {userId} = req.body
+        console.log(req.query)
+        Student.findAll({
+            attributes: [
+                'id',
+                'name',
+                'pendidikanTerakhir',
+            ],
+            where : {
+                userId: req.query.id
+            }
+        })
+        .then((result) => {
+            console.log(result)
+            return res.send(result)
+        }).catch((err)=>{
+            console.log(err)
+        })
+    }
 
 
 }
