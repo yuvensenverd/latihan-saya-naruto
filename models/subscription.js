@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
   Subscription.associate = function(models) {
     // SCHOLARSHIP
     // USERID
-
+    Subscription.belongsTo(models.scholarship, {foreignKey : 'scholarshipId'})
     Subscription.belongsTo(models.User, { foreignKey : 'userId'})
   };
   return Subscription;

@@ -1,4 +1,4 @@
-const { Sequelize, sequelize, User, Student, StudenDetail, School, scholarship } = require('../models')
+const { Sequelize, sequelize, User, Student, StudenDetail, School, scholarship, Subscription } = require('../models')
 const Op = Sequelize.Op
 const moment = require('moment')
 
@@ -14,10 +14,11 @@ module.exports = {
             userId, 
             nominal, 
             durasi, 
-            desctiption, 
+            description, 
             shareDescription,
         } = req.body
         // console.log(req.body)
+        var end = moment().add(durasi, 'month').format('YYYY-MM-DD h:mm:ss')
 
         scholarship.create({
             judul,
@@ -26,16 +27,16 @@ module.exports = {
             userId,
             nominal,
             durasi,
-            desctiption,
+            description,
             shareDescription,
-            scholarshipStart: Date
-        }).then(() => {
-            scholarship.findAll()
-            .then((result) => {
-                // console.log(result)
-                res.send(result)
-            })
+            scholarshipStart: Date,
+            scholarshipEnded : end
+        }).then((result) => {
+         
+            return res.status(200).send(result)
+
         }).catch((err) => {
+            return res.status(500).send(err.message)
             console.log(err)
         })
     },
@@ -123,6 +124,7 @@ module.exports = {
             return(
                 scholarship.findAll({
                     attributes : [
+                        "id",
                         "judul",
                         "nominal",
                         "durasi",
@@ -130,7 +132,8 @@ module.exports = {
                         "studentId",
                         "shareDescription",
                         "scholarshipStart",
-                        "scholarshipEnded"
+                        "scholarshipEnded",
+        
                     ],
                     
                     include : [{
@@ -145,11 +148,65 @@ module.exports = {
                         attributes : [
                             ["nama", "namaSekolah"]
                         ]
-                    }
+                    },
                     ],
                     where : {
                         id
                     },
+                     
+                })
+
+                .then((result) => {
+                    // console.log(result)
+                    return res.status(200).send(result)
+                }).catch((err)=>{
+                    return res.status(500).send({message: err})
+                })
+            )
+        })
+    },
+    // DI PAGE SUBSCRIPTION UI
+    getAllScholarshipList : (req,res) =>{
+        sequelize.transaction(function(t){
+            return(
+                scholarship.findAll({
+                    attributes : [
+                        "id",
+                        "judul",
+                        "nominal",
+                        "durasi",
+                        "description",
+                        "studentId",
+                        "shareDescription",
+                        "scholarshipStart",
+                        "scholarshipEnded",
+                        [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],
+                        [sequelize.fn('SUM', sequelize.col('Subscriptions.nominalSubscription')), 'currentSubs'],
+                        [sequelize.fn('COUNT', sequelize.col('Subscriptions.id')), 'totalDonasi']
+                    ],
+                    
+                    include : [{
+                        model : Student,
+                        attributes : [
+                            ["name", "namaSiswa"],
+                            "studentImage"
+                        ]
+                    },
+                    {
+                        model : School,
+                        attributes : [
+                            ["nama", "namaSekolah"]
+                        ]
+                    },
+                    {
+                        model : Subscription,
+                        attributes : []
+                    }
+                    ],
+                    where : {
+                        isOngoing : 1
+                    },
+                    group : ['id']
                      
                 })
 

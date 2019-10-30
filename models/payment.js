@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     nominal: DataTypes.INTEGER,
     statusPayment: DataTypes.STRING,
     projectId: DataTypes.INTEGER,
+    scholarshipId: DataTypes.INTEGER,
     userId: DataTypes.INTEGER,
     isRefund: DataTypes.INTEGER,
     refundDate: DataTypes.INTEGER,
@@ -17,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     Payment.belongsTo(models.User, { foreignKey: 'userId'})
     Payment.belongsTo(models.Project, { foreignKey: 'projectId'})
+    Payment.belongsTo(models.scholarship, { foreignKey: 'scholarshipId'})
   };
   return Payment;
 };
