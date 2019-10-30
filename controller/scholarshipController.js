@@ -235,6 +235,10 @@ module.exports = {
                 "id",
                 "studentId"
             ],
+            include:[{
+                model: Student,
+                attributes:["name"]
+            }],
             where: {
                 userId : id
             }
