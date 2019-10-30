@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Payment, {foreignKey : 'userId'})
     User.hasMany(models.Project, {foreignKey : 'userId'})
     User.hasMany(models.Subscription, {foreignKey : 'userId'})
+    User.hasMany(models.scholarship, {foreignKey : 'userId'})
   };
   return User;
 };

@@ -557,6 +557,7 @@ module.exports = {
                 // login lewat gmail, maka muncul errornya
                 return res.status(500).send({ status: 'error', message: `Anda sudah pernah mendaftar dengan Email = ${req.body.data.email}`})
             } else {
+                // console.log('Testing')
             
                 let encryptGoogleId = Crypto.createHmac('sha256', 'kasihnusantaraGoogleId_api')
                                     .update(req.body.data.googleId).digest('hex')
@@ -574,7 +575,7 @@ module.exports = {
                         // console.log(dataUser.email)
                         const tokenJwt = createJWTToken({ userId: dataUser.id, email: dataUser.email })
 
-                        console.log(dataUser.id)
+                        // console.log(dataUser.id)
 
                         return res.status(200).send({
                             dataUser,
@@ -733,6 +734,32 @@ module.exports = {
     //         res.send('success')
     //     })
     // },
+    getSubscription : (req,res) => {
+        User.findOne({
+            where: {
+                email: req.body.email
+            },
+            attributes: ['subscriptionStatus', 'subscriptionNominal']
+        }).then((results) => {
+            res.send(results)
+        })
+    },
+
+    applySubscription : (req,res) => {
+        var { subscriptionNominal, email, reminderDate } = req.body
+        // console.log(req.body)
+        User.update({
+            subscriptionStatus: 1,
+            subscriptionNominal,
+            reminderDate
+        },{
+            where: { email }
+        })
+        .then(() => {
+            // console.log('masuk')
+            res.send('success')
+        })
+    },
     reminderInvoice : async (req,results) =>{ // RUN SEKALI / HARI
         // console.log('reminderINvoice')
         // console.log(req)

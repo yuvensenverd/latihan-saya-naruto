@@ -1,10 +1,11 @@
-const { Student, StudentDetail } = require('../models')
+const { Student, StudentDetail, School } = require('../models')
 const fs = require('fs')
 const { uploader } = require('../helpers/uploader')
 
 module.exports = {
     getStudentDetail : (req,res) => {
         const { id } = req.params
+        console.log('masuk detail')
         console.log(id)
             Student.findAll({
                 where: {
@@ -19,10 +20,14 @@ module.exports = {
                         attributes: {
                             exclude: ['createdAt', 'updatedAt']
                         }
+                    },
+                    {
+                        model: School,
+                        attributes: ['id',['nama', 'namaSekolah']]
                     }
                 ],
                 attributes: {
-                    exclude: ['createdAt', 'updatedAt', 'sekolah']
+                    exclude: ['createdAt', 'updatedAt']
                 }
             })
             .then((results) => {
@@ -147,5 +152,12 @@ module.exports = {
         }
         
     },
+    getDetail:(req, res) => {
+        // let {id} = req.params
+        // console.log(id)
+        // console.log(req.body)
+        console.log('-----------------> masuk detail')
+
+    }
 
 }

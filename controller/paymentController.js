@@ -1,6 +1,6 @@
-const { Sequelize, sequelize, Payment, User, Project } = require('../models')
-const midtransClient                    = require('midtrans-client')
-const moment                            = require('moment')
+const { Sequelize, sequelize, Payment, User, Project }  = require('../models')
+const midtransClient                                    = require('midtrans-client')
+const moment                                            = require('moment')
 
 const snap = new midtransClient.Snap({
     isProduction    : false,
@@ -24,6 +24,7 @@ module.exports = {
         .then((transaction)=>{
             transactionToken = transaction.token;
             console.log('transactionToken: ', transactionToken)
+
             //######## INSERT DATABASE 
             Payment.create({
                 paymentType: 'pending',
@@ -60,8 +61,26 @@ module.exports = {
         .then((Response)=>{
             console.log('=======masuk status=========')
             console.log( Response.transaction_status)
-            req.app.io.emit('status_transaction', Response.transaction_status)
- 
+            let status = {
+                order_id : Response.order_id,
+                transaction_status : Response.transaction_status
+            }
+            
+            //kirim respond status payment ke ui payment page dari push notification midtrans lewat socket io
+            req.app.io.emit('status_transaction', status)
+            
+            //update payment status on database
+            Payment.update({
+                paymentType : Response.payment_type,
+                statusPayment : Response.transaction_status,
+                updateAt: Response.transaction_time
+            },
+            {
+                where : {
+                    order_id : Response.order_id
+                }
+            })
+
             mockNotificationJson = Response     
             snap.transaction.notification(Response)
                 .then((statusResponse)=>{
@@ -165,6 +184,33 @@ module.exports = {
             console.log(err)
         })
     },
+    getDonasiProject: (req,res) => {
+        // console.log('masuk getDonasiProject')
+        let { projectId } = req.body
+        console.log(req.body)
+        Payment.findAll({
+            attributes: ['nominal','updatedAt', 'komentar', 'isAnonim'],
+            where: { 
+                projectId,
+                statusPayment: 'settlement'
+             },
+            include: [
+                {
+                    model: User,
+                    attributes: ['nama']
+                }
+            ]
+        })
+        .then((result) => {
+            // console.log('===========>>>>>>>')
+            // console.log(result)
+            res.send(result)
+        })
+        .catch((err)=>{
+            console.log(err)
+        }
+        )
+    },
     getSubscription : (req,res) => {
         User.findOne({
             where: {
@@ -182,7 +228,7 @@ module.exports = {
         if(!email){
             return null
         }
-        console.log(req.body)
+        // console.log(req.body)
         User.update({
             subscriptionStatus: 1,
             subscriptionNominal,
