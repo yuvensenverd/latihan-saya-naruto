@@ -983,20 +983,20 @@ module.exports = {
 
             },
             group : ['id'],
-            // having : {
-            //     [Op.or] : [
-            //         sequelize.where(sequelize.fn('datediff', sequelize.col('projectEnded') ,  sequelize.fn("NOW")), {
-            //             [Op.lte] : 0 // OR [Op.gt] : 5
-            //         }),
-            //         {
-            //             totalTarget : {
-            //                 [Op.lte] : sequelize.col('totalNominal')
-            //                 //sequelize.fn('SUM', sequelize.col('Payments.nominal'))
-            //             }
-            //         }
-            //     ]
+            having : {
+                [Op.or] : [
+                    sequelize.where(sequelize.fn('datediff', sequelize.col('projectEnded') ,  sequelize.fn("NOW")), {
+                        [Op.lte] : 0 // OR [Op.gt] : 5
+                    }),
+                    {
+                        totalTarget : {
+                            [Op.lte] : sequelize.col('totalNominal')
+                            //sequelize.fn('SUM', sequelize.col('Payments.nominal'))
+                        }
+                    }
+                ]
            
-            // }
+            }
         }).then((res)=>{
    
             var listproject = res.map((val)=>{
@@ -1005,19 +1005,19 @@ module.exports = {
             })
             console.log(listproject)
 
-            // Project.update({
-            //     isGoing : 0
-            // }, {
-            //     where : {
-            //         id : {
-            //             [Op.in] : listproject
-            //         }
-            //     }
-            // }).then((res)=>{
-            //     console.log('success')
-            // }).catch((err)=>{
-            //     console.log('error')
-            // })
+            Project.update({
+                isGoing : 0
+            }, {
+                where : {
+                    id : {
+                        [Op.in] : listproject
+                    }
+                }
+            }).then((res)=>{
+                console.log('success')
+            }).catch((err)=>{
+                console.log('error')
+            })
         }).catch((err)=>{
             console.log('errors')
         })

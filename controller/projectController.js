@@ -340,14 +340,12 @@ module.exports = {
                 },
                 isDeleted : 0,
                 isGoing : 1
-       
-              
             },
-            order : !date ? [['id', 'asc']] : [['projectCreated', `${date}`]],
+            // order : !date ? [['id', 'asc']] : [['projectCreated', `${date}`]],
             group : ['id']
         })
         .then((results)=>{
-       
+            console.log(results.length)
             Project.count({
                 where: {
                     name: {
@@ -358,8 +356,7 @@ module.exports = {
                 }
             })
             .then((resultsTotalProject) => {
-                console.log('===========================================================')
-                console.log(results.length)
+                
                 let total = resultsTotalProject
                 console.log('total  ' + total)
                 
