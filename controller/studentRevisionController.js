@@ -27,7 +27,7 @@ module.exports = {
                 {
                     model : School,
                     attributes: 
-                       [ 'bank', ['alamat', 'alamatSekolah'], 'namaPemilikRekening', 'nomorRekening', 'telepon', ['nama', 'schoolName']]
+                       [ 'bank', ['alamat','alamatSekolah'], 'namaPemilikRekening', 'nomorRekening', 'telepon', ['nama', 'schoolName']]
                 }
             ]
         })

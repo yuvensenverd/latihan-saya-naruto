@@ -7,6 +7,7 @@ const testcontroller=require('./testpdf')
 const studentRevisionController = require('./studentRevisionController')
 const scholarshipController = require('./scholarshipController')
 const studentDetailRevisionController = require('./studentDetailRevisionController')
+const subscriptionController = require('./subscriptionController')
 
 
 module.exports = {
@@ -19,5 +20,6 @@ module.exports = {
     testcontroller,
     studentRevisionController,
     scholarshipController,
-    studentDetailRevisionController
+    studentDetailRevisionController,
+    subscriptionController
 }

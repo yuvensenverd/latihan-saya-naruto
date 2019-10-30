@@ -11,9 +11,9 @@ module.exports = (sequelize, DataTypes) => {
     lastLogin: DataTypes.DATE,
     verified: DataTypes.INTEGER,
     role: DataTypes.STRING,
-    subscriptionStatus: DataTypes.INTEGER,
-    subscriptionNominal: DataTypes.INTEGER,
-    reminderDate: DataTypes.DATE
+    // subscriptionStatus: DataTypes.INTEGER,
+    // subscriptionNominal: DataTypes.INTEGER,
+    // reminderDate: DataTypes.DATE
   }, {});
   User.associate = function(models) {
     // associations can be defined here
@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Payment, {foreignKey : 'userId'})
     User.hasMany(models.Project, {foreignKey : 'userId'})
     User.hasMany(models.scholarship, {foreignKey : 'userId'})
+    User.hasMany(models.Subscription, {foreignKey : 'userId'})
   };
   return User;
 };

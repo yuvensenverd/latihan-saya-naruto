@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     userId: DataTypes.INTEGER,
     isCancelled: DataTypes.INTEGER,
     cancelledDate: DataTypes.DATE,
+    isGoing: DataTypes.INTEGER,
     isDeleted: DataTypes.INTEGER
   }, {});
   Project.associate = function(models) {
