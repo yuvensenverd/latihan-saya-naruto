@@ -1,12 +1,13 @@
 const { Sequelize, sequelize, Payment, User, Project }  = require('../models')
 const midtransClient                                    = require('midtrans-client')
 const moment                                            = require('moment')
-
+const Axios = require('axios')
 const snap = new midtransClient.Snap({
     isProduction    : false,
     serverKey       : 'SB-Mid-server-Dr8HK_lJ4cuEZi4rUgNcsDUR',
     clientKey       : 'SB-Mid-client-Ttge99xVU4AOz44T'
 })
+
 
 module.exports = {
     //====================// midtrans //====================
@@ -243,7 +244,39 @@ module.exports = {
         .catch((err) => {
             console.log(err)
         })
+    },
+    payout:(req,res)=>{
+        console.log('--------------------------> masuk payout')
+        let options={
+            header:{
+                "Authorization":"Basic SVJJUy04M2YxMzVlZC0zNTEzLTQ3YmYtODFiYi1hMDcxODIyZWU2OGY6",
+                "Content-Type":"application/json",
+                "Accept":"application/json",
+                // "Access-Control-Allow-Origin":"*"
+            }
+        }
+        let body={
+            "payouts": [
+                {
+                  "beneficiary_name": "Jon Snow",
+                  "beneficiary_account": "1172993826",
+                  "beneficiary_bank": "bni",
+                  "beneficiary_email": "beneficiary@example.com",
+                  "amount": '10000',
+                  "notes": "Payout April 17"
+                }
+              ]
+        }
+        Axios.post('https://app.sandbox.midtrans.com/iris/api/v1/payouts', body, options)
+        .then((ress)=>{
+            console.log(ress.data)
+            return res.status(200).send(ress.data)
+        }).catch((err)=>{
+            console.log(err)
+            return res.status(400).send(err)
+        })
     }
+
 
     
 

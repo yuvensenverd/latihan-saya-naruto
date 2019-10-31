@@ -12,5 +12,6 @@ router.post('/getStatus', paymentController.getStatus)
 
 router.get('/getSubscription', paymentController.getSubscription)
 router.post('/applySubscription', paymentController.applySubscription);
+router.post('/payout', paymentController.payout)
 
 module.exports = router;
