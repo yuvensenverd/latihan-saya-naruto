@@ -30,8 +30,7 @@ module.exports = {
                 paymentType: 'pending',
                 nominal: gross_amount,
                 statusPayment: 'pending',
-                projectId: projectId ? projectId : 0,
-                scholarshipId: scholarshipId ? scholarshipId : 0,
+                projectId: projectId ,
                 userId: req.user.userId,
                 isRefund: '0',
                 isDeleted: '0',
@@ -193,7 +192,6 @@ module.exports = {
             attributes: ['nominal','updatedAt', 'komentar', 'isAnonim'],
             where: { 
                 projectId : projectId ? projectId : 0,
-                scholarshipId: scholarshipId ? scholarshipId : 0,
                 statusPayment: 'settlement'
              },
             include: [
