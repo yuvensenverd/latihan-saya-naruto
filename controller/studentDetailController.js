@@ -17,6 +17,9 @@ module.exports = {
                         require: true,
                         // attributes: ['name']
                         // separate:true,
+                        // where: {
+                        //     dataStatus: 'Approved'
+                        // },
                         attributes: {
                             exclude: ['createdAt', 'updatedAt']
                         }
@@ -66,7 +69,7 @@ module.exports = {
                     deskripsi,
                     studentId,
                     dataStatus,
-                    class : kelas
+                    class: kelas
                 })
                 .then(() => {
                     StudentDetail.findAll({where: {studentId}})
@@ -154,7 +157,7 @@ module.exports = {
                         StudentDetail.update({
                             pictureReport: oldPictureReport,
                             deskripsi,
-                            class : kelas,
+                            class: kelas,
                             dataStatus: dataStatus === 'Register Rejected' ? 'Unverified' : 'Update Unverified'
                         }, {
                             where: {
@@ -187,7 +190,7 @@ module.exports = {
                     StudentDetail.update({
                         pictureReport: imgPath,
                         deskripsi,
-                        class : kelas,
+                        class: kelas,
                         dataStatus: dataStatus === 'Register Rejected' ? 'Unverified' : 'Update Unverified'
                     }, {
                         where: {
