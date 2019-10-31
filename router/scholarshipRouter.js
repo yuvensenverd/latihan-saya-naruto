@@ -9,6 +9,6 @@ router.get('/getScholarshipDetail', scholarshipController.getScholarshipDetail)
 router.post('/getScholarship', scholarshipController.getAllScholarshipList) // Home
 router.put('/putScholarship', scholarshipController.putScholarship)
 router.put('/cancelScholarship', scholarshipController.cancelScholarship)
-router.post('/getAllScholarship', scholarshipController.getAllScholarship)
+// router.post('/getAllScholarship', scholarshipController.getAllScholarship)
 
 module.exports = router;
