@@ -1,5 +1,5 @@
 
-const { User, Sequelize, sequelize, School, Project, Payment, Subscription } = require('../models');
+const { User, Sequelize, sequelize, School, Project, Payment, Subscription, Student, scholarship } = require('../models');
 const Op = Sequelize.Op
 const Crypto = require('crypto');
 
@@ -82,5 +82,171 @@ module.exports = {
            
         })   
 
+    },
+    getUserSubscriptionList : (req,res) =>{
+        const userId = req.params.id
+
+        scholarship.findAll({
+            attributes : {
+                exclude : [
+                    'createdAt', 'updatedAt', 'nominal'
+                ],
+                include : [
+
+                    [sequelize.col("Subscriptions.id"), "subsId"],
+                    [sequelize.col("Subscriptions.monthLeft"), "subsMonthLeft"],
+                    [sequelize.col("Subscriptions.nominalSubscription"), "userSubs"],
+                    [sequelize.col("Subscriptions.remainderDate"), "Date"],
+                    [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],
+                    [sequelize.col("Student.name"), "namaMurid"],
+                    [sequelize.col("Student.studentImage"), "studentImage"],
+                    [sequelize.col("School.nama"), "namaSekolah"],
+                    ['nominal', 'targetScholarship']
+
+                ]
+            },
+            include : [
+                {
+                    model : Subscription,
+                    require : true,
+                    attributes : [],
+                    where : {
+                        userId,
+                        isCancelled : 0
+                    }
+    
+                },
+                {
+                    model : School,
+                    attributes : []
+                },
+                {
+                    model : Student,
+                    attributes : []
+                },
+
+            ]
+          
+        })
+
+        .then((result) => {
+
+            var hasil = result.map((val)=>{
+                return val.dataValues
+            })
+            var listScholarId = hasil.map((val)=>{
+                return val.id
+            })
+
+            Subscription.findAll({
+                attributes : [[sequelize.fn('SUM', sequelize.col('nominalSubscription')), 'currentSubs']],
+                group : ['scholarshipId'],
+                where : {
+                    scholarshipId  : {
+                        [Op.in] : listScholarId
+                    }
+                }
+            }).then((res2)=>{
+
+                var subsScholar = res2.map((val)=>{
+                    return val.dataValues.currentSubs
+                })
+
+                for(var i = 0 ; i < hasil.length; i++){
+                    hasil[i].currentSubs = parseInt(subsScholar[i])
+                }
+
+                console.log(hasil)
+                
+                return res.status(200).send({message : 'success get', result : hasil})
+
+            }).catch((err)=>{
+
+                return res.status(500).send({message: err})
+
+            })
+            
+
+
+            // return res.status(200).send(result)
+        }).catch((err)=>{
+            console.log(err)
+            return res.status(500).send({message: err})
+        })
+    },
+    cancelSubscription : async (req,res) =>{
+        const {id} = req.body
+        try{
+
+            await Subscription.update({
+                cancelledDate : new Date(),
+                isCancelled : 1
+            }, {
+                where : {
+                    id 
+                }
+            })
+
+            res.status(200).send({message : 'success update'})
+        }
+        catch (err){
+            console.log(err)
+            res.status(500).send(err)
+        }
     }
+
 }
+
+
+// console.log('-------------------getuser--------------------')
+// console.log(userId)
+
+// Subscription.findAll({
+//     attributes : {
+//         exclude : [
+//             'createdAt', 'updatedAt', 'isCancelled', 'cancelledDate'
+//         ],
+//         include : [
+//             // [sequelize.literal('(SELECT SUM(Subscriptions.nominalSubscription) FROM Subscriptions where scholarshipId = id)'), 'totalAmount']
+//         ]
+//     },
+//     include : [
+//         {
+//             model : scholarship,
+//             attributes : [
+//                 'judul',
+//                 'durasi',  
+//                 [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],  
+                // [sequelize.fn('SUM', sequelize.col('Subscription.nominalSubscription')), 'total']
+//                 // [sequelize.literal('(SELECT SUM(Subscriptions.nominalSubscription) FROM Subscriptions  )'), 'totalAmount']
+                // [sequelize.literal('(SELECT SUM(Subscriptions.nominalSubscription) FROM Subscriptions join scholarships on subscriptions.scholarshipId = scholarships.id WHERE  scholarships.id )'), 'totalAmount']
+       
+     
+//             ],
+//             // group : ['id'],
+//             include : [
+//                 {
+//                     model: Subscription
+//                 },
+                // {
+                //     model : School,
+                //     attributes : [
+                //         ['nama', 'namaSekolah']
+                //     ]
+                // },
+                // {
+                //     model : Student,
+                //     attributes : [
+                //         ['name', 'namaMurid']
+                //     ]
+                // },
+//             ]
+           
+//         }
+        
+//     ],
+//     // where : {
+//     //     userId
+//     // },
+//     // group : ["scholarship->Subscriptions.scholarshipId"]
+// })

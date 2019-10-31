@@ -183,7 +183,7 @@ module.exports={
         console.log(req.body)
         console.log(req.user)
 
-        var { page, limit, sekolah,  pendidikan} = req.body;
+        var { page, limit, sekolah,  pendidikan, userId} = req.body;
         var listpendidikan = ['SMA', 'SMK', 'S1', 'SD', 'SMP', 'TK']
    
         var offset=(page*limit)-limit
@@ -203,11 +203,15 @@ module.exports={
                         nama : {
                             [Op.like] : `%${sekolah ? sekolah : ''}%`
                         },
+                    
                   
                     },
                
                 }
             ],
+            where : {
+                userId
+            }
             // where:{
             //     isDeleted:0,
             //     // pendidikanTerakhir : {
