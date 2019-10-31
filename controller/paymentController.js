@@ -19,7 +19,7 @@ module.exports = {
         console.log(order_id)
         var Date = moment().format("YYMMDD")
         var randInt = Math.floor(Math.random()*(999-100+1)+100)
-  
+        // Halo
         snap.createTransaction(parameter)
         .then((transaction)=>{
             transactionToken = transaction.token;
