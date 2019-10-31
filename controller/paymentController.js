@@ -30,8 +30,9 @@ module.exports = {
                 paymentType: 'pending',
                 nominal: gross_amount,
                 statusPayment: 'pending',
-                projectId: projectId,
-                userId: userId,
+                projectId: projectId ? projectId : 0,
+                scholarshipId: scholarshipId ? scholarshipId : 0,
+                userId: req.user.userId,
                 isRefund: '0',
                 isDeleted: '0',
                 order_id: order_id,
@@ -191,7 +192,8 @@ module.exports = {
         Payment.findAll({
             attributes: ['nominal','updatedAt', 'komentar', 'isAnonim'],
             where: { 
-                projectId,
+                projectId : projectId ? projectId : 0,
+                scholarshipId: scholarshipId ? scholarshipId : 0,
                 statusPayment: 'settlement'
              },
             include: [
