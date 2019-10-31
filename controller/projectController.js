@@ -328,7 +328,7 @@ module.exports = {
             include : 
                 {
                     model : Payment,
-                    required : false
+                    attributes : []
                 }
             ,
             where : {
