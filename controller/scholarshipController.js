@@ -100,7 +100,7 @@ module.exports = {
                     
                     ],
                     where : {
-                        userId : req.user.userId
+                        userId : id
                     },
                      
                 })
