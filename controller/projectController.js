@@ -338,7 +338,7 @@ module.exports = {
                 isDeleted : 0,
                 isGoing : 1
             },
-            // order : !date ? [['id', 'asc']] : [['projectCreated', `${date}`]],
+            order : [['projectCreated', `${date}`]],
             group : ['id']
         })
         .then((results)=>{
