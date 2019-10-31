@@ -20,7 +20,6 @@ module.exports = (sequelize, DataTypes) => {
     scholarship.belongsTo(models.User, { foreignKey : 'userId'})
     scholarship.belongsTo(models.Student, { foreignKey : 'studentId'})
     scholarship.hasMany(models.Subscription, {foreignKey : 'scholarshipId'})
-    scholarship.hasMany(models.Subscription, {foreignKey : 'scholarshipId', as: "totalSubscriptions"})
     scholarship.hasMany(models.Payment, {foreignKey : 'scholarshipId'})
   };
   return scholarship;
