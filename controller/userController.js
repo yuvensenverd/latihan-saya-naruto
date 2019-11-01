@@ -708,6 +708,7 @@ module.exports = {
             return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
         })
     },
+
     // getSubscription : (req,res) => {
     //     User.findOne({
     //         where: {
@@ -734,15 +735,42 @@ module.exports = {
     //         res.send('success')
     //     })
     // },
+
     getSubscription : (req,res) => {
-        User.findOne({
+        // cek user ketika user udah subscribe ke scholarship atau belum.
+        // berarti butuh get dari Subscription dan butuh req.user.userId dan params.id untuk get data subscriptionnya.
+ 
+        // User.findOne({
+        //     where: {
+        //         email: req.body.email
+        //     },
+        //     attributes: ['subscriptionStatus', 'subscriptionNominal']
+        // }).then((results) => {
+        //     res.send(results)
+        // })
+        Subscription.findOne({
             where: {
-                email: req.body.email
-            },
-            attributes: ['subscriptionStatus', 'subscriptionNominal']
-        }).then((results) => {
-            res.send(results)
+                userId: req.user.userId
+            }
         })
+        .then((result) => {
+            console.log(result)
+            let status;
+            if(result) {
+                console.log('User ini telah subscribe')
+                status = 1
+            } else {
+                console.log('User ini belum subscribe ke scholarship ini')
+                status = 0
+            }
+            return res.status(200).send({
+                status           
+            })
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+ 
     },
 
     applySubscription : (req,res) => {
