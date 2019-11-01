@@ -61,7 +61,7 @@ module.exports = {
         snap.transaction.status(order_id)
         .then((Response)=>{
             console.log('=======masuk status=========')
-            console.log( Response.transaction_status)
+            console.log( Response)
             let status = {
                 order_id : Response.order_id,
                 transaction_status : Response.transaction_status
