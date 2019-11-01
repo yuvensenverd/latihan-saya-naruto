@@ -179,10 +179,11 @@ module.exports = {
     },
     // DI PAGE SUBSCRIPTION UI
     getAllScholarshipList : (req,res) =>{
+        const { name } = req.body
                 scholarship.findAll({
-                    limit:parseInt(limit),
+                    // limit:parseInt(limit),
                     // limit : 10,
-                    offset:offset,
+                    // offset:offset,
                     subQuery: false,
                     attributes : [
                         "id",

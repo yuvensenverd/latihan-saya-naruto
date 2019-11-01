@@ -210,7 +210,7 @@ module.exports={
                 }
             ],
             where : {
-                userId,
+                // userId,
                 isDeleted : 0
             }
             // where:{
