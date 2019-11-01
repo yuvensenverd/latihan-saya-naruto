@@ -6,7 +6,7 @@ const { scholarshipController } = require('../controller')
 router.post('/addScholarship', scholarshipController.postScholarship)
 router.get('/getScholarshipPerUser', scholarshipController.getScholarshipPerUser )
 router.get('/getScholarshipDetail', scholarshipController.getScholarshipDetail)
-router.get('/getScholarship', scholarshipController.getAllScholarshipList)
+router.post('/getscholarship', scholarshipController.getAllScholarshipList)
 router.put('/putScholarship', scholarshipController.putScholarship)
 router.put('/cancelScholarship', scholarshipController.cancelScholarship)
 

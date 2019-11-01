@@ -129,7 +129,8 @@ module.exports = {
           
         })
 
-        .then((result) => {
+        .then(async (result) => {
+            console.log('------------------------------------then')
 
             var hasil = result.map((val)=>{
                 return val.dataValues
@@ -138,33 +139,67 @@ module.exports = {
                 return val.id
             })
 
-            Subscription.findAll({
-                attributes : [[sequelize.fn('SUM', sequelize.col('nominalSubscription')), 'currentSubs']],
-                group : ['scholarshipId'],
+           var res2 = await  Subscription.findAll({
+                attributes : [
+                    [sequelize.fn('SUM', sequelize.col('nominalSubscription')), 'currentSubs']
+                ],
+        
                 where : {
                     scholarshipId  : {
                         [Op.in] : listScholarId
                     }
-                }
-            }).then((res2)=>{
-
-                var subsScholar = res2.map((val)=>{
-                    return val.dataValues.currentSubs
-                })
-
-                for(var i = 0 ; i < hasil.length; i++){
-                    hasil[i].currentSubs = parseInt(subsScholar[i])
-                }
-
-                console.log(hasil)
-                
-                return res.status(200).send({message : 'success get', result : hasil})
-
-            }).catch((err)=>{
-
-                return res.status(500).send({message: err})
-
+                },
+                group : ['scholarshipId']
             })
+
+            var res3 = await Payment.findAll({
+                attributes : [
+                    'scholarshipId',
+                    [sequelize.fn('SUM', sequelize.col('nominal')), 'currentDonation']
+                ],
+                where : {
+                    scholarshipId  : {
+                        [Op.in] : listScholarId
+                    }
+                },
+                group : ['id']
+            })
+
+            // KALAU ADA YANG TAU CARA BIKIN INI SEMUA DALAM SEKALI SEQUELIZE TOLONG DIUBAH YA :)
+
+            var subsScholar = res2.map((val)=>{
+                console.log(val)
+                return val.dataValues.currentSubs
+            })
+            var paymentDonations = res3.map((val)=>{
+                return [val.dataValues.scholarshipId ,val.dataValues.currentDonation]
+            })
+            console.log(subsScholar)
+            console.log(paymentDonations)
+
+            for(var i = 0 ; i < hasil.length; i++){
+                hasil[i].currentSubs = parseInt(subsScholar[i])
+                var totaldonation = 0
+                for(var y = 0 ; y < paymentDonations.length ; y++){
+                    if(paymentDonations[y][0] === hasil[i].id){
+                        totaldonation = totaldonation + parseInt(paymentDonations[y][1])
+                    }
+                }
+                hasil[i].totaldonation = totaldonation
+            }
+
+            console.log(hasil)
+
+                // console.log(hasil)
+                
+            return res.status(200).send({message : 'success get', result : hasil})
+
+            
+            // .catch((err)=>{
+            //     console.log(err)
+            //     return res.status(500).send({message: err})
+
+            // })
             
 
 

@@ -1,4 +1,4 @@
-const { Sequelize, sequelize, User, Student, StudenDetail, School, scholarship, Subscription } = require('../models')
+const { Sequelize, sequelize, User, Student, StudenDetail, School, scholarship, Subscription, Payment } = require('../models')
 const Op = Sequelize.Op
 const moment = require('moment')
 
@@ -133,56 +133,11 @@ module.exports = {
                         "shareDescription",
                         "scholarshipStart",
                         "scholarshipEnded",
-        
-                    ],
-                    
-                    include : [{
-                        model : Student,
-                        attributes : [
-                            ["name", "namaSiswa"],
-                            "studentImage"
-                        ]
-                    },
-                    {
-                        model : School,
-                        attributes : [
-                            ["nama", "namaSekolah"]
-                        ]
-                    },
-                    ],
-                    where : {
-                        id
-                    },
-                     
-                })
-
-                .then((result) => {
-                    // console.log(result)
-                    return res.status(200).send(result)
-                }).catch((err)=>{
-                    return res.status(500).send({message: err})
-                })
-            )
-        })
-    },
-    // DI PAGE SUBSCRIPTION UI
-    getAllScholarshipList : (req,res) =>{
-        sequelize.transaction(function(t){
-            return(
-                scholarship.findAll({
-                    attributes : [
-                        "id",
-                        "judul",
-                        "nominal",
-                        "durasi",
-                        "description",
-                        "studentId",
-                        "shareDescription",
-                        "scholarshipStart",
-                        "scholarshipEnded",
                         [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],
                         [sequelize.fn('SUM', sequelize.col('Subscriptions.nominalSubscription')), 'currentSubs'],
                         [sequelize.fn('COUNT', sequelize.col('Subscriptions.id')), 'totalDonasi']
+                        
+        
                     ],
                     
                     include : [{
@@ -202,11 +157,12 @@ module.exports = {
                         model : Subscription,
                         attributes : []
                     }
+
+
                     ],
                     where : {
-                        isOngoing : 1
+                        id
                     },
-                    group : ['id']
                      
                 })
 
@@ -218,6 +174,70 @@ module.exports = {
                 })
             )
         })
+    },
+    // DI PAGE SUBSCRIPTION UI
+    getAllScholarshipList : (req,res) =>{
+
+                scholarship.findAll({
+                    attributes : [
+                        "id",
+                        "judul",
+                        "nominal",
+                        "durasi",
+                        "description",
+                        "studentId",
+                        "shareDescription",
+                        "scholarshipStart",
+                        "scholarshipEnded",
+                        [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],
+                        // [sequelize.fn('SUM', sequelize.col('Subscriptions.nominalSubscription')), 'currentSubs'],
+                        [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totaldonation'],
+                        [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'jumlahdonation'],
+          
+              
+                    ],
+                 
+                    
+                    include : [{
+                        model : Student,
+                        attributes : [
+                            ["name", "namaSiswa"],
+                            "studentImage"
+                        ]
+                    },
+                    {
+                        model : School,
+                        attributes : [
+                            ["nama", "namaSekolah"]
+                        ]
+                    },
+                    {
+                        model : Subscription,
+                        attributes :   [[sequelize.fn('SUM', sequelize.col('nominalSubscription')), 'currentSubs']], 
+                                    
+                        separate : true
+                    },
+                    {
+                        model : Payment,
+                        attributes : []
+                    }
+                    ],
+                    where : {
+                        isOngoing : 1
+                    },
+                    group : ['id']
+                     
+                })
+
+                .then((result) => {
+                    // console.log(result)
+                    console.log(result)
+                    return res.status(200).send(result)
+                }).catch((err)=>{
+                    console.log(err)
+                    return res.status(500).send({message: err})
+                })
+
     },
     cancelScholarship: (req, res) => {
         console.log(req.query)
