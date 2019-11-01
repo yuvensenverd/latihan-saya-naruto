@@ -1,4 +1,4 @@
-const { Sequelize, sequelize, User, Student, StudenDetail, School, scholarship } = require('../models')
+const { Sequelize, sequelize, User, Student, StudenDetail, School, scholarship, Subscription } = require('../models')
 const Op = Sequelize.Op
 const moment = require('moment')
 
@@ -17,8 +17,9 @@ module.exports = {
             description, 
             shareDescription,
         } = req.body
-        // console.log(req.body)
-        var end = moment().add(durasi, 'month').format("YYYY-MM-DD h:mm:ss")
+        // let end = moment().add(durasi, 'month').format('YYYY-MM-DD h:mm:ss');
+        // // console.log(req.body)
+        var end = moment().add(durasi, 'month').format('YYYY-MM-DD h:mm:ss')
 
         scholarship.create({
             judul,
@@ -30,14 +31,13 @@ module.exports = {
             description,
             shareDescription,
             scholarshipStart: Date,
-            scholarshipEnded: end
-        }).then(() => {
-            scholarship.findAll()
-            .then((result) => {
-                // console.log(result)
-                res.send(result)
-            })
+            scholarshipEnded : end
+        }).then((result) => {
+         
+            return res.status(200).send(result)
+
         }).catch((err) => {
+            return res.status(500).send(err.message)
             console.log(err)
         })
     },
@@ -170,6 +170,7 @@ module.exports = {
             return(
                 scholarship.findAll({
                     attributes : [
+                        "id",
                         "judul",
                         "nominal",
                         "durasi",
@@ -177,7 +178,10 @@ module.exports = {
                         "studentId",
                         "shareDescription",
                         "scholarshipStart",
-                        "scholarshipEnded"
+                        "scholarshipEnded",
+                        [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],
+                        [sequelize.fn('SUM', sequelize.col('Subscriptions.nominalSubscription')), 'currentSubs'],
+                        [sequelize.fn('COUNT', sequelize.col('Subscriptions.id')), 'totalDonasi']
                     ],
                     
                     include : [{
@@ -192,17 +196,113 @@ module.exports = {
                         attributes : [
                             ["nama", "namaSekolah"]
                         ]
+                    },
+                    {
+                        model : Subscription,
+                        attributes : []
                     }
                     ],
                     where : {
+                        isOngoing: 1,
                         id
                     },
-                     
+                    group: ['id']
                 })
 
                 .then((result) => {
                     // console.log(result)
                     return res.status(200).send(result)
+                }).catch((err)=>{
+                    return res.status(500).send({message: err})
+                })
+            )
+        })
+    },
+
+    // DI PAGE SUBSCRIPTION UI
+    getAllScholarshipList : (req,res) =>{
+        var { page, limit, name, date} = req.body;
+        
+        var offset = (page * limit) - limit
+        console.log(req.body)
+        console.log(offset)
+        
+        sequelize.transaction(function(t){
+            return(
+                scholarship.findAll({
+                    limit:parseInt(limit),
+                    // limit : 10,
+                    offset:offset,
+                    subQuery: false,
+                    attributes : [
+                        "id",
+                        "judul",
+                        "nominal",
+                        "durasi",
+                        "description",
+                        "studentId",
+                        "shareDescription",
+                        "scholarshipStart",
+                        "scholarshipEnded",
+                        [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],
+                        [sequelize.fn('SUM', sequelize.col('Subscriptions.nominalSubscription')), 'currentSubs'],
+                        [sequelize.fn('COUNT', sequelize.col('Subscriptions.id')), 'totalDonasi']
+                    ],
+                    
+                    include : [{
+                        model : Student,
+                        attributes : [
+                            ["name", "namaSiswa"],
+                            "studentImage"
+                        ]
+                    },
+                    {
+                        model : School,
+                        attributes : [
+                            ["nama", "namaSekolah"]
+                        ]
+                    },
+                    {
+                        model : Subscription,
+                        attributes : []
+                    }
+                    ],
+                    where : {
+                        judul : {
+                            [Op.like] : `%${name}%`
+                        },
+                        // isDeleted : 0,
+                        isOngoing : 1,
+                        isVerified: 1
+                    },
+                    order : [['createdAt', `${date}`]],
+                    group : ['id']
+                     
+                })
+
+                .then((results) => {
+                    // console.log(result)
+                    // Kurang Counting
+                    
+                    // return res.status(200).send(result)
+
+                    scholarship.count({
+                        where : {
+                            judul : {
+                                [Op.like] : `%${name}%`
+                            },
+                            isOngoing : 1,
+                            isVerified: 1
+                        }
+                    })
+                    .then((resultTotalScholarship) => {
+                        var total = resultTotalScholarship;
+
+                        return res.status(200).send({message: 'Success Get All Scholarship', results, total})
+                    })
+                    .catch((err) => {
+                        return res.status(500).send({message: err})
+                    })
                 }).catch((err)=>{
                     return res.status(500).send({message: err})
                 })
@@ -270,3 +370,82 @@ module.exports = {
         })
     }
 } 
+
+    // getAllScholarship: (req, res) => {
+        
+    //     var { page, limit, name, date} = req.body;
+        
+    //     var offset = (page * limit) - limit
+    //     console.log(req.body)
+    //     console.log(offset)
+
+    //     scholarship.findAll({
+    //         limit: parseInt(limit),
+    //         offset: offset,
+    //         subQuery: false, 
+    //         attributes : [
+    //             "id",
+    //             "judul",
+    //             "nominal",
+    //             "durasi",
+    //             "description",
+    //             "studentId",
+    //             "shareDescription",
+    //             "scholarshipStart",
+    //             "scholarshipEnded",
+    //             "isVerified",
+    //             "isOngoing",
+    //             // [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.fn("scholarshipStart")), 'SisaHari'],
+    //             // [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totalNominal'],
+    //             // [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'totalDonasi']
+    //         ],
+           
+    //         include : [{
+    //             model : Student,
+    //             attributes : [
+    //                 ["name", "namaSiswa"],
+    //                 "studentImage"
+    //             ]
+    //         },
+    //         {
+    //             model : School,
+    //             attributes : [
+
+    //                 ["nama", "namaSekolah"]
+    //             ]
+    //         },
+    //         // {
+    //         //     model : Payment,
+    //         //     required : false
+    //         // },
+    //         // {
+    //         //     model: Subscription,
+    //         //     required: false
+    //         // }
+    //     ]
+    //     })
+    //     .then((results) => {
+    //         scholarship.count({
+    //             where: {
+    //                 judul: {
+    //                     [Op.like] : `%${name}%`
+    //                     },
+    //                     isVerified : 1,
+    //                     isOngoing : 1
+    //             }
+    //         })
+    //         .then((resultsTotalScholarship) => {
+    //             let total = resultsTotalScholarship
+
+    //             console.log(results)
+    //             return res.status(200).send({message: 'success get scholarship', results, total})
+    //         })
+    //         .catch((err) => {
+    //             console.log(err)
+    //         })
+
+    //     }).catch((err)=>{
+    //         return res.status(500).send({message: err})
+    //     })
+    // }
+}

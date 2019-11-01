@@ -163,6 +163,7 @@ module.exports = {
                         }}
                     ).then((resultdua) => {
                         var total = resultdua
+                        console.log(result.length)
                         
 
                         return res.status(200).send({message : 'success get projects', result, total})
@@ -302,13 +303,15 @@ module.exports = {
 
         var { page, limit, name, date} = req.body;
         
-  
         var offset = (page * limit) - limit
         console.log(req.body)
+        console.log(offset)
         
         Project.findAll({
             limit:parseInt(limit),
+            // limit : 10,
             offset:offset,
+            subQuery: false,
             attributes : [
                 ["name", "projectName"],
                 ["id", "projectId"],
@@ -319,41 +322,41 @@ module.exports = {
                 "projectImage",
                 "shareDescription",
                 [sequelize.fn('datediff', sequelize.col('projectEnded') ,  sequelize.fn("NOW")), 'SisaHari'],
-
-
+                [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totalNominal'],
+                [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'totalDonasi']
             ],
-            include : [
+            include : 
                 {
                     model : Payment,
-                    require : true,
-                    attributes : [[sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totalNominal'], [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'totalDonasi']]
+                    attributes : []
                 }
-            ],
+            ,
             where : {
                 name : {
                     [Op.like] : `%${name}%`
                 },
                 isDeleted : 0,
                 isGoing : 1
-       
-              
             },
-            order : !date ? [['id', 'asc']] : [['projectCreated', `${date}`]],
+            order : [['projectCreated', `${date}`]],
             group : ['id']
         })
         .then((results)=>{
-            console.log(results)
-            console.log('kasdijasidj')
+            console.log(results.length)
             Project.count({
                 where: {
                     name: {
                     [Op.like] : `%${name}%`
-                    }
+                    },
+                    isDeleted : 0,
+                    isGoing : 1
                 }
             })
             .then((resultsTotalProject) => {
-                console.log(results)
+                
                 let total = resultsTotalProject
+                console.log('total  ' + total)
+                
                 return res.status(200).send({message : 'success get projects', results, total})
             })
             .catch((err) => {

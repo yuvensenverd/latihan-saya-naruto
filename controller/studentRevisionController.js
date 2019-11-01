@@ -176,7 +176,7 @@ module.exports = {
             //     fs.unlinkSync('./public' + data.oldimg);
             // }
            
-            const {name,pendidikanTerakhir,gender,status,alamat,tanggalLahir,userId,story,schoolId,studentImage,studentId}=data.result[0]
+            const {name,pendidikanTerakhir,gender,status,alamat,tanggalLahir,userId,story,schoolId,studentImage,studentId, dataStatus}=data.result[0]
             console.log(name)
             return sequelize.transaction(function (t){
                 return StudentRevision.create({
@@ -203,7 +203,7 @@ module.exports = {
                         status,
                         schoolId,
                         studentImage,
-                        dataStatus : 'Update Unverified'
+                        dataStatus : dataStatus === 'Register Rejected' ? 'Unverified' : 'Update Unverified'
                     }, {
                         where : {
                             id : id
@@ -256,7 +256,7 @@ module.exports = {
     newStudentReject : (req,res) =>{
         console.log('student reject')
         Student.update({
-            dataStatus : 'Rejected',
+            dataStatus : 'Register Rejected',
             statusNote : `${req.body.text}`
         }, {
             where : {

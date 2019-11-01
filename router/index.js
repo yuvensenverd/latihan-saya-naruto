@@ -18,7 +18,8 @@ module.exports = {
     studentDetailRouter,
     testRouter,
     studentRevisionRouter,
-    scholarshipRouter,
     studentDetailRevisionRouter,
-    subscriptionRouter
+    subscriptionRouter,
+    scholarshipRouter,
+
 }

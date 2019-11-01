@@ -734,6 +734,32 @@ module.exports = {
     //         res.send('success')
     //     })
     // },
+    getSubscription : (req,res) => {
+        User.findOne({
+            where: {
+                email: req.body.email
+            },
+            attributes: ['subscriptionStatus', 'subscriptionNominal']
+        }).then((results) => {
+            res.send(results)
+        })
+    },
+
+    applySubscription : (req,res) => {
+        var { subscriptionNominal, email, reminderDate } = req.body
+        // console.log(req.body)
+        User.update({
+            subscriptionStatus: 1,
+            subscriptionNominal,
+            reminderDate
+        },{
+            where: { email }
+        })
+        .then(() => {
+            // console.log('masuk')
+            res.send('success')
+        })
+    },
     reminderInvoice : async (req,results) =>{ // RUN SEKALI / HARI
         // console.log('reminderINvoice')
         // console.log(req)
@@ -929,11 +955,16 @@ module.exports = {
 
 
         Project.findAll({
-            attributes : ['id',[sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totalNominal'], 'projectEnded', 'totalTarget'],
+            attributes : [
+                 'id',
+                 [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totalNominal'],
+                 'projectEnded',
+                 'totalTarget'
+            ],
             include : [
                 {
                     model : Payment,
-                    require : true
+                    required : true
                 }
             ],
             where : {
@@ -967,7 +998,9 @@ module.exports = {
            
             }
         }).then((res)=>{
+   
             var listproject = res.map((val)=>{
+                console.log(val.dataValues)
                 return val.dataValues.id
             })
             console.log(listproject)

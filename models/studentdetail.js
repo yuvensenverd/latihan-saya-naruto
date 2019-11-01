@@ -5,11 +5,13 @@ module.exports = (sequelize, DataTypes) => {
     deskripsi: DataTypes.STRING,
     class: DataTypes.STRING,
     studentId: DataTypes.INTEGER,
-    dataStatus: DataTypes.STRING
+    dataStatus: DataTypes.STRING,
+    statusNote: DataTypes.STRING
   }, {});
   StudentDetail.associate = function(models) {
     // associations can be defined here
     StudentDetail.belongsTo(models.Student, {foreignKey : 'studentId'})
+    StudentDetail.hasMany(models.StudentDetailRevision, { foreignKey : 'detailId'})
   };
   return StudentDetail;
 };
