@@ -341,6 +341,7 @@ module.exports = {
                 isDeleted : 0,
                 isGoing : 1
             },
+            order : [['projectCreated', `${date}`]],
             // order : !date ? [['id', 'asc']] : [['projectCreated', `${date}`]],
             group : ['id']
         })

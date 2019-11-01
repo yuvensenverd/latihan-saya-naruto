@@ -184,7 +184,7 @@ module.exports={
         console.log(req.body)
         console.log(req.user)
 
-        var { page, limit, sekolah,  pendidikan, userId} = req.body;
+        var { page, limit, sekolah,  pendidikan} = req.body;
         var listpendidikan = ['SMA', 'SMK', 'S1', 'SD', 'SMP', 'TK']
    
         var offset=(page*limit)-limit
@@ -204,7 +204,6 @@ module.exports={
                         nama : {
                             [Op.like] : `%${sekolah ? sekolah : ''}%`
                         },
-                    
                   
                     },
                
@@ -233,8 +232,8 @@ module.exports={
     },
     getStudentPerUser : (req, res) => {
         console.log('masuk sini')
-        const {userId} = req.body
-        console.log(req.query)
+        // const {userId} = req.body
+        // console.log(req.query)
         Student.findAll({
             attributes: [
                 'id',
@@ -242,7 +241,8 @@ module.exports={
                 'pendidikanTerakhir',
             ],
             where : {
-                userId: req.query.id
+                userId: req.query.id,
+                isDeleted: 0
             }
         })
         .then((result) => {

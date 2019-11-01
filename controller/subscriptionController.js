@@ -1,5 +1,5 @@
 
-const { User, Sequelize, sequelize, School, Project, Payment, Subscription, Student, scholarship } = require('../models');
+const { User, Sequelize, sequelize, School, Project, Payment, Subscription } = require('../models');
 const Op = Sequelize.Op
 const Crypto = require('crypto');
 
@@ -229,59 +229,4 @@ module.exports = {
             res.status(500).send(err)
         }
     }
-
 }
-
-
-// console.log('-------------------getuser--------------------')
-// console.log(userId)
-
-// Subscription.findAll({
-//     attributes : {
-//         exclude : [
-//             'createdAt', 'updatedAt', 'isCancelled', 'cancelledDate'
-//         ],
-//         include : [
-//             // [sequelize.literal('(SELECT SUM(Subscriptions.nominalSubscription) FROM Subscriptions where scholarshipId = id)'), 'totalAmount']
-//         ]
-//     },
-//     include : [
-//         {
-//             model : scholarship,
-//             attributes : [
-//                 'judul',
-//                 'durasi',  
-//                 [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],  
-                // [sequelize.fn('SUM', sequelize.col('Subscription.nominalSubscription')), 'total']
-//                 // [sequelize.literal('(SELECT SUM(Subscriptions.nominalSubscription) FROM Subscriptions  )'), 'totalAmount']
-                // [sequelize.literal('(SELECT SUM(Subscriptions.nominalSubscription) FROM Subscriptions join scholarships on subscriptions.scholarshipId = scholarships.id WHERE  scholarships.id )'), 'totalAmount']
-       
-     
-//             ],
-//             // group : ['id'],
-//             include : [
-//                 {
-//                     model: Subscription
-//                 },
-                // {
-                //     model : School,
-                //     attributes : [
-                //         ['nama', 'namaSekolah']
-                //     ]
-                // },
-                // {
-                //     model : Student,
-                //     attributes : [
-                //         ['name', 'namaMurid']
-                //     ]
-                // },
-//             ]
-           
-//         }
-        
-//     ],
-//     // where : {
-//     //     userId
-//     // },
-//     // group : ["scholarship->Subscriptions.scholarshipId"]
-// })

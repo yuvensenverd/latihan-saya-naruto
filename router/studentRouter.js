@@ -11,4 +11,5 @@ router.delete('/deletestudentdata/:id',stundentController.deleteStudentdata)
 router.get('/getstudentperuser', stundentController.getStudentPerUser)
 
 
+
 module.exports=router
