@@ -78,7 +78,8 @@ module.exports = {
                         "scholarshipStart",
                         "scholarshipEnded",
                         "isVerified",
-                        "isOngoing"
+                        "isOngoing",
+                        "note"
                     ],
                    
                     include : [{
@@ -111,56 +112,56 @@ module.exports = {
                 })
 
     },
-    getScholarship : ( req, res) =>{
-        const {id} = req.query
-                scholarship.findAll({
-                    attributes : [
-                        "id",
-                        "userId",
-                        "judul",
-                        "nominal",
-                        "durasi",
-                        "description",
-                        "studentId",
-                        "shareDescription",
-                        "scholarshipStart",
-                        "scholarshipEnded",
-                        "isVerified",
-                        "isOngoing"
-                    ],
+    // getScholarship : ( req, res) =>{
+    //     const {id} = req.query
+    //             scholarship.findAll({
+    //                 attributes : [
+    //                     "id",
+    //                     "userId",
+    //                     "judul",
+    //                     "nominal",
+    //                     "durasi",
+    //                     "description",
+    //                     "studentId",
+    //                     "shareDescription",
+    //                     "scholarshipStart",
+    //                     "scholarshipEnded",
+    //                     "isVerified",
+    //                     "isOngoing"
+    //                 ],
                    
-                    include : [{
-                            model : Student,
-                            attributes : [
-                                ["name", "namaSiswa"],
-                                "studentImage"
-                            ],
-                            include : [{
-                                model : User,
-                                require: true,
-                                attributes:["nama"]
-                            }]
-                        },
-                        {
-                            model : School,
-                            attributes : [
+    //                 include : [{
+    //                         model : Student,
+    //                         attributes : [
+    //                             ["name", "namaSiswa"],
+    //                             "studentImage"
+    //                         ],
+    //                         include : [{
+    //                             model : User,
+    //                             require: true,
+    //                             attributes:["nama"]
+    //                         }]
+    //                     },
+    //                     {
+    //                         model : School,
+    //                         attributes : [
 
-                                ["nama", "namaSekolah"]
-                            ]
-                        },
-                    ],
-                    order:[['id', 'DESC']]
+    //                             ["nama", "namaSekolah"]
+    //                         ]
+    //                     },
+    //                 ],
+    //                 order:[['id', 'DESC']]
                      
-                })
+    //             })
 
-                .then((result) => {
-                    // console.log(result)
-                    return res.status(200).send(result)
-                }).catch((err)=>{
-                    return res.status(500).send({message: err})
-                })
+    //             .then((result) => {
+    //                 // console.log(result)
+    //                 return res.status(200).send(result)
+    //             }).catch((err)=>{
+    //                 return res.status(500).send({message: err})
+    //             })
 
-    },
+    // },
     getScholarshipDetail:(req,res) => {
         const {id} = req.query
         // console.log('---------------> masuk secDetail')
@@ -279,13 +280,13 @@ module.exports = {
                     }
                     ],
                     where : {
-                        isOngoing : 1,
+                        // isOngoing : 1,
                         judul : {
                             [Op.like] : `%${name}%`
                         },
                         // isDeleted : 0,
-                        isOngoing : 1,
-                        isVerified: 1
+                        isOngoing : 'on Going',
+                        isVerified: 'verified'
                     },
                     group : ['id']
                      
@@ -302,8 +303,8 @@ module.exports = {
                             judul : {
                                 [Op.like] : `%${name}%`
                             },
-                            isOngoing : 1,
-                            isVerified: 1
+                            isOngoing : 'on Going',
+                            isVerified: 'verified'
                         }
                     })
                     .then((resultTotalScholarship) => {
