@@ -17,6 +17,6 @@ router.get('/getDetailProject', projectController.getDetailProject);
 router.put('/editproject/:id', projectController.editProject)
 router.put('/deleteproject/:id', projectController.deleteProject)
 
-
+router.post('/GenerateURL',projectController.generateImgUrlquill)
 
 module.exports = router

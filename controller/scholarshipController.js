@@ -1,4 +1,4 @@
-const { Sequelize, sequelize, User, Student, StudenDetail, School, scholarship, Subscription } = require('../models')
+const { Sequelize, sequelize, User, Student, StudenDetail, School, scholarship, Subscription, Payment } = require('../models')
 const Op = Sequelize.Op
 const moment = require('moment')
 
@@ -17,8 +17,7 @@ module.exports = {
             description, 
             shareDescription,
         } = req.body
-        // let end = moment().add(durasi, 'month').format('YYYY-MM-DD h:mm:ss');
-        // // console.log(req.body)
+        // console.log(req.body)
         var end = moment().add(durasi, 'month').format('YYYY-MM-DD h:mm:ss')
 
         scholarship.create({
@@ -182,6 +181,8 @@ module.exports = {
                         [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],
                         [sequelize.fn('SUM', sequelize.col('Subscriptions.nominalSubscription')), 'currentSubs'],
                         [sequelize.fn('COUNT', sequelize.col('Subscriptions.id')), 'totalDonasi']
+                        
+        
                     ],
                     
                     include : [{
@@ -201,12 +202,15 @@ module.exports = {
                         model : Subscription,
                         attributes : []
                     }
+
+
                     ],
                     where : {
+                        id,
                         isOngoing: 1,
-                        id
                     },
                     group: ['id']
+                     
                 })
 
                 .then((result) => {
@@ -218,7 +222,6 @@ module.exports = {
             )
         })
     },
-
     // DI PAGE SUBSCRIPTION UI
     getAllScholarshipList : (req,res) =>{
         var { page, limit, name, date} = req.body;
@@ -226,9 +229,7 @@ module.exports = {
         var offset = (page * limit) - limit
         console.log(req.body)
         console.log(offset)
-        
-        sequelize.transaction(function(t){
-            return(
+
                 scholarship.findAll({
                     limit:parseInt(limit),
                     // limit : 10,
@@ -245,9 +246,13 @@ module.exports = {
                         "scholarshipStart",
                         "scholarshipEnded",
                         [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],
-                        [sequelize.fn('SUM', sequelize.col('Subscriptions.nominalSubscription')), 'currentSubs'],
-                        [sequelize.fn('COUNT', sequelize.col('Subscriptions.id')), 'totalDonasi']
+                        // [sequelize.fn('SUM', sequelize.col('Subscriptions.nominalSubscription')), 'currentSubs'],
+                        [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totaldonation'],
+                        [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'jumlahdonation'],
+          
+              
                     ],
+                 
                     
                     include : [{
                         model : Student,
@@ -264,10 +269,17 @@ module.exports = {
                     },
                     {
                         model : Subscription,
+                        attributes :   [[sequelize.fn('SUM', sequelize.col('nominalSubscription')), 'currentSubs']], 
+                                    
+                        separate : true
+                    },
+                    {
+                        model : Payment,
                         attributes : []
                     }
                     ],
                     where : {
+                        isOngoing : 1,
                         judul : {
                             [Op.like] : `%${name}%`
                         },
@@ -275,12 +287,11 @@ module.exports = {
                         isOngoing : 1,
                         isVerified: 1
                     },
-                    order : [['createdAt', `${date}`]],
                     group : ['id']
                      
                 })
 
-                .then((results) => {
+                .then((result) => {
                     // console.log(result)
                     // Kurang Counting
                     
@@ -298,16 +309,17 @@ module.exports = {
                     .then((resultTotalScholarship) => {
                         var total = resultTotalScholarship;
 
-                        return res.status(200).send({message: 'Success Get All Scholarship', results, total})
+                        return res.status(200).send({message: 'Success Get All Scholarship', result, total})
                     })
                     .catch((err) => {
+                        console.log(err)
                         return res.status(500).send({message: err})
                     })
                 }).catch((err)=>{
+                    console.log(err)
                     return res.status(500).send({message: err})
                 })
-            )
-        })
+
     },
     cancelScholarship: (req, res) => {
         // console.log(req.query)
@@ -447,5 +459,7 @@ module.exports = {
     //     }).catch((err)=>{
     //         return res.status(500).send({message: err})
     //     })
+    
+    
     // }
 
