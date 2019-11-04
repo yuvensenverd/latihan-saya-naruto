@@ -63,11 +63,9 @@ module.exports = {
         })
     },
     getScholarshipPerUser : ( req, res) =>{
+        console.log('------------------------> masuk per user')
+        console.log(req.query)
         const {id} = req.query
-        // console.log('masuk getScholarshipPerUser')
-        // console.log(req.query)
-        // sequelize.transaction(function(t){
-        //     return(
                 scholarship.findAll({
                     attributes : [
                         "id",
@@ -84,23 +82,23 @@ module.exports = {
                     ],
                    
                     include : [{
-                        model : Student,
-                        attributes : [
-                            ["name", "namaSiswa"],
-                            "studentImage"
-                        ]
-                    },
-                    {
-                        model : School,
-                        attributes : [
+                            model : Student,
+                            attributes : [
+                                ["name", "namaSiswa"],
+                                "studentImage"
+                            ]
+                        },
+                        {
+                            model : School,
+                            attributes : [
 
-                            ["nama", "namaSekolah"]
-                        ]
-                    },
+                                ["nama", "namaSekolah"]
+                            ]
+                        },
                     
                     ],
                     where : {
-                        userId : id
+                        userId : id 
                     },
                      
                 })
@@ -111,9 +109,56 @@ module.exports = {
                 }).catch((err)=>{
                     return res.status(500).send({message: err})
                 })
-            // )
-        // }
-        // )
+
+    },
+    getScholarship : ( req, res) =>{
+        const {id} = req.query
+                scholarship.findAll({
+                    attributes : [
+                        "id",
+                        "userId",
+                        "judul",
+                        "nominal",
+                        "durasi",
+                        "description",
+                        "studentId",
+                        "shareDescription",
+                        "scholarshipStart",
+                        "scholarshipEnded",
+                        "isVerified",
+                        "isOngoing"
+                    ],
+                   
+                    include : [{
+                            model : Student,
+                            attributes : [
+                                ["name", "namaSiswa"],
+                                "studentImage"
+                            ],
+                            include : [{
+                                model : User,
+                                require: true,
+                                attributes:["nama"]
+                            }]
+                        },
+                        {
+                            model : School,
+                            attributes : [
+
+                                ["nama", "namaSekolah"]
+                            ]
+                        },
+                    ],
+                    order:[['id', 'DESC']]
+                     
+                })
+
+                .then((result) => {
+                    // console.log(result)
+                    return res.status(200).send(result)
+                }).catch((err)=>{
+                    return res.status(500).send({message: err})
+                })
 
     },
     getScholarshipDetail:(req,res) => {
@@ -277,9 +322,10 @@ module.exports = {
 
     },
     cancelScholarship: (req, res) => {
-        console.log(req.query)
-        console.log('--------------------------> masuk cancel')
+        // console.log(req.query)
+        // console.log('--------------------------> masuk cancel')
         scholarship.update({
+            isVerified: 'Cancelled',
             isOngoing : 'Cancelled'
         },{
             where : {
@@ -293,6 +339,50 @@ module.exports = {
             return res.status(500).send(err)
         })
     },
+    getExistStudent: (req, res) => {
+        console.log('---------------------> masuk get exist student')
+        let {id}=req.query
+        scholarship.findAll({
+            attributes:[
+                "id",
+                "studentId"
+            ],
+            include:[{
+                model: Student,
+                attributes:["name"]
+            }],
+            where: {
+                userId : id
+            }
+        })
+        .then((result) => {
+            console.log(res)
+            return res.status(200).send(result)
+        })
+    },
+    putVerification:(req, res) => {
+        console.log('--------------------> put Verification')
+        let {id} = req.query
+        let { isVerified, note, isOngoing } = req.body
+        // console.log(req.body)
+        // console.log(req.query)
+        scholarship.update({
+            isVerified,
+            isOngoing,
+            note
+        },{
+            where : {
+                id  
+            }
+        })
+        .then((result) => {
+            return res.status(200).send(result)
+        }).catch((err) => {
+            return res.status(500).send(err)
+        })
+    }
+} 
+
     // getAllScholarship: (req, res) => {
         
     //     var { page, limit, name, date} = req.body;
@@ -372,4 +462,4 @@ module.exports = {
     
     
     // }
-}
+
