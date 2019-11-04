@@ -279,13 +279,13 @@ module.exports = {
                     }
                     ],
                     where : {
-                        isOngoing : 1,
+                        isOngoing : 'on Going',
                         judul : {
                             [Op.like] : `%${name}%`
                         },
                         // isDeleted : 0,
-                        isOngoing : 1,
-                        isVerified: 1
+                        // isOngoing : 1,
+                        isVerified: 'verified'
                     },
                     group : ['id']
                      
@@ -302,8 +302,8 @@ module.exports = {
                             judul : {
                                 [Op.like] : `%${name}%`
                             },
-                            isOngoing : 1,
-                            isVerified: 1
+                            isOngoing : 'on Going',
+                            isVerified: 'verified'
                         }
                     })
                     .then((resultTotalScholarship) => {
