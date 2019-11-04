@@ -248,37 +248,61 @@ module.exports = {
             console.log(err)
         })
     },
+
     payout:(req,res)=>{
         console.log('--------------------------> masuk payout')
-        let options={
-            header:{
-                "Authorization":"Basic SVJJUy04M2YxMzVlZC0zNTEzLTQ3YmYtODFiYi1hMDcxODIyZWU2OGY6",
-                "Content-Type":"application/json",
-                "Accept":"application/json",
-                // "Access-Control-Allow-Origin":"*"
-            }
-        }
-        let body={
-            "payouts": [
-                {
-                  "beneficiary_name": "Jon Snow",
-                  "beneficiary_account": "1172993826",
-                  "beneficiary_bank": "bni",
-                  "beneficiary_email": "beneficiary@example.com",
-                  "amount": '10000',
-                  "notes": "Payout April 17"
-                }
-              ]
-        }
-        Axios.post('https://app.sandbox.midtrans.com/iris/api/v1/payouts', body, options)
-        .then((ress)=>{
-            console.log(ress.data)
-            return res.status(200).send(ress.data)
-        }).catch((err)=>{
-            console.log(err)
-            return res.status(400).send(err)
-        })
-    }
+        console.log(req.body)
+        Axios({
+            headers: {
+              'Content-Type': 'application/json',
+              "Accept":"application/json",
+            },
+            method: 'post',
+            url: 'https://app.sandbox.midtrans.com/iris/api/v1/payouts',
+            auth: {
+              username: 'IRIS-83f135ed-3513-47bf-81bb-a071822ee68f'
+            },
+            data: req.body
+            })
+            .then((ress)=>{
+                    console.log(ress.data)
+                    return res.status(200).send(ress.data)
+                }).catch((err)=>{
+                    console.log(err)
+                    return res.status(400).send(err)
+                })
+
+    },
+    createBeneficiaries:(req,res)=>{
+        console.log('--------------------------> masuk Beneficiaries')
+        console.log(req.body)
+        Axios({
+            headers: {
+              'Content-Type': 'application/json',
+              "Accept":"application/json",
+            },
+            method: 'post',
+            url: 'https://app.sandbox.midtrans.com/iris/api/v1/beneficiaries',
+            auth: {
+              username: 'IRIS-83f135ed-3513-47bf-81bb-a071822ee68f'
+            },
+            data: {
+                "name": "Nusa",
+                "account": "998999893",
+                "bank": "bca",
+                "alias_name": "nusa",
+                "email": "nusa@benefecary.com"
+              }
+            })
+            .then((ress)=>{
+                    console.log(ress.data)
+                    return res.status(200).send(ress.data)
+                }).catch((err)=>{
+                    console.log(err)
+                    return res.status(400).send(err)
+                })
+
+    },
 
 
     
