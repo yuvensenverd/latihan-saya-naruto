@@ -1,17 +1,18 @@
-const { Sequelize, sequelize, Payment, User, Project } = require('../models')
-const midtransClient                    = require('midtrans-client')
-const moment                            = require('moment')
-
+const { Sequelize, sequelize, Payment, User, Project }  = require('../models')
+const midtransClient                                    = require('midtrans-client')
+const moment                                            = require('moment')
+const Axios = require('axios')
 const snap = new midtransClient.Snap({
     isProduction    : false,
     serverKey       : 'SB-Mid-server-Dr8HK_lJ4cuEZi4rUgNcsDUR',
     clientKey       : 'SB-Mid-client-Ttge99xVU4AOz44T'
 })
 
+
 module.exports = {
     //====================// midtrans //====================
     getSnapMd : (req, res) => {
-        let { projectId, userId, komentar, anonim} = req.body.userData
+        let { projectId, userId, komentar, anonim, scholarshipId} = req.body.userData
         let { gross_amount, order_id} = req.body.parameter.transaction_details
         let { parameter } = req.body
         console.log('masuk get token midtrans')
@@ -19,17 +20,20 @@ module.exports = {
         console.log(order_id)
         var Date = moment().format("YYMMDD")
         var randInt = Math.floor(Math.random()*(999-100+1)+100)
-  
+        // Halo jjhjhjhjkhhjhjj
+        // kol md 6
         snap.createTransaction(parameter)
         .then((transaction)=>{
             transactionToken = transaction.token;
             console.log('transactionToken: ', transactionToken)
+
             //######## INSERT DATABASE 
             Payment.create({
                 paymentType: 'pending',
                 nominal: gross_amount,
                 statusPayment: 'pending',
-                projectId: projectId,
+                projectId: projectId ? projectId : null,
+                scholarshipId: scholarshipId ? scholarshipId : null,
                 userId: userId,
                 isRefund: '0',
                 isDeleted: '0',
@@ -59,9 +63,27 @@ module.exports = {
         snap.transaction.status(order_id)
         .then((Response)=>{
             console.log('=======masuk status=========')
-            console.log( Response.transaction_status)
-            req.app.io.emit('status_transaction', Response.transaction_status)
- 
+            console.log( Response)
+            let status = {
+                order_id : Response.order_id,
+                transaction_status : Response.transaction_status
+            }
+            
+            //kirim respond status payment ke ui payment page dari push notification midtrans lewat socket io
+            req.app.io.emit('status_transaction', status)
+            
+            //update payment status on database
+            Payment.update({
+                paymentType : Response.payment_type,
+                statusPayment : Response.transaction_status,
+                updateAt: Response.transaction_time
+            },
+            {
+                where : {
+                    order_id : Response.order_id
+                }
+            })
+
             mockNotificationJson = Response     
             snap.transaction.notification(Response)
                 .then((statusResponse)=>{
@@ -165,6 +187,35 @@ module.exports = {
             console.log(err)
         })
     },
+    getDonasiProject: (req,res) => {
+        // console.log('masuk getDonasiProject')
+        let { projectId, scholarshipId } = req.body
+        console.log(req.body)
+        Payment.findAll({
+            attributes: ['nominal','updatedAt', 'komentar', 'isAnonim'],
+            where: { 
+                projectId: projectId ? projectId : null,
+                scholarshipId : scholarshipId ? scholarshipId : null,
+                
+                statusPayment: 'settlement'
+             },
+            include: [
+                {
+                    model: User,
+                    attributes: ['nama']
+                }
+            ]
+        })
+        .then((result) => {
+            // console.log('===========>>>>>>>')
+            // console.log(result)
+            res.send(result)
+        })
+        .catch((err)=>{
+            console.log(err)
+        }
+        )
+    },
     getSubscription : (req,res) => {
         User.findOne({
             where: {
@@ -182,7 +233,7 @@ module.exports = {
         if(!email){
             return null
         }
-        console.log(req.body)
+        // console.log(req.body)
         User.update({
             subscriptionStatus: 1,
             subscriptionNominal,
@@ -197,7 +248,63 @@ module.exports = {
         .catch((err) => {
             console.log(err)
         })
-    }
+    },
+
+    payout:(req,res)=>{
+        console.log('--------------------------> masuk payout')
+        console.log(req.body)
+        Axios({
+            headers: {
+              'Content-Type': 'application/json',
+              "Accept":"application/json",
+            },
+            method: 'post',
+            url: 'https://app.sandbox.midtrans.com/iris/api/v1/payouts',
+            auth: {
+              username: 'IRIS-83f135ed-3513-47bf-81bb-a071822ee68f'
+            },
+            data: req.body
+            })
+            .then((ress)=>{
+                    console.log(ress.data)
+                    return res.status(200).send(ress.data)
+                }).catch((err)=>{
+                    console.log(err)
+                    return res.status(400).send(err)
+                })
+
+    },
+    createBeneficiaries:(req,res)=>{
+        console.log('--------------------------> masuk Beneficiaries')
+        console.log(req.body)
+        Axios({
+            headers: {
+              'Content-Type': 'application/json',
+              "Accept":"application/json",
+            },
+            method: 'post',
+            url: 'https://app.sandbox.midtrans.com/iris/api/v1/beneficiaries',
+            auth: {
+              username: 'IRIS-83f135ed-3513-47bf-81bb-a071822ee68f'
+            },
+            data: {
+                "name": "Nusa",
+                "account": "998999893",
+                "bank": "bca",
+                "alias_name": "nusa",
+                "email": "nusa@benefecary.com"
+              }
+            })
+            .then((ress)=>{
+                    console.log(ress.data)
+                    return res.status(200).send(ress.data)
+                }).catch((err)=>{
+                    console.log(err)
+                    return res.status(400).send(err)
+                })
+
+    },
+
 
     
 
