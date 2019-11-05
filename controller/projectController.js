@@ -373,7 +373,6 @@ module.exports = {
             return res.status(500).send({message : err})
         })
     },
-
     generateImgUrlquill(req,res){
         const path = '/post/image/project/Quill'; //file save path
         const upload = uploader(path, 'PQuil').fields([{ name: 'image'}]); //uploader(path, 'default prefix')

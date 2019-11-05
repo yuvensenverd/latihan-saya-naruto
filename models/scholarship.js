@@ -11,8 +11,9 @@ module.exports = (sequelize, DataTypes) => {
     shareDescription: DataTypes.STRING,
     scholarshipStart: DataTypes.DATE,
     scholarshipEnded: DataTypes.DATE,
-    isVerified: DataTypes.STRING,
-    isOngoing: DataTypes.STRING,
+    isVerified: DataTypes.INTEGER,
+    isOngoing: DataTypes.INTEGER,
+    status : DataTypes.STRING,
     note: DataTypes.STRING
   }, {});
   scholarship.associate = function(models) {
