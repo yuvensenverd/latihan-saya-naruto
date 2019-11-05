@@ -15,6 +15,7 @@ router.get('/getAllProject', projectController.getAllProject)
 router.get('/getDetailProject', projectController.getDetailProject);
 
 router.put('/editproject/:id', projectController.editProject)
+router.post('/GenerateURL',projectController.generateImgUrlquill)
 router.put('/deleteproject/:id', projectController.deleteProject)
 
 
