@@ -285,8 +285,8 @@ module.exports = {
                             [Op.like] : `%${name}%`
                         },
                         // isDeleted : 0,
-                        isOngoing : 'on Going',
-                        isVerified: 'verified'
+                        isOngoing : 1,
+                        isVerified: 1
                     },
                     group : ['id']
                      
@@ -303,8 +303,8 @@ module.exports = {
                             judul : {
                                 [Op.like] : `%${name}%`
                             },
-                            isOngoing : 'on Going',
-                            isVerified: 'verified'
+                            isOngoing : 1,
+                            isVerified: 1
                         }
                     })
                     .then((resultTotalScholarship) => {
