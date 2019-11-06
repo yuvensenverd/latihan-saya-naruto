@@ -64,17 +64,19 @@ module.exports = {
         // bisa dari token juga (req.user.userId)
 
         // console.log('masik')
-        var { page, limit, sortMethod} = req.query;
-        if(!sortMethod){
-            sortMethod='ASC'
-        }
-        var offset=(page*limit)-limit
 
-      
+        var { page, limit, name, date} = req.body;
+        
+  
+        var offset = (page * limit) - limit
+        console.log(req.body)
+        console.log(offset)
+
         Project.findAll({
             limit:parseInt(limit),
+            // limit : 10,
             offset:offset,
-            order:[['id',sortMethod]],
+            subQuery: false,
             attributes : [
                 ["name", "projectName"],
                 ["id", "projectId"],
@@ -83,26 +85,41 @@ module.exports = {
                 "projectEnded",
                 "totalTarget",
                 "projectImage",
-                [sequelize.fn('datediff', sequelize.col('projectEnded') ,  sequelize.fn("NOW")), 'SisaHari']
+                "shareDescription",
+                [sequelize.fn('datediff', sequelize.col('projectEnded') ,  sequelize.fn("NOW")), 'SisaHari'],
+                [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totalNominal'],
+                [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'totalDonasi']
+
+
             ],
-            
-
+            include : 
+                [
+                    {
+                        model : Payment,
+                        attributes : []
+                    },
+                    {
+                        model : User,
+                        attributes : [
+                            ["nama", "projectCreator"]
+                        ]
+                    }
+                ]
+            ,
             where : {
-                isDeleted : 0
+                name : {
+                    [Op.like] : `%${name}%`
+                },
+                userId: req.user.userId,
+                isDeleted : 0,
+                isGoing : 1
             },
-            include : [{
-                model : User,
-                attributes : [
-                    ["nama", "projectCreator"]
-                ],
-                where : {
-                    id: req.user.userId,
-                    role: 'User Admin'
-                }
-            }]
-
+            order : [['projectCreated', `${date}`]],
+            // order : !date ? [['id', 'asc']] : [['projectCreated', `${date}`]],
+            group : ['id']
         })
         .then((result)=>{
+            console.log(result)
             Project.count(
                 {where : {
                     isDeleted : 0
@@ -157,6 +174,7 @@ module.exports = {
 
                 })
                 .then((result)=>{
+                    console.log(result)
                     Project.count(
                         {where : {
                             isDeleted : 0

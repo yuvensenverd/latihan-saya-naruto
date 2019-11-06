@@ -272,7 +272,8 @@ module.exports = {
                         model : Student,
                         attributes : [
                             ["name", "namaSiswa"],
-                            "studentImage"
+                            "studentImage",
+                            "tanggalLahir"
                         ]
                     },
                     {
