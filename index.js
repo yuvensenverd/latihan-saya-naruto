@@ -6,7 +6,6 @@ var io = require('socket.io').listen(server);
 const port = 2019
 const bodyParser = require('body-parser')
 const cors = require('cors')
-
 const bearerToken = require('express-bearer-token');
 
 require('./scheduler/schedulers')
@@ -29,7 +28,21 @@ app.use(bearerToken())
 
 
 
-const {userRouter, paymentRouter,studentRouter,studentDetailRouter,projectRouter,testRouter, studentRevisionRouter, studentDetailRevisionRouter, subscriptionRouter, scholarshipRouter} = require('./router')
+const {
+    userRouter, 
+    paymentRouter,
+    studentRouter,
+    studentDetailRouter,
+    projectRouter,
+    testRouter, 
+    studentRevisionRouter,
+    scholarshipRouter,
+    studentDetailRevisionRouter,
+    subscriptionRouter,
+    schoolRouter
+} = require('./router')
+
+
 app.use("/user", userRouter)
 app.use('/payment', paymentRouter)
 app.use("/user", userRouter)
@@ -41,7 +54,7 @@ app.use('/studentrev', studentRevisionRouter)
 app.use('/scholarship', scholarshipRouter)
 app.use('/studentdetailrev', studentDetailRevisionRouter);
 app.use('/subscription', subscriptionRouter);
-
+app.use('/school', schoolRouter)
 
 console.log('masuk io')
 io.on('connection', (socket) => {

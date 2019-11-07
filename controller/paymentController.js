@@ -1,12 +1,13 @@
 const { Sequelize, sequelize, Payment, User, Project }  = require('../models')
 const midtransClient                                    = require('midtrans-client')
 const moment                                            = require('moment')
-
+const Axios = require('axios')
 const snap = new midtransClient.Snap({
     isProduction    : false,
     serverKey       : 'SB-Mid-server-Dr8HK_lJ4cuEZi4rUgNcsDUR',
     clientKey       : 'SB-Mid-client-Ttge99xVU4AOz44T'
 })
+
 
 module.exports = {
     //====================// midtrans //====================
@@ -63,7 +64,7 @@ module.exports = {
         snap.transaction.status(order_id)
         .then((Response)=>{
             console.log('=======masuk status=========')
-            console.log( Response.transaction_status)
+            console.log( Response)
             let status = {
                 order_id : Response.order_id,
                 transaction_status : Response.transaction_status
@@ -248,7 +249,103 @@ module.exports = {
         .catch((err) => {
             console.log(err)
         })
+    },
+
+    payout:(req,res)=>{
+        // console.log('--------------------------> masuk payout')
+        console.log(req.body)
+        Axios({
+            headers: {
+              'Content-Type': 'application/json',
+              "Accept":"application/json",
+            },
+            method: 'post',
+            url: 'https://app.sandbox.midtrans.com/iris/api/v1/payouts',
+            auth: {
+              username: 'IRIS-83f135ed-3513-47bf-81bb-a071822ee68f'
+            },
+            data: req.body
+            })
+            .then((ress)=>{
+                    console.log(ress.data)
+                    return res.status(200).send(ress.data)
+                }).catch((err)=>{
+                    console.log(err)
+                    return res.status(400).send(err)
+                })
+
+    },
+    createBeneficiaries:  (req,res)=>{
+        console.log('--------------------------> masuk Beneficiaries')
+        console.log(req.body)
+        Axios({
+            headers: {
+              'Content-Type': 'application/json',
+              "Accept":"application/json",
+            },
+            method: 'post',
+            url: 'https://app.sandbox.midtrans.com/iris/api/v1/beneficiaries',
+            auth: {
+              username: 'IRIS-83f135ed-3513-47bf-81bb-a071822ee68f'
+            },
+            data: req.body
+            })
+            .then((ress)=>{
+                    console.log(ress.data)
+                    return res.status(200).send(ress.data)
+                }).catch((err)=>{
+                    // console.log('----error cuy')
+                    console.log(err)
+                    // console.log(err.response.data)
+                    return res.status(400).send({message: err.response.data})
+                })
+    },
+    getListBank : (req, res) => {
+        console.log('-------------- > list bank')
+        Axios({
+            headers: {
+              'Content-Type': 'application/json',
+              "Accept":"application/json",
+            },
+            method: 'get',
+            url: 'https://app.sandbox.midtrans.com/iris/api/v1/beneficiary_banks',
+            auth: {
+              username: 'IRIS-83f135ed-3513-47bf-81bb-a071822ee68f'
+            }
+        })
+        .then((ress)=>{
+                // console.log(ress.data)
+                return res.status(200).send(ress.data)
+            }).catch((err)=>{
+                console.log(err)
+                return res.status(400).send(err)
+        })
+    },
+    validateBankAccount : (req, res) => {
+        console.log('------------------------ validate bank account')
+        const {code, account} = req.body
+        console.log(req.body)
+        Axios({
+            headers: {
+                "Content-Type":"application/json",
+                "Accept":"application/json",
+                "Cache-Control": "no-cache"
+            },
+            method: 'get',
+            url: `https://app.sandbox.midtrans.com/iris/api/v1//account_validation?bank=${code}&account=${account}`,
+            auth: {
+              username: 'IRIS-83f135ed-3513-47bf-81bb-a071822ee68f'
+            }
+        })
+        .then((ress)=>{
+            // console.log(ress.data)
+            return res.status(200).send(ress.data)
+        }).catch((err)=>{
+            console.log(err)
+            return res.status(400).send({message: err.response.data})
+    })
     }
+
 
     
 
