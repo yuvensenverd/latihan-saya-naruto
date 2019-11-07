@@ -99,7 +99,8 @@ module.exports = {
                     
                     ],
                     where : {
-                        userId : id 
+                        isOngoing : 1,
+                        userId : id
                     },
                      
                 })
@@ -178,10 +179,12 @@ module.exports = {
                         "studentId",
                         "shareDescription",
                         "scholarshipStart",
+                        // "paymentSource",
                         "scholarshipEnded",
                         [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],
-                        [sequelize.fn('SUM', sequelize.col('Subscriptions.nominalSubscription')), 'currentSubs'],
-                        [sequelize.fn('COUNT', sequelize.col('Subscriptions.id')), 'totalDonasi']
+                        // [sequelize.fn('SUM', sequelize.col('Subscriptions.nominalSubscription')), 'currentSubs'],
+                        [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totaldonation'],
+                        [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'jumlahdonation'],
                         
         
                     ],
@@ -199,8 +202,19 @@ module.exports = {
                             ["nama", "namaSekolah"], "namaPemilikRekening", "nomorRekening" , "bank", "email"
                         ]
                     },
+                    // {
+                    //     model : Subscription,
+                    //     attributes :   [
+                    //         'nominalSubscription',
+                    //         [sequelize.fn('SUM', sequelize.col('nominalSubscription')), 'currentSubs']
+                    //     ], 
+                    //     group : ['scholarshipId'],
+                       
+                                    
+                    //     separate : true
+                    // },
                     {
-                        model : Subscription,
+                        model : Payment,
                         attributes : []
                     }
 
@@ -245,6 +259,7 @@ module.exports = {
                         "studentId",
                         "shareDescription",
                         "scholarshipStart",
+                        // "paymentSource",
                         "scholarshipEnded",
                         [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],
                         // [sequelize.fn('SUM', sequelize.col('Subscriptions.nominalSubscription')), 'currentSubs'],
@@ -268,14 +283,15 @@ module.exports = {
                             ["nama", "namaSekolah"]
                         ]
                     },
-                    {
-                        model : Subscription,
-                        attributes :   [
-                            [sequelize.fn('SUM', sequelize.col('nominalSubscription')), 'currentSubs']
-                        ], 
-                                    
-                        separate : true
-                    },
+                    // {
+                    //     model : Subscription,
+                    //     attributes :   [
+                    //         'nominalSubscription',
+                    //         [sequelize.fn('SUM', sequelize.col('nominalSubscription')), 'currentSubs']
+                    //     ], 
+                    //     group : ['scholarshipId'],    
+                    //     separate : true
+                    // },
                     {
                         model : Payment,
                         attributes : []
@@ -294,29 +310,9 @@ module.exports = {
                 })
 
                 .then((result) => {
-                    // console.log(result)
-                    // Kurang Counting
-                    
-                    // return res.status(200).send(result)
-
-                    scholarship.count({
-                        where : {
-                            judul : {
-                                [Op.like] : `%${name}%`
-                            },
-                            isOngoing : 'on Going',
-                            isVerified: 'verified'
-                        }
-                    })
-                    .then((resultTotalScholarship) => {
-                        var total = resultTotalScholarship;
-
-                        return res.status(200).send({message: 'Success Get All Scholarship', result, total})
-                    })
-                    .catch((err) => {
-                        console.log(err)
-                        return res.status(500).send({message: err})
-                    })
+                    // console.log(result[0].dataValues.Subscriptions.length)
+                    // console.log(result[0].dataValues.Subscriptions[0].dataValues)
+                    return res.status(200).send(result)
                 }).catch((err)=>{
                     console.log(err)
                     return res.status(500).send({message: err})
@@ -327,8 +323,7 @@ module.exports = {
         // console.log(req.query)
         // console.log('--------------------------> masuk cancel')
         scholarship.update({
-            isVerified: 'Cancelled',
-            isOngoing : 'Cancelled'
+            isOngoing : 0
         },{
             where : {
                 id : req.query.id  
