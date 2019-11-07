@@ -164,8 +164,8 @@ module.exports = {
     // },
     getScholarshipDetail:(req,res) => {
         const {id} = req.query
-        // console.log('---------------> masuk secDetail')
-        // console.log(req.query)
+        console.log('---------------> masuk secDetail')
+        console.log(req.query)
         sequelize.transaction(function(t){
             return(
                 scholarship.findAll({
@@ -196,7 +196,7 @@ module.exports = {
                     {
                         model : School,
                         attributes : [
-                            ["nama", "namaSekolah"]
+                            ["nama", "namaSekolah"], "namaPemilikRekening", "nomorRekening" , "bank", "email"
                         ]
                     },
                     {
@@ -208,14 +208,14 @@ module.exports = {
                     ],
                     where : {
                         id,
-                        isOngoing: 1,
+                        isOngoing: 'on Going',
                     },
                     group: ['id']
                      
                 })
 
                 .then((result) => {
-                    // console.log(result)
+                    console.log(result)
                     return res.status(200).send(result)
                 }).catch((err)=>{
                     return res.status(500).send({message: err})
@@ -270,7 +270,9 @@ module.exports = {
                     },
                     {
                         model : Subscription,
-                        attributes :   [[sequelize.fn('SUM', sequelize.col('nominalSubscription')), 'currentSubs']], 
+                        attributes :   [
+                            [sequelize.fn('SUM', sequelize.col('nominalSubscription')), 'currentSubs']
+                        ], 
                                     
                         separate : true
                     },
