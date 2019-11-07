@@ -11,7 +11,7 @@ const snap = new midtransClient.Snap({
 module.exports = {
     //====================// midtrans //====================
     getSnapMd : (req, res) => {
-        let { projectId, userId, komentar, anonim, scholarshipId} = req.body.userData
+        let { projectId, userId, komentar, anonim, scholarshipId, paymentSource} = req.body.userData
         let { gross_amount, order_id} = req.body.parameter.transaction_details
         let { parameter } = req.body
         console.log('masuk get token midtrans')
@@ -31,6 +31,7 @@ module.exports = {
                 paymentType: 'pending',
                 nominal: gross_amount,
                 statusPayment: 'pending',
+                paymentSource,
                 projectId: projectId ? projectId : null,
                 scholarshipId: scholarshipId ? scholarshipId : null,
                 userId: userId,
