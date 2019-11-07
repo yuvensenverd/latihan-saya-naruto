@@ -179,6 +179,7 @@ module.exports = {
                         "studentId",
                         "shareDescription",
                         "scholarshipStart",
+                        // "paymentSource",
                         "scholarshipEnded",
                         [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],
                         // [sequelize.fn('SUM', sequelize.col('Subscriptions.nominalSubscription')), 'currentSubs'],
@@ -201,17 +202,17 @@ module.exports = {
                             ["nama", "namaSekolah"]
                         ]
                     },
-                    {
-                        model : Subscription,
-                        attributes :   [
-                            'nominalSubscription',
-                            [sequelize.fn('SUM', sequelize.col('nominalSubscription')), 'currentSubs']
-                        ], 
-                        group : ['scholarshipId'],
+                    // {
+                    //     model : Subscription,
+                    //     attributes :   [
+                    //         'nominalSubscription',
+                    //         [sequelize.fn('SUM', sequelize.col('nominalSubscription')), 'currentSubs']
+                    //     ], 
+                    //     group : ['scholarshipId'],
                        
                                     
-                        separate : true
-                    },
+                    //     separate : true
+                    // },
                     {
                         model : Payment,
                         attributes : []
@@ -258,6 +259,7 @@ module.exports = {
                         "studentId",
                         "shareDescription",
                         "scholarshipStart",
+                        // "paymentSource",
                         "scholarshipEnded",
                         [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],
                         // [sequelize.fn('SUM', sequelize.col('Subscriptions.nominalSubscription')), 'currentSubs'],
@@ -288,7 +290,7 @@ module.exports = {
                     //         'nominalSubscription',
                     //         [sequelize.fn('SUM', sequelize.col('nominalSubscription')), 'currentSubs']
                     //     ], 
-                    //     group : ['scholarshipId'], 
+                    //     group : ['scholarshipId'],    
                     //     separate : true
                     // },
                     {
