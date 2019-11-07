@@ -258,6 +258,7 @@ module.exports = {
     },
 
     getDetailProject: (req, res) => {
+        console.log('masukasmauskasmasuasamsauskasmasuakmsuasmausams')
         Project.findAll({
             attributes : [
                 ["name", "projectName"],
@@ -267,7 +268,10 @@ module.exports = {
                 "projectEnded",
                 "totalTarget",
                 "projectImage",
-                "shareDescription"
+                "shareDescription",
+                [sequelize.fn('datediff', sequelize.col('projectEnded') ,  sequelize.fn("NOW")), 'SisaHari'],
+                [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totalNominal'],
+                [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'totalDonasi']
             ],
 
             where: {
@@ -280,11 +284,19 @@ module.exports = {
                 attributes : [
                     ["nama", "projectCreator"]
                 ]
-            }]
+            },
+            {
+                model : Payment,
+                attributes : []
+            }
+        ,
+        
+        ]
         })
         .then((results) => {
             // console.log(results)
-            return res.status(200).send({message : 'success get projects', results})
+            console.log(results)
+            return res.status(200).send({message : 'success get proooooojects', results})
         })
         .catch((err) => {
             return res.status(500).send({message : err})
@@ -292,7 +304,7 @@ module.exports = {
     },
 
     searchProject : (req,res) =>{
-
+        console.log('projects')
         // -----------BACA--------------
         // formatbody : {
         //     name : 'namaProject',
@@ -347,25 +359,25 @@ module.exports = {
         })
         .then((results)=>{
             console.log(results.length)
-            Project.count({
-                where: {
-                    name: {
-                    [Op.like] : `%${name}%`
-                    },
-                    isDeleted : 0,
-                    isGoing : 1
-                }
-            })
-            .then((resultsTotalProject) => {
+            // Project.count({
+            //     where: {
+            //         name: {
+            //         [Op.like] : `%${name}%`
+            //         },
+            //         isDeleted : 0,
+            //         isGoing : 1
+            //     }
+            // })
+            // .then((resultsTotalProject) => {
                 
-                let total = resultsTotalProject
-                console.log('total  ' + total)
+            //     let total = resultsTotalProject
+            //     console.log('total  ' + total)
                 
-                return res.status(200).send({message : 'success get projects', results, total})
-            })
-            .catch((err) => {
-                return res.status(500).send({message : err})
-            })
+                return res.status(200).send({message : 'success get  proooooojects', results})
+            // })
+            // .catch((err) => {
+            //     return res.status(500).send({message : err})
+            // })
         })
         .catch((err) => {
             console.log('nasuk')
