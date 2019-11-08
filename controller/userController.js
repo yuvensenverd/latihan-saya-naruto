@@ -23,7 +23,7 @@ const createPdf = async (obj, cb) => {
     // let objObj = JSON.parse(JSON.stringify(obj)) //Forces get of Datavalues
     
 
-    var { email , username, id , nominalSubscription, date, namamurid, judulscholarship, nominalscholarship} = obj
+    var { email , username, id , nominalSubscription, date, namamurid, judulscholarship, nominalscholarship, scholarshipId} = obj
     try{ 
         const replacements = {
             PaymentReceiptNumber: id,
@@ -38,8 +38,9 @@ const createPdf = async (obj, cb) => {
 
             //
             NamaMurid : namamurid,
-            JudulScholarship : judulscholarship,
+            JudulScholarship : encodeURIComponent(judulscholarship) , // Bantu Reeza sekolah Bantu%Reza%sekolah
             NominalScholarship : nominalscholarship,
+            scholarshipId : scholarshipId,
 
             //
 
@@ -76,7 +77,7 @@ const mailInvoice = async (obj, PDF_STREAM) => {
     try{
         // const { transaction, voucher } = paymentObj
         // const { programSales, subscriptionSales, serviceSales } = transaction
-        var { email , username, id , nominalSubscription, date, namamurid, judulscholarship, nominalscholarship} = obj
+        var { email , username, id , nominalSubscription, date, namamurid, judulscholarship, nominalscholarship, scholarshipId} = obj
 
         let subject = "Payment Receipt kasihnusantara"
         let InvoiceNumber = 012334556
@@ -96,9 +97,9 @@ const mailInvoice = async (obj, PDF_STREAM) => {
             NumberDetails: NumberDetails,
             Nominal:nominalSubscription.toString().toLocaleString(),
             
-
+            scholarshipId : scholarshipId,
             NamaMurid : namamurid,
-            JudulScholarship : judulscholarship,
+            JudulScholarship : encodeURIComponent(judulscholarship),
             NominalScholarship : nominalscholarship,
         }
 
@@ -761,22 +762,25 @@ module.exports = {
         //     res.send(results)
         // })
         Subscription.findOne({
+            attributes : ['nominalSubscription'],
             where: {
-                userId: req.user.userId
+                userId: req.user.userId,
+                scholarshipId : req.params.id
+
             }
         })
         .then((result) => {
             console.log(result)
-            let status;
-            if(result) {
-                console.log('User ini telah subscribe')
-                status = 1
-            } else {
-                console.log('User ini belum subscribe ke scholarship ini')
-                status = 0
-            }
+            // let status;
+            // if(result) {
+            //     console.log('User ini telah subscribe')
+            //     status = 1
+            // } else {
+            //     console.log('User ini belum subscribe ke scholarship ini')
+            //     status = 0
+            // }
             return res.status(200).send({
-                status           
+                result           
             })
         })
         .catch((err) => {
