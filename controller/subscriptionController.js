@@ -160,18 +160,18 @@ module.exports = {
                 return val.id
             })
 
-           var res2 = await  Subscription.findAll({
-                attributes : [
-                    [sequelize.fn('SUM', sequelize.col('nominalSubscription')), 'currentSubs']
-                ],
+        //    var res2 = await  Subscription.findAll({
+        //         attributes : [
+        //             [sequelize.fn('SUM', sequelize.col('nominalSubscription')), 'currentSubs']
+        //         ],
         
-                where : {
-                    scholarshipId  : {
-                        [Op.in] : listScholarId
-                    }
-                },
-                group : ['scholarshipId']
-            })
+        //         where : {
+        //             scholarshipId  : {
+        //                 [Op.in] : listScholarId
+        //             }
+        //         },
+        //         group : ['scholarshipId']
+        //     })
 
             var res3 = await Payment.findAll({
                 attributes : [
@@ -188,18 +188,18 @@ module.exports = {
 
             // KALAU ADA YANG TAU CARA BIKIN INI SEMUA DALAM SEKALI SEQUELIZE TOLONG DIUBAH YA :)
 
-            var subsScholar = res2.map((val)=>{
-                console.log(val)
-                return val.dataValues.currentSubs
-            })
+            // var subsScholar = res2.map((val)=>{
+            //     console.log(val)
+            //     return val.dataValues.currentSubs
+            // })
             var paymentDonations = res3.map((val)=>{
                 return [val.dataValues.scholarshipId ,val.dataValues.currentDonation]
             })
-            console.log(subsScholar)
+            // console.log(subsScholar)
             console.log(paymentDonations)
 
             for(var i = 0 ; i < hasil.length; i++){
-                hasil[i].currentSubs = parseInt(subsScholar[i])
+                // hasil[i].currentSubs = parseInt(subsScholar[i])
                 var totaldonation = 0
                 for(var y = 0 ; y < paymentDonations.length ; y++){
                     if(paymentDonations[y][0] === hasil[i].id){
@@ -280,6 +280,22 @@ module.exports = {
         }).catch((err)=>{
             console.log(err)
             return res.status(500).send(err)
+        })
+    },
+
+    getUserSubscriptionNominal : (req,res) =>{
+        const { id } = req.body
+        const params = req.params.id
+        Subscription.findOne({
+            attributes : ['nominalSubscription'],
+            where : {
+                userId : id,
+                scholarshipId : params
+            }
+        }).then((result)=>{
+            return res.status(200).send({result})
+        }).catch((err)=>{
+            return res.status(500).send({message : 'Error database', error : err.message})
         })
     }
 }
