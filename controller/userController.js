@@ -564,6 +564,8 @@ module.exports = {
             }
         })
         .then((results) => {
+            console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+            console.log(results)
             if(results !== null) {
                 // Kalo sudah pernah mendaftar dengan email google, dan user ingin mencoba
                 // login lewat gmail, maka muncul errornya
@@ -581,6 +583,8 @@ module.exports = {
                     }
                 })
                 .then((dataUser) => {
+                    console.log('BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')
+                    console.log(dataUser)
                     if(dataUser !== null) {
                         // Jika ada
                         // console.log(dataUser.id)
@@ -610,9 +614,12 @@ module.exports = {
                         .then((results) => {
 
                             User.findOne({
-                                isGoogle: encryptGoogleId
+                                where: {
+                                    isGoogle: encryptGoogleId
+                                }
                             })
                             .then((dataUserInsert) => {
+                                console.log('CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCc')
                                 const tokenJwt = createJWTToken({ userId: dataUserInsert.id, email: dataUserInsert.email })
 
                                 return res.status(200).send({
@@ -691,7 +698,9 @@ module.exports = {
                         .then((results) => {
 
                             User.findOne({
-                                isGoogle: encryptFacebookId
+                                where: {
+                                    isFacebook: encryptFacebookId
+                                }
                             })
                             .then((dataUserInsert) => {
                                 const tokenJwt = createJWTToken({ userId: dataUserInsert.id, email: dataUserInsert.email })
