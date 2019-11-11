@@ -35,25 +35,25 @@ module.exports = {
         const { parameter, userData } = req.body
         console.log(parameter)
         // console.log(userData) 
-        const { gross_amount } = parameter.transaction_details
+        const { gross_amount, order_id } = parameter.transaction_details
         const nominalSubscription = gross_amount
         const { userId, scholarshipId, remainderDate, monthLeft, paymentSource } = userData
 
         
-        Subscription.create({
-            scholarshipId,
-            userId,
-            nominalSubscription,
-            remainderDate,
-            monthLeft
-        }).then((results)=>{
-            console.log('success insert ')
-            return res.status(200).send(results);
+        // Subscription.create({
+        //     scholarshipId,
+        //     userId,
+        //     nominalSubscription,
+        //     remainderDate,
+        //     monthLeft
+        // }).then((results)=>{
+        //     console.log('success insert ')
+        //     return res.status(200).send(results);
 
 
-        }).catch((err)=>{
-            return res.status(500).send(err);
-        })  
+        // }).catch((err)=>{
+        //     return res.status(500).send(err);
+        // })  
 
 
 
