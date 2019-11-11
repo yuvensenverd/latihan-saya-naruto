@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "root",
-    "password": "P@ssw0rd",
-    "database": "kasihnusantara",
-    "host": "127.0.0.1",
+    "username": "hisbu44",
+    "password": "P@ssw0rd.o1",
+    "database": "devapi",
+    "host": "db4free.net",
     "dialect": "mysql"
   },
   "test": {
