@@ -9,5 +9,6 @@ router.post('/addSchool', schoolController.addSchool)
 router.post('/putSchool', schoolController.putSchool)
 router.post('/verifiedSchool', schoolController.verifiedSchool)
 router.post('/deleteSchool', schoolController.deleteSchool)
+router.post('/getSelectedSchool', schoolController.getSelectedSchool)
 
 module.exports = router

@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     Project.hasMany(models.Payment, { foreignKey : 'projectId' })
     Project.belongsTo(models.User, { foreignKey : 'userId'})
+    Project.belongsTo(models.Payout, { foreignKey : 'projectId'})
   };
   return Project;
 };

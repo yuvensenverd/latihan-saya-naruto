@@ -252,8 +252,10 @@ module.exports = {
     },
 
     payout:(req,res)=>{
-        // console.log('--------------------------> masuk payout')
-        console.log(req.body)
+        console.log('--------------------------> masuk payout')
+        // console.log(req.body)
+        let {id} = req.query
+        // console.log(id)
         Axios({
             headers: {
               'Content-Type': 'application/json',
@@ -267,12 +269,50 @@ module.exports = {
             data: req.body
             })
             .then((ress)=>{
-                    console.log(ress.data)
+                    // console.log(ress.data)
+                    let { reference_no } = ress.data.payouts[0]
+                    // console.log(ress.data.payouts[0].reference_no)
+                    // console.log( reference_no )
+                    // --------> getPayout detail from midtrans and insert to db
+                    
+                    Axios({
+                        headers: {
+                          'Content-Type': 'application/json',
+                          "Accept":"application/json",
+                        },
+                        method: 'post',
+                        url: `https://app.sandbox.midtrans.com/iris/api/v1/payouts/${reference_no}`,
+                        auth: {
+                          username: 'IRIS-83f135ed-3513-47bf-81bb-a071822ee68f'
+                        },
+                        data: req.body
+                        })
+                        .then((resPayout)=>{
+                                console.log(resPayout.data)
+                                let {
+                                    amount,
+                                    beneficiary_name,
+                                    beneficiary_account,
+                                    bank,
+                                    reference_no,
+                                    notes,
+                                    status,
+                                    created_by
+                                } = resPayout.data
+                                
+
+                                return res.status(200).send(resPayout.data)
+            
+                        }).catch((err)=>{
+                            console.log(err)
+                            return res.status(400).send(err)
+                        })
+
                     return res.status(200).send(ress.data)
-                }).catch((err)=>{
-                    console.log(err)
-                    return res.status(400).send(err)
-                })
+            }).catch((err)=>{
+                console.log(err)
+                return res.status(400).send(err)
+            })
 
     },
     createBeneficiaries:  (req,res)=>{
@@ -332,7 +372,7 @@ module.exports = {
                 "Cache-Control": "no-cache"
             },
             method: 'get',
-            url: `https://app.sandbox.midtrans.com/iris/api/v1//account_validation?bank=${code}&account=${account}`,
+            url: `https://app.sandbox.midtrans.com/iris/api/v1/account_validation?bank=${code}&account=${account}`,
             auth: {
               username: 'IRIS-83f135ed-3513-47bf-81bb-a071822ee68f'
             }

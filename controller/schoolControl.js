@@ -5,7 +5,7 @@ module.exports = {
     getSchool : (req, res) => {
         School.findAll({
             attributes:{
-                exclude : ['createAt', 'updateAt']
+                exclude : ['createdAt', 'updatedAt']
             },
                 where : {
                     isDeleted : 0
@@ -16,6 +16,25 @@ module.exports = {
             return res.status(200).send(result)
         }).catch((err)=>{
             return res.status(500).send({message: 'error', error: err})
+        })
+    },
+    getSelectedSchool: (req, res) => {
+        console.log('--------------->')
+        const {id} = req.query
+        let kondisi = `where : { ${id} }`
+        School.findAll({
+            attributes: {
+                exclude: ['createdAt', 'updatedAt']
+            },
+            where: {
+                id
+            }
+        }).then((result)=>{
+            console.log(result)
+            return res.status(200).send(result)
+        }).catch((err)=>{
+            console.log(err)
+            return res.status(500).send(err)
         })
     },
     addSchool : (req, res) => {

@@ -99,14 +99,14 @@ module.exports = {
                     
                     ],
                     where : {
-                        isOngoing : 1,
+                        // isOngoing : 1,
                         userId : id
                     },
                      
                 })
 
                 .then((result) => {
-                    // console.log(result)
+                    console.log(result)
                     return res.status(200).send(result)
                 }).catch((err)=>{
                     return res.status(500).send({message: err})
@@ -222,14 +222,14 @@ module.exports = {
                     ],
                     where : {
                         id,
-                        isOngoing: 'on Going',
+                        isOngoing: '1',
                     },
                     group: ['id']
                      
                 })
 
                 .then((result) => {
-                    console.log(result)
+                    // console.log(result)
                     return res.status(200).send(result)
                 }).catch((err)=>{
                     return res.status(500).send({message: err})
