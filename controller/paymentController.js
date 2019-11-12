@@ -59,8 +59,11 @@ module.exports = {
         
         const {order_id} = req.body
         console.log('========masuk getStatus =============')
-
+        
         if(req.body.order_id){
+            console.log(req.body)
+            //######## INSERT DATABASE
+             
             
         }
 
