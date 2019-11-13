@@ -25,7 +25,7 @@ module.exports = {
         snap.createTransaction(parameter)
         .then((transaction)=>{
             transactionToken = transaction.token;
-            console.log('transactionToken: ', transactionToken)
+            // console.log('transactionToken: ', transactionToken)
 
             //######## INSERT DATABASE 
             Payment.create({
@@ -42,9 +42,10 @@ module.exports = {
                 komentar: komentar,
                 isAnonim: anonim
             }).then(()=>{
+                // if paymentSource === Subscription, subscription update remainderDate + 1 month from column (or now), (if settlement)
                 Payment.findAll()
                 .then((result)=>{
-                    console.log(result)
+                    // console.log(result)
                     res.send(result)
 
                 })
