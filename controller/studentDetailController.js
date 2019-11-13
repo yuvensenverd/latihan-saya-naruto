@@ -234,12 +234,13 @@ module.exports = {
         }
         
     },
-    getDetail:(req, res) => {
-        // let {id} = req.params
-        // console.log(id)
-        // console.log(req.body)
-        console.log('-----------------> masuk detail')
 
-    }
+    // getDetail:(req, res) => {
+    //     let {id} = req.params
+    //     console.log(id)
+    //     console.log(req.body)
+    //     console.log('-----------------> masuk detail')
+
+    // }
 
 }

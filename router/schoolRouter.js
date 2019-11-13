@@ -5,9 +5,9 @@ var {auth} = require('../helpers/auth')
 const { schoolController} = require('../controller')
 
 router.get('/getSchool', schoolController.getSchool)
-router.post('/addSchool', schoolController.addSchool)
-router.post('/putSchool', schoolController.putSchool)
-router.post('/verifiedSchool', schoolController.verifiedSchool)
-router.post('/deleteSchool', schoolController.deleteSchool)
+router.post('/addSchool', auth, schoolController.addSchool)
+router.post('/putSchool', auth, schoolController.putSchool)
+router.post('/verifiedSchool', auth, schoolController.verifiedSchool)
+router.post('/deleteSchool', auth, schoolController.deleteSchool)
 
 module.exports = router

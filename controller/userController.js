@@ -501,6 +501,7 @@ module.exports = {
             return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
         })
     },
+    
     getSchool:(req,res)=>{
         School.findAll({
             attributes:[
