@@ -73,7 +73,7 @@ module.exports = {
                 console.log('asudhauishd')
 
                 Payment.create({
-                    paymentType,
+                    paymentType : 'pending',
                     paymentSource,
                     nominal : nominalSubscription, //
                     statusPayment : "Pending", 
@@ -83,8 +83,8 @@ module.exports = {
                 }).then((result)=>{
                     console.log('finish subscription insert ')
                     
-                    return res.status(200).send({result})
-        
+                    // return res.status(200).send({result})
+                    return res.status(200).send({transactionToken, order_id: parameter.transaction_details.order_id})
         
                 
                 }).catch((err)=>{
@@ -92,7 +92,7 @@ module.exports = {
                     return res.status(500).send(err)
                 })
                 
-                return res.status(200).send({transactionToken, order_id: parameter.transaction_details.order_id})
+               
 
 
             
@@ -272,8 +272,22 @@ module.exports = {
             order_id
         }).then((result)=>{
             console.log('finish subscription insert ')
-            
-            return res.status(200).send({result})
+
+
+            Subscription.update({
+                remainderDate : sequelize.fn('ADDDATE', sequelize.col('remainderDate'),sequelize.literal('INTERVAL 1 MONTH') ),
+            },{
+                where : {
+                    id : 1 // Subs_id
+                }
+            }).then((res)=>{
+                console.log('asidjaisdjiajsd')
+                console.log(res)
+                return res.status(200).send({result})
+            }).catch((err)=>{
+                return res.status(500).send({err})
+            })
+
 
 
         
@@ -281,6 +295,25 @@ module.exports = {
             console.log(err)
             return res.status(500).send(err)
         })
+
+
+
+        
+            // Subscription.findAll({
+            //     attributes : [
+            //         [sequelize.fn('ADDDATE', sequelize.col('remainderDate'),sequelize.literal('INTERVAL 1 YEAR') ), 'harioi']
+            //     ],
+            //     where : {
+            //         id : 1
+            //     }
+            // }).then((res)=>{
+            //     console.log(res)
+            // }).catch((err)=>{
+            //     console.log(err)
+            // })
+
+            
+            // return res.status(200).send({result})
     },
 
     getUserSubscriptionNominal : (req,res) =>{
