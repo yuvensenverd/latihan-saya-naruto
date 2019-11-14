@@ -9,6 +9,7 @@ var schedulerInvoice = schedule.scheduleJob('*/5 * * * * *', function(){
     // subscriptionController.subscriptionPayment()
     // userController.scholarshipCheck() //params
     // userController.reminderInvoice()
+    userController.projectCheck()
 });
 
 

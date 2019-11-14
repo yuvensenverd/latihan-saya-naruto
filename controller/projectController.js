@@ -376,12 +376,12 @@ module.exports = {
                 isDeleted : 0,
                 isGoing : 1
             },
-            order : [['projectCreated', `${date}`]],
+            order : [['id', 'asc'],['projectCreated', `${date}`]],
             // order : !date ? [['id', 'asc']] : [['projectCreated', `${date}`]],
             group : ['id']
         })
         .then((results)=>{
-            console.log(results.length)
+            console.log(results)
             // Project.count({
             //     where: {
             //         name: {

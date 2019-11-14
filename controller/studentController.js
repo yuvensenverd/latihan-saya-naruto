@@ -36,7 +36,7 @@ module.exports={
                 console.log(data)
                 data.studentImage=imagePath
                 // data.tanggalLahir=Moment(data.tanggalLahir)
-                const {name,pendidikanTerakhir,gender,status,alamat,tanggalLahir,userId,story,schoolId,studentImage}=data
+                const {name,pendidikanTerakhir,gender,status,alamat,tanggalLahir,userId,story,schoolId,studentImage,provinsi}=data
                 console.log(name)
                 return sequelize.transaction(function (t){
                     return Student.create({
@@ -44,6 +44,7 @@ module.exports={
                         pendidikanTerakhir:pendidikanTerakhir,
                         gender:gender,
                         status,
+                        provinsi,
                         alamat,
                         tanggalLahir:Moment(tanggalLahir),
                         userId,

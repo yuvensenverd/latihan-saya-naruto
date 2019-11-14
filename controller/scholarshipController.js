@@ -242,8 +242,8 @@ module.exports = {
         var { page, limit, name, date} = req.body;
         
         var offset = (page * limit) - limit
-        console.log(req.body)
-        console.log(offset)
+        // console.log(req.body)
+        // console.log(offset)
 
                 scholarship.findAll({
                     limit:parseInt(limit),

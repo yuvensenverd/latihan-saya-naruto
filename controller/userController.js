@@ -971,8 +971,8 @@ module.exports = {
         }
         
     },
-    projectCheck : (req,results) =>{ 
-        
+    projectCheck :   (req,results) =>{ 
+   
         // Project.update(
         //     {
         //         isGoing : 0
@@ -1033,17 +1033,20 @@ module.exports = {
         //     })
 
 
+        // BNEER
+
         Project.findAll({
             attributes : [
                  'id',
-                 [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totalNominal'],
+                 [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totalPayment'],
                  'projectEnded',
-                 'totalTarget'
+                 'totalTarget',
+                 [sequelize.fn('datediff', sequelize.col('projectEnded') ,  sequelize.fn('NOW')), 'SisaHari'],
             ],
             include : [
                 {
                     model : Payment,
-                    required : true
+                    required : false
                 }
             ],
             where : {
@@ -1064,12 +1067,17 @@ module.exports = {
             group : ['id'],
             having : {
                 [Op.or] : [
-                    sequelize.where(sequelize.fn('datediff', sequelize.col('projectEnded') ,  sequelize.fn("NOW")), {
-                        [Op.lte] : 0 // OR [Op.gt] : 5
-                    }),
+                    // sequelize.where(sequelize.fn('datediff', sequelize.col('projectEnded') ,  sequelize.fn("NOW")), {
+                    //     [Op.lte] : 0 // OR [Op.gt] : 5
+                    // }),
+                    {
+                        SisaHari : {
+                             [Op.lte] : 0
+                         }
+                    },
                     {
                         totalTarget : {
-                            [Op.lte] : sequelize.col('totalNominal')
+                            [Op.lte] : sequelize.col('totalPayment')
                             //sequelize.fn('SUM', sequelize.col('Payments.nominal'))
                         }
                     }
@@ -1078,6 +1086,8 @@ module.exports = {
             }
         }).then((res)=>{
    
+
+            console.log(res)
             var listproject = res.map((val)=>{
                 console.log(val.dataValues)
                 return val.dataValues.id
@@ -1101,6 +1111,8 @@ module.exports = {
             console.log('errors')
         })
 
+        // BNEER
+
 
        
     },
@@ -1119,33 +1131,33 @@ module.exports = {
          
                 "scholarshipStart",
                 "scholarshipEnded",
-                [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],
+                [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.fn('NOW')), 'SisaHari'],
                 // [sequelize.fn('SUM', sequelize.col('Subscriptions.nominalSubscription')), 'currentSubs'],
-                [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totalpayment'],
+                [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totalPayment'],
                 [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'jumlahdonation']
   
       
             ],
             
             include : [
-            {
-                model : Subscription,
-                attributes :   ['nominalSubscription',[sequelize.fn('SUM', sequelize.col('nominalSubscription')), 'currentSubs']], 
+            // {
+            //     model : Subscription,
+            //     attributes :   ['nominalSubscription',[sequelize.fn('SUM', sequelize.col('nominalSubscription')), 'currentSubs']], 
                             
-                separate : true,
-                group : ['scholarshipId']
-                // include : [
-                //     {
-                //         model : scholarship,
-                //         attributes : [],
-                //         where : {
-                //             isOngoing : 1
-                //         }
-                //     }
-                // ],
+            //     separate : true,
+            //     group : ['scholarshipId']
+            //     // include : [
+            //     //     {
+            //     //         model : scholarship,
+            //     //         attributes : [],
+            //     //         where : {
+            //     //             isOngoing : 1
+            //     //         }
+            //     //     }
+            //     // ],
 
             
-            },
+            // },
             {
                 model : Payment,
                 attributes : []
@@ -1156,50 +1168,44 @@ module.exports = {
                 // isDeleted : 0,
                 // isGoing : 1
             },
-            group : ['id']
+            group : ['id'],
+            having : {
+                [Op.or] : [
+                    {
+                       SisaHari : {
+                            [Op.lte] : 0
+                        }
+                    }
+                    ,
+                    // sequelize.where(sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.fn("NOW")), {
+                    //     [Op.lte] : 0 // OR [Op.gt] : 5
+                    // }),
+                    {
+                        nominal : {
+                            [Op.lte] : sequelize.col('totalPayment')
+                            //sequelize.fn('SUM', sequelize.col('Payments.nominal'))
+                        }
+                    }
+                ]
+           
+            }
              
         }).then((res)=>{
 
             console.log(res)
-        
-   
+
             var listscholarship = res.map((val)=>{
-      
-                    if(val.dataValues.Subscriptions.length !== 0){
-                        var hasil = {...val.dataValues, ...val.dataValues.Subscriptions[0].dataValues}
-                        hasil.grandtotal = parseInt(hasil.totalpayment) + parseInt(hasil.currentSubs)
-                    }else{
-                        var hasil = {...val.dataValues }
-                        hasil.grandtotal = parseInt(hasil.totalpayment)
-                    }
-                
-                    // if(parseInt(hasil.totalpayment) + parseInt(hasil.currentSubs) >= hasil.nominal || hasil.SisaHari === 0){
-                    //     return hasil.id
-                    // }
-                    delete hasil.Subscriptions
-                    return hasil
-                
+                console.log(val.dataValues)
+                return val.dataValues.id
             })
-
             console.log(listscholarship)
-
-            listscholarship = listscholarship.filter(function(e){
-                return e.grandtotal >= e.nominal || e.SisaHari === 0
-            })
-
-            var scholarshipStop = listscholarship.map((e)=> e.id)
-            console.log(scholarshipStop)
-            
-     
-
-   
 
             scholarship.update({
                 isOngoing : 0
             }, {
                 where : {
                     id : {
-                        [Op.in] : scholarshipStop
+                        [Op.in] : listscholarship
                     }
                 }
             }).then((res)=>{
@@ -1207,6 +1213,54 @@ module.exports = {
             }).catch((err)=>{
                 console.log('error')
             })
+
+
+        
+   
+            // var listscholarship = res.map((val)=>{
+      
+            //         if(val.dataValues.Subscriptions.length !== 0){
+            //             var hasil = {...val.dataValues, ...val.dataValues.Subscriptions[0].dataValues}
+            //             hasil.grandtotal = parseInt(hasil.totalpayment) + parseInt(hasil.currentSubs)
+            //         }else{
+            //             var hasil = {...val.dataValues }
+            //             hasil.grandtotal = parseInt(hasil.totalpayment)
+            //         }
+                
+            //         // if(parseInt(hasil.totalpayment) + parseInt(hasil.currentSubs) >= hasil.nominal || hasil.SisaHari === 0){
+            //         //     return hasil.id
+            //         // }
+            //         delete hasil.Subscriptions
+            //         return hasil
+                
+            // })
+
+            // console.log(listscholarship)
+
+            // listscholarship = listscholarship.filter(function(e){
+            //     return e.grandtotal >= e.nominal || e.SisaHari === 0
+            // })
+
+            // var scholarshipStop = listscholarship.map((e)=> e.id)
+            // console.log(scholarshipStop)
+            
+     
+
+   
+
+            // scholarship.update({
+            //     isOngoing : 0
+            // }, {
+            //     where : {
+            //         id : {
+            //             [Op.in] : scholarshipStop
+            //         }
+            //     }
+            // }).then((res)=>{
+            //     console.log('success')
+            // }).catch((err)=>{
+            //     console.log('error')
+            // })
 
 
         }).catch((err)=>{
