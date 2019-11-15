@@ -812,21 +812,22 @@ module.exports = {
  
     },
 
-    applySubscription : (req,res) => {
-        var { subscriptionNominal, email, reminderDate } = req.body
-        // console.log(req.body)
-        User.update({
-            subscriptionStatus: 1,
-            subscriptionNominal,
-            reminderDate
-        },{
-            where: { email }
-        })
-        .then(() => {
-            // console.log('masuk')
-            res.send('success')
-        })
-    },
+    // applySubscription : (req,res) => {
+    //     var { subscriptionNominal, email, reminderDate } = req.body
+    //     // console.log(req.body)
+    //     User.update({
+    //         subscriptionStatus: 1,
+    //         subscriptionNominal,
+    //         reminderDate
+    //     },{
+    //         where: { email }
+    //     })
+    //     .then(() => {
+    //         // console.log('masuk')
+    //         res.send('success')
+    //     })
+    // },
+    
     reminderInvoice : async (req,results) =>{ // RUN SEKALI / HARI
         // console.log('reminderINvoice')
         // console.log(req)

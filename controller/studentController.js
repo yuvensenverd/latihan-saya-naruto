@@ -5,21 +5,21 @@ const Op = Sequelize.Op
 const {uploader}=require('../helpers/uploader')
 const fs=require('fs')
 module.exports={
-    getStudentdata(req,res){
-        Student.findAll({
-            attributes:{
-                exclude:['createdAt','updatedAt']
-            },
-            where:{
-                isDeleted:0
-            }
-        })
-        .then((result)=>{
-            return res.status(200).send(result)
-        }).catch((err)=>{
-            res.status(500).send({message:'error post', error:err})
-        })
-    },
+    // getStudentdata(req,res){
+    //     Student.findAll({
+    //         attributes:{
+    //             exclude:['createdAt','updatedAt']
+    //         },
+    //         where:{
+    //             isDeleted:0
+    //         }
+    //     })
+    //     .then((result)=>{
+    //         return res.status(200).send(result)
+    //     }).catch((err)=>{
+    //         res.status(500).send({message:'error post', error:err})
+    //     })
+    // },
     postStudentdata(req,res){
         try {
             const path = '/student/images'; //file save path
@@ -90,6 +90,8 @@ module.exports={
         }
     },
     putStudentdata(req,res){
+        console.log('Ubahhhh')
+        console.log(req.params.id)
         const {id}=req.params
         console.log(id)
         Student.findAll(
@@ -211,7 +213,7 @@ module.exports={
                 }
             ],
             where : {
-                // userId,
+                userId: req.user.userId,
                 isDeleted : 0
             }
             // where:{
@@ -243,7 +245,8 @@ module.exports={
             ],
             where : {
                 userId: req.query.id,
-                isDeleted: 0
+                isDeleted: 0,
+                dataStatus: 'Approved'
             }
         })
         .then((result) => {

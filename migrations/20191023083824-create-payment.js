@@ -27,6 +27,13 @@ module.exports = {
           key : 'id'
         }
       },
+      scholarshipId: {
+        type: Sequelize.INTEGER,
+        references : {
+          model : 'Scholarships',
+          key : 'id'
+        }
+      },
       userId: {
         type: Sequelize.INTEGER,
         references : {
