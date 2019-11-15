@@ -872,6 +872,7 @@ module.exports = {
             
                 })
                 console.log(res)
+                
         
                 // console.log(res[0].dataValues.User.dataValues)
         
@@ -923,7 +924,8 @@ module.exports = {
         
                 Subscription.update(
                 {
-                    monthLeft : sequelize.literal('monthLeft - 1')
+                    monthLeft : sequelize.literal('monthLeft - 1'),
+                    remainderDate : sequelize.fn('ADDDATE', sequelize.col('remainderDate'),sequelize.literal('INTERVAL 1 MONTH') )
                 }
                 ,
                 {
