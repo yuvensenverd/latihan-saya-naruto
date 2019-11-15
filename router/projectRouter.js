@@ -19,5 +19,6 @@ router.post('/GenerateURL',projectController.generateImgUrlquill)
 router.put('/deleteproject/:id', projectController.deleteProject)
 
 router.post('/GenerateURL',projectController.generateImgUrlquill)
+router.post('/deleteFileQuill', projectController.deleteFileQuill)
 
 module.exports = router

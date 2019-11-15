@@ -428,6 +428,20 @@ module.exports = {
                 return res.status(404).send('error')
             }
         })  
+    },
+
+    deleteFileQuill :  async (req,res) =>{ 
+        console.log('delete file')
+        var filepath = req.body.filepath
+
+        try{
+            await fs.unlinkSync('./public' + filepath);
+            console.log('success')
+            return res.status(200).send({message : ` Success Delete File IN ${filepath}`  })
+        }
+        catch(err){
+            return  res.status(500).send({err})
+        }
     }
 
 }

@@ -13,6 +13,8 @@ router.put('/putScholarship', scholarshipController.putScholarship)
 router.put('/cancelScholarship', scholarshipController.cancelScholarship)
 router.get('/getExistStudent', scholarshipController.getExistStudent)
 router.put('/putVerification', scholarshipController.putVerification)
+
+router.post('/GenerateURL',scholarshipController.generateImgUrlquill)
 // router.post('/getAllScholarship', scholarshipController.getAllScholarship)
 
 module.exports = router;

@@ -1,7 +1,8 @@
 const { Sequelize, sequelize, User, Student, StudenDetail, School, scholarship, Subscription, Payment } = require('../models')
 const Op = Sequelize.Op
 const moment = require('moment')
-
+const {uploader} = require('../helpers/uploader')
+const fs = require('fs')
 
 module.exports = {
     postScholarship : ( req, res) => {
@@ -229,7 +230,7 @@ module.exports = {
                 })
 
                 .then((result) => {
-                    console.log(result)
+                    // console.log(result)
                     return res.status(200).send(result)
                 }).catch((err)=>{
                     return res.status(500).send({message: err})
@@ -378,7 +379,7 @@ module.exports = {
             }
         })
         .then((result) => {
-            console.log(res)
+            // console.log(res)
             return res.status(200).send(result)
         })
     },
@@ -402,7 +403,28 @@ module.exports = {
         }).catch((err) => {
             return res.status(500).send(err)
         })
-    }
+    },
+    generateImgUrlquill(req,res){
+        const path = '/post/image/scholarship'; //file save path
+        const upload = uploader(path, 'PQuil').fields([{ name: 'image'}]); //uploader(path, 'default prefix')
+
+        upload(req, res, (err) => {
+
+            if(err){
+                console.log('masuk2')
+                return res.status(500).json({ message: 'Upload picture failed !', error: err.message });
+            }
+            const { image } = req.files;
+            console.log(image)
+            const imagePath = image ? path + '/' + image[0].filename : null;
+            console.log(imagePath)
+            if(imagePath){
+                return res.status(200).send(imagePath)
+            }else{
+                return res.status(404).send('error')
+            }
+        })  
+    },
 } 
 
     // getAllScholarship: (req, res) => {
