@@ -21,7 +21,7 @@ router.put('/editproject/:id', auth, projectController.editProject)
 router.post('/GenerateURL', auth, projectController.generateImgUrlquill)
 router.put('/deleteproject/:id', auth, projectController.deleteProject)
 
-// router.get('/getAllProject', projectController.getAllProject)
-// router.post('/GenerateURL',projectController.generateImgUrlquill)
+router.post('/GenerateURL',projectController.generateImgUrlquill)
+router.post('/deleteFileQuill', projectController.deleteFileQuill)
 
 module.exports = router

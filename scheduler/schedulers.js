@@ -5,10 +5,11 @@ console.log('masuk')
 
 const schedule = require('node-schedule');
 
-var schedulerInvoice = schedule.scheduleJob('*/5 * * * * *', function(){
+var schedulerInvoice = schedule.scheduleJob('*/15 * * * * *', function(){
     // subscriptionController.subscriptionPayment()
     // userController.scholarshipCheck() //params
     // userController.reminderInvoice()
+    // userController.projectCheck()
 });
 
 

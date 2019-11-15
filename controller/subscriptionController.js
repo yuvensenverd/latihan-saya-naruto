@@ -273,20 +273,26 @@ module.exports = {
         }).then((result)=>{
             console.log('finish subscription insert ')
 
+            
+            return res.status(200).send({result})
 
-            Subscription.update({
-                remainderDate : sequelize.fn('ADDDATE', sequelize.col('remainderDate'),sequelize.literal('INTERVAL 1 MONTH') ),
-            },{
-                where : {
-                    id : 1 // Subs_id
-                }
-            }).then((res)=>{
-                console.log('asidjaisdjiajsd')
-                console.log(res)
-                return res.status(200).send({result})
-            }).catch((err)=>{
-                return res.status(500).send({err})
-            })
+
+            // setelah payment, 
+
+
+            // Subscription.update({
+            //     remainderDate : sequelize.fn('ADDDATE', sequelize.col('remainderDate'),sequelize.literal('INTERVAL 1 MONTH') ),
+            // },{
+            //     where : {
+            //         id : 1 // Subs_id
+            //     }
+            // }).then((res)=>{
+            //     console.log('asidjaisdjiajsd')
+            //     console.log(res)
+            //     return res.status(200).send({result})
+            // }).catch((err)=>{
+            //     return res.status(500).send({err})
+            // })
 
 
 
