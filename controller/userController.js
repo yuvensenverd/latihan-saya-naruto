@@ -253,10 +253,13 @@ module.exports = {
             }
         })
         .then((results) => {
-       
+            console.log(req.user)
+            
             if(results.length === 0) {
+                console.log('tidak dapat')
                 return res.status(500).send({ status: 'error', message: 'User not found' });
             } else {
+                console.log('dapat')
 
                 User.update(
                     {verified: 1},
@@ -274,6 +277,9 @@ module.exports = {
                         }
                     })
                     .then((dataUser) => {
+                 
+                        const tokenJwt = createJWTToken({ userId: dataUser.dataValues.id, email: dataUser.dataValues.email })
+               
                   
 
                         return res.status(200).send({
@@ -283,15 +289,21 @@ module.exports = {
                         
                     })
                     .catch((err) => {
+                        console.log('err1')
+                        console.log(err)
                         return res.status(500).send({ status: 'error', message: 'User not found' });
                     })
                 })
                 .catch((err) => {
+                    console.log('err2')
+                    console.log(err)
                     return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
                 })
             }
         })
         .catch((err) => {
+            console.log('err3')
+            console.log(err)
             return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
         })
     },
