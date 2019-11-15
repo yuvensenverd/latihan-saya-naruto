@@ -11,6 +11,7 @@ router.post('/updatePayment', paymentController.updatePayment)
 router.post('/getHistory', paymentController.getHistory)
 router.post('/getDonasiProject', paymentController.getDonasiProject)
 router.post('/getStatus', paymentController.getStatus)
+router.post('/createPayment', paymentController.addPayment)
 
 router.get('/getSubscription', paymentController.getSubscription)
 router.post('/applySubscription', paymentController.applySubscription);
