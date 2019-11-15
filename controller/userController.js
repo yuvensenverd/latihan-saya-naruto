@@ -245,6 +245,7 @@ module.exports = {
     },
 
     emailVerification: (req, res) => {
+        console.log('Masuk verification')
         User.findAll({
             where: {
                 id: req.user.userId,
@@ -274,8 +275,8 @@ module.exports = {
                         }
                     })
                     .then((dataUser) => {
-                  
-
+                        console.log(dataUser)
+                        console.log(dataUser.dataValues)
                         return res.status(200).send({
                             dataUser: dataUser.dataValues,
                             token: tokenJwt
