@@ -38,7 +38,8 @@ module.exports = {
       },
       isVerified: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
       },
       isDeleted: {
         type: Sequelize.INTEGER,
