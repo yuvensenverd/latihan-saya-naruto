@@ -1,4 +1,4 @@
-
+ 
 const { User, Sequelize, sequelize, School, Project, Payment, Subscription, scholarship, Student } = require('../models');
 const Op = Sequelize.Op
 const Crypto = require('crypto');
@@ -68,6 +68,7 @@ module.exports = {
                 userId,
                 nominalSubscription,
                 remainderDate,
+                isCancelled: 0,
                 monthLeft
             }).then((result)=>{
                 console.log('asudhauishd')

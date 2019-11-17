@@ -100,14 +100,13 @@ module.exports = {
                     
                     ],
                     where : {
-                        isOngoing : 1,
                         userId : id
                     },
                      
                 })
 
                 .then((result) => {
-                    // console.log(result)
+                    console.log(result)
                     return res.status(200).send(result)
                 }).catch((err)=>{
                     return res.status(500).send({message: err})
@@ -238,7 +237,7 @@ module.exports = {
             )
         })
     },
-    // DI PAGE SUBSCRIPTION UI
+    // DI PAGE HOME UI
     getAllScholarshipList : (req,res) =>{
         var { page, limit, name, date} = req.body;
         
@@ -307,38 +306,39 @@ module.exports = {
                         isOngoing : 1,
                         isVerified: 1
                     },
+                    order: [['id', `${date}`], ['createdAt', `${date}`]],
                     group : ['id']
                      
                 })
 
-                .then((result) => {
+                .then((results) => {
                     // console.log(result[0].dataValues.Subscriptions.length)
                     // console.log(result[0].dataValues.Subscriptions[0].dataValues)
                     // return res.status(200).send(result)
-                    // console.log(result)
+                    // console.log(results)
                     // Kurang Counting
                     
                     // return res.status(200).send(result)
 
-                    // scholarship.count({
-                    //     where : {
-                    //         judul : {
-                    //             [Op.like] : `%${name}%`
-                    //         },
-                    //         isOngoing : 1,
-                    //         isVerified: 1
-                    //     }
-                    // })
-                    // .then((resultTotalScholarship) => {
-                    //     var total = resultTotalScholarship;
+                    scholarship.count({
+                        where : {
+                            judul : {
+                                [Op.like] : `%${name}%`
+                            },
+                            isOngoing : 1,
+                            isVerified: 1
+                        }
+                    })
+                    .then((resultTotalScholarship) => {
+                        var total = resultTotalScholarship;
 
-                        // return res.status(200).send({message: 'Success Get All Scholarship', result, total})
-                        return res.status(200).send(result)
-                    // })
-                    // .catch((err) => {
-                    //     console.log(err)
-                    //     return res.status(500).send({message: err})
-                    // })
+                        return res.status(200).send({message: 'Success Get All Scholarship', results, total})
+                        // return res.status(200).send(result)
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                        return res.status(500).send({message: err})
+                    })
                 }).catch((err)=>{
                     console.log(err)
                     return res.status(500).send({message: err})

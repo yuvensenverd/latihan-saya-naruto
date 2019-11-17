@@ -325,7 +325,7 @@ module.exports = {
         
                 let mailOptions = {
                     from: 'KasihNusantara Admin <rezardiansyah1997@gmail.com>',
-                    to: email,
+                    to: req.user.email,
                     subject: 'Verifikasi Email for Kasih Nusantara',
                     html: `
                             <div>
