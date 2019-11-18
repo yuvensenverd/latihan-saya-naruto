@@ -17,5 +17,6 @@ router.put('/putVerification', auth, scholarshipController.putVerification)
 
 router.post('/GenerateURL',scholarshipController.generateImgUrlquill)
 // router.post('/getAllScholarship', scholarshipController.getAllScholarship)
+// router.post('/getScholarshipAllUserByAdmin', auth, scholarshipController.getScholarshipAllUserByAdmin)
 
 module.exports = router;
