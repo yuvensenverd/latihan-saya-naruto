@@ -44,7 +44,6 @@ module.exports = {
 
         // }
         console.log('updateee approve')
-        console.log(req)
         console.log(req.body)
         return sequelize.transaction(function (t){
             return StudentRevision.update({

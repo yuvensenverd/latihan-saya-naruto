@@ -16,12 +16,28 @@ module.exports = {
         type: Sequelize.STRING,
         defaultValue: null
       },
+      class : {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       studentId: {
         type: Sequelize.INTEGER,
         references : {
           model : 'StudentRevisions',
           key : 'id'
         },
+      },
+      detaildId : {
+        type: Sequelize.INTEGER,
+        references : {
+          model : 'StudentDetails',
+          key : 'id'
+        },
+      },
+      isDeleted: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0
       },
       createdAt: {
         allowNull: false,

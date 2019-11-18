@@ -245,6 +245,7 @@ module.exports = {
     },
 
     emailVerification: (req, res) => {
+        console.log('Masuk verification')
         User.findAll({
             where: {
                 id: req.user.userId,
@@ -324,7 +325,7 @@ module.exports = {
         
                 let mailOptions = {
                     from: 'KasihNusantara Admin <rezardiansyah1997@gmail.com>',
-                    to: email,
+                    to: req.user.email,
                     subject: 'Verifikasi Email for Kasih Nusantara',
                     html: `
                             <div>
@@ -513,6 +514,7 @@ module.exports = {
             return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
         })
     },
+    
     getSchool:(req,res)=>{
         School.findAll({
             attributes:[
@@ -810,21 +812,22 @@ module.exports = {
  
     },
 
-    applySubscription : (req,res) => {
-        var { subscriptionNominal, email, reminderDate } = req.body
-        // console.log(req.body)
-        User.update({
-            subscriptionStatus: 1,
-            subscriptionNominal,
-            reminderDate
-        },{
-            where: { email }
-        })
-        .then(() => {
-            // console.log('masuk')
-            res.send('success')
-        })
-    },
+    // applySubscription : (req,res) => {
+    //     var { subscriptionNominal, email, reminderDate } = req.body
+    //     // console.log(req.body)
+    //     User.update({
+    //         subscriptionStatus: 1,
+    //         subscriptionNominal,
+    //         reminderDate
+    //     },{
+    //         where: { email }
+    //     })
+    //     .then(() => {
+    //         // console.log('masuk')
+    //         res.send('success')
+    //     })
+    // },
+    
     reminderInvoice : async (req,results) =>{ // RUN SEKALI / HARI
         // console.log('reminderINvoice')
         // console.log(req)

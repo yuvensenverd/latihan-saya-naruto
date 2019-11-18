@@ -376,31 +376,31 @@ module.exports = {
                 isDeleted : 0,
                 isGoing : 1
             },
-            order : [['id', 'asc'],['projectCreated', `${date}`]],
+            order: [['id', `${date}`],['projectCreated', `${date}`]],
             // order : !date ? [['id', 'asc']] : [['projectCreated', `${date}`]],
             group : ['id']
         })
         .then((results)=>{
             console.log(results)
-            // Project.count({
-            //     where: {
-            //         name: {
-            //         [Op.like] : `%${name}%`
-            //         },
-            //         isDeleted : 0,
-            //         isGoing : 1
-            //     }
-            // })
-            // .then((resultsTotalProject) => {
+            Project.count({
+                where: {
+                    name: {
+                    [Op.like] : `%${name}%`
+                    },
+                    isDeleted : 0,
+                    isGoing : 1
+                }
+            })
+            .then((resultsTotalProject) => {
                 
-            //     let total = resultsTotalProject
-            //     console.log('total  ' + total)
+                let total = resultsTotalProject
+                // console.log('total  ' + total)
                 
-                return res.status(200).send({message : 'success get  proooooojects', results})
-            // })
-            // .catch((err) => {
-            //     return res.status(500).send({message : err})
-            // })
+               return res.status(200).send({message : 'success get  proooooojects', results, total})
+            })
+            .catch((err) => {
+                return res.status(500).send({message : err})
+            })
         })
         .catch((err) => {
             console.log('nasuk')

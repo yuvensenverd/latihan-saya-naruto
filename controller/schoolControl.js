@@ -88,5 +88,25 @@ module.exports = {
         }).catch((err) => {
             return res.status(500).send(err)
         })
+    },
+
+    getSelectedSchool : (req, res) => {
+        const { id } = req.query
+        console.log(id)
+        School.findOne({
+            attributes:{
+                exclude : ['createAt', 'updateAt']
+            },
+                where : {
+                    id,
+                    isDeleted : 0
+                }
+        })
+        .then((result)=>{
+            // console.log(result.dataValues)
+            return res.status(200).send(result.dataValues)
+        }).catch((err)=>{
+            return res.status(500).send({message: 'error', error: err})
+        })
     }
 }

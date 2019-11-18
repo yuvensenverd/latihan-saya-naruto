@@ -12,6 +12,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      paymentType: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       nominal: {
         type: Sequelize.INTEGER,
         allowNull: false
@@ -24,6 +28,13 @@ module.exports = {
         type: Sequelize.INTEGER,
         references : {
           model : 'Projects',
+          key : 'id'
+        }
+      },
+      scholarshipId: {
+        type: Sequelize.INTEGER,
+        references : {
+          model : 'Scholarships',
           key : 'id'
         }
       },
