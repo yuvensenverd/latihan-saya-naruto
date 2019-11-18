@@ -12,7 +12,7 @@ const snap = new midtransClient.Snap({
 module.exports = {
     //====================// midtrans //====================
     getSnapMd : (req, res) => {
-        let { projectId, userId, komentar, anonim, scholarshipId, paymentSource} = req.body.userData
+        // let { projectId, userId, komentar, anonim, scholarshipId, paymentSource} = req.body.userData
         let { gross_amount, order_id} = req.body.parameter.transaction_details
         let { parameter } = req.body
         console.log('masuk get token midtrans')
@@ -28,30 +28,30 @@ module.exports = {
             // console.log('transactionToken: ', transactionToken)
 
             //######## INSERT DATABASE 
-            Payment.create({
-                paymentType: 'pending',
-                nominal: gross_amount,
-                statusPayment: 'pending',
-                paymentSource,
-                projectId: projectId ? projectId : null,
-                scholarshipId: scholarshipId ? scholarshipId : null,
-                userId: userId,
-                isRefund: '0',
-                isDeleted: '0',
-                order_id: order_id,
-                komentar: komentar,
-                isAnonim: anonim
-            }).then(()=>{
-                // if paymentSource === Subscription, subscription update remainderDate + 1 month from column (or now), (if settlement)
-                Payment.findAll()
-                .then((result)=>{
-                    // console.log(result)
-                    res.send(result)
+            // Payment.create({
+            //     paymentType: 'pending',
+            //     nominal: gross_amount,
+            //     statusPayment: 'pending',
+            //     paymentSource,
+            //     projectId: projectId ? projectId : null,
+            //     scholarshipId: scholarshipId ? scholarshipId : null,
+            //     userId: userId,
+            //     isRefund: '0',
+            //     isDeleted: '0',
+            //     order_id: order_id,
+            //     komentar: komentar,
+            //     isAnonim: anonim
+            // }).then(()=>{
+            //     // if paymentSource === Subscription, subscription update remainderDate + 1 month from column (or now), (if settlement)
+            //     Payment.findAll()
+            //     .then((result)=>{
+            //         // console.log(result)
+            //         res.send(result)
 
-                })
-            }).catch((err)=>{
-                console.log(err)
-            })
+            //     })
+            // }).catch((err)=>{
+            //     console.log(err)
+            // })
             return res.status(200).send({transactionToken, order_id: parameter.transaction_details.order_id})
         })       
     },
