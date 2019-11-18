@@ -66,7 +66,7 @@ module.exports = {
     getScholarshipPerUser : ( req, res) =>{
         console.log('------------------------> masuk per user')
         console.log(req.query)
-        const {id} = req.query
+        const { userId } = req.user
                 scholarship.findAll({
                     attributes : [
                         "id",
@@ -100,7 +100,8 @@ module.exports = {
                     
                     ],
                     where : {
-                        userId : id
+                        // isOngoing : 1,
+                        userId
                     },
                      
                 })

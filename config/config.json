@@ -3,7 +3,7 @@
     "username": "enverd",
     "password": "123123123",
     "database": "kasihnusantara",
-    "host": "127.0.0.1",
+    "host": "localhost",
     "dialect": "mysql"
   },
   "test": {

@@ -47,7 +47,8 @@ const {
     scholarshipRouter,
     studentDetailRevisionRouter,
     subscriptionRouter,
-    schoolRouter
+    schoolRouter,
+    payoutRouter
 } = require('./router')
 
 
@@ -76,6 +77,7 @@ app.use('/scholarship', scholarshipRouter)
 app.use('/studentdetailrev', studentDetailRevisionRouter);
 app.use('/subscription', subscriptionRouter);
 app.use('/school', schoolRouter)
+app.use('/payout', payoutRouter)
 
 console.log('masuk io')
 io.on('connection', (socket) => {
