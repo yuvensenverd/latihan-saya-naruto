@@ -25,7 +25,7 @@ module.exports = {
         snap.createTransaction(parameter)
         .then((transaction)=>{
             transactionToken = transaction.token;
-            console.log('transactionToken: ', transactionToken)
+            // console.log('transactionToken: ', transactionToken)
 
             // //######## INSERT DATABASE 
             // Payment.create({

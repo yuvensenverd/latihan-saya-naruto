@@ -4,11 +4,18 @@ const {uploader} = require('../helpers/uploader')
 const fs = require('fs')
 
 
+// opn(oauth.generateAuthUrl({
+//     access_type: "offline"
+//   , scope: ["https://www.googleapis.com/auth/youtube.upload"]
+// }));
+
+
 
 module.exports = {
     postProject : (req,res) =>{
         console.log('masuk1')
 
+        
         const path = '/post/image/project'; //file save path
         const upload = uploader(path, 'PJT').fields([{ name: 'image'}]); //uploader(path, 'default prefix')
 
@@ -64,17 +71,19 @@ module.exports = {
         // bisa dari token juga (req.user.userId)
 
         // console.log('masik')
-        var { page, limit, sortMethod} = req.query;
-        if(!sortMethod){
-            sortMethod='ASC'
-        }
-        var offset=(page*limit)-limit
 
-      
+        var { page, limit, name, date} = req.body;
+        
+  
+        var offset = (page * limit) - limit
+        console.log(req.body)
+        console.log(offset)
+
         Project.findAll({
             limit:parseInt(limit),
+            // limit : 10,
             offset:offset,
-            order:[['id',sortMethod]],
+            subQuery: false,
             attributes : [
                 ["name", "projectName"],
                 ["id", "projectId"],
@@ -83,26 +92,41 @@ module.exports = {
                 "projectEnded",
                 "totalTarget",
                 "projectImage",
-                [sequelize.fn('datediff', sequelize.col('projectEnded') ,  sequelize.fn("NOW")), 'SisaHari']
+                "shareDescription",
+                [sequelize.fn('datediff', sequelize.col('projectEnded') ,  sequelize.fn("NOW")), 'SisaHari'],
+                [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totalNominal'],
+                [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'totalDonasi']
+
+
             ],
-            
-
+            include : 
+                [
+                    {
+                        model : Payment,
+                        attributes : []
+                    },
+                    {
+                        model : User,
+                        attributes : [
+                            ["nama", "projectCreator"]
+                        ]
+                    }
+                ]
+            ,
             where : {
-                isDeleted : 0
+                name : {
+                    [Op.like] : `%${name}%`
+                },
+                userId: req.user.userId,
+                isDeleted : 0,
+                isGoing : 1
             },
-            include : [{
-                model : User,
-                attributes : [
-                    ["nama", "projectCreator"]
-                ],
-                where : {
-                    id: req.user.userId,
-                    role: 'User Admin'
-                }
-            }]
-
+            order : [['projectCreated', `${date}`]],
+            // order : !date ? [['id', 'asc']] : [['projectCreated', `${date}`]],
+            group : ['id']
         })
         .then((result)=>{
+            console.log(result)
             Project.count(
                 {where : {
                     isDeleted : 0
@@ -157,6 +181,7 @@ module.exports = {
 
                 })
                 .then((result)=>{
+                    console.log(result)
                     Project.count(
                         {where : {
                             isDeleted : 0
@@ -258,6 +283,7 @@ module.exports = {
     },
 
     getDetailProject: (req, res) => {
+        console.log('masukasmauskasmasuasamsauskasmasuakmsuasmausams')
         Project.findAll({
             attributes : [
                 ["name", "projectName"],
@@ -267,7 +293,10 @@ module.exports = {
                 "projectEnded",
                 "totalTarget",
                 "projectImage",
-                "shareDescription"
+                "shareDescription",
+                [sequelize.fn('datediff', sequelize.col('projectEnded') ,  sequelize.fn("NOW")), 'SisaHari'],
+                [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totalNominal'],
+                [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'totalDonasi']
             ],
 
             where: {
@@ -280,11 +309,19 @@ module.exports = {
                 attributes : [
                     ["nama", "projectCreator"]
                 ]
-            }]
+            },
+            {
+                model : Payment,
+                attributes : []
+            }
+        ,
+        
+        ]
         })
         .then((results) => {
             // console.log(results)
-            return res.status(200).send({message : 'success get projects', results})
+            console.log(results)
+            return res.status(200).send({message : 'success get proooooojects', results})
         })
         .catch((err) => {
             return res.status(500).send({message : err})
@@ -292,7 +329,7 @@ module.exports = {
     },
 
     searchProject : (req,res) =>{
-
+        console.log('projects')
         // -----------BACA--------------
         // formatbody : {
         //     name : 'namaProject',
@@ -325,8 +362,6 @@ module.exports = {
                 [sequelize.fn('datediff', sequelize.col('projectEnded') ,  sequelize.fn("NOW")), 'SisaHari'],
                 [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totalNominal'],
                 [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'totalDonasi']
-
-
             ],
             include : 
                 {
@@ -341,12 +376,12 @@ module.exports = {
                 isDeleted : 0,
                 isGoing : 1
             },
-            order : [['projectCreated', `${date}`]],
+            order: [['id', `${date}`],['projectCreated', `${date}`]],
             // order : !date ? [['id', 'asc']] : [['projectCreated', `${date}`]],
             group : ['id']
         })
         .then((results)=>{
-            console.log(results.length)
+            console.log(results)
             Project.count({
                 where: {
                     name: {
@@ -359,9 +394,9 @@ module.exports = {
             .then((resultsTotalProject) => {
                 
                 let total = resultsTotalProject
-                console.log('total  ' + total)
+                // console.log('total  ' + total)
                 
-                return res.status(200).send({message : 'success get projects', results, total})
+               return res.status(200).send({message : 'success get  proooooojects', results, total})
             })
             .catch((err) => {
                 return res.status(500).send({message : err})
@@ -393,6 +428,20 @@ module.exports = {
                 return res.status(404).send('error')
             }
         })  
+    },
+
+    deleteFileQuill :  async (req,res) =>{ 
+        console.log('delete file')
+        var filepath = req.body.filepath
+
+        try{
+            await fs.unlinkSync('./public' + filepath);
+            console.log('success')
+            return res.status(200).send({message : ` Success Delete File IN ${filepath}`  })
+        }
+        catch(err){
+            return  res.status(500).send({err})
+        }
     }
 
 }

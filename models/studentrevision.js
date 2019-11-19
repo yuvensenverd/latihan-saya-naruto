@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     pendidikanTerakhir: DataTypes.STRING,
     gender: DataTypes.STRING,
     status: DataTypes.STRING,
+    provinsi : DataTypes.STRING,
     alamat: DataTypes.STRING,
     tanggalLahir: DataTypes.DATE,
     studentImage: DataTypes.STRING,
