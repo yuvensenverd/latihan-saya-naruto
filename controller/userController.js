@@ -526,6 +526,9 @@ module.exports = {
         .then((result)=>{
             return res.status(200).send({ message : 'getschool success', result : result})
         })
+        .catch((err) => {
+            return res.status(500).send(err)
+        })
     },
 
     userChangePassword: (req, res) => {
@@ -1284,10 +1287,105 @@ module.exports = {
             console.log(err)
             console.log('errors')
         })
-
-
-       
     },
+
+    getDataUser: (req, res) => {
+        User.findOne({
+            where: {
+                id: req.user.userId
+            }
+        })
+        .then((result) => {
+            return res.status(200).send(result)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    },
+
+    updateProfilePic: (req, res) => {
+        try {
+            let path = `/users`; //file save path
+            const upload = uploader(path, 'KasihNusantara').fields([{ name: 'imageUser' }]); //uploader(path, 'default prefix')
+
+            upload(req, res, (err) => {
+                if (err) {
+                    return res.status(500).json({ message: 'Upload picture failed !', error: err.message });
+                }
+
+                // Setelah upload berhasil
+                // proses parse data JSON karena kita ngirim file gambar
+                // const data = JSON.parse(req.body.data);
+                /* 
+                 `createdAt` default value ?, 
+                `updatedAt` default value */
+
+                const { imageUser } = req.files;
+       
+                const imagePath = imageUser ? path + '/' + imageUser[0].filename : '/defaultPhoto/defaultUser.png';
+
+                User.update(
+                    {
+                        userImage: imagePath
+                    },
+                    {
+                        where : {
+                            id: req.user.userId
+                        }
+                    }
+                )
+                .then((result) => {
+                    User.findOne({
+                        where: {
+                            id: req.user.userId
+                        }
+                    })
+                    .then((resultAkhir) => {
+                        return res.status(200).send(resultAkhir)
+                    })  
+                    .catch((err) => {
+                        return res.status(500).send(err)
+                    })
+                })
+                .catch((err) =>{
+                    console.log(err)
+                })
+            })
+        }
+        catch(err) {
+            return res.status(500).json({ error: err.message });
+        }
+    },
+
+    editPhoneNumber: (req, res) => {
+        console.log(req.body.phoneNumber)
+        User.update(
+            {
+                phoneNumber: req.body.phoneNumber
+            },
+            {
+                where : {
+                    id: req.user.userId
+                }
+            }
+        )
+        .then((results) => {
+            User.findOne({
+                where: {
+                    id: req.user.userId
+                }
+            })
+            .then((resultAkhir) => {
+                return res.status(200).send(resultAkhir)
+            })  
+            .catch((err) => {
+                return res.status(500).send(err)
+            })
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    }
     
 }
 

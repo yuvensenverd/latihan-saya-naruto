@@ -191,10 +191,15 @@ module.exports={
         var listpendidikan = ['SMA', 'SMK', 'S1', 'SD', 'SMP', 'TK']
    
         var offset=(page*limit)-limit
+        
         Student.findAndCountAll({
             // limit:parseInt(limit),
             // offset:offset,
             // order:[['id','asc']],
+            limit:parseInt(limit),
+            // limit : 10,
+            offset:offset,
+            subQuery: false,
             attributes:{
                 exclude:['createdAt','updatedAt']
             },

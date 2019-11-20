@@ -4,7 +4,8 @@ var {auth} = require('../helpers/auth')
 
 const { schoolController} = require('../controller')
 
-router.get('/getSchool', schoolController.getSchool)
+router.post('/getSchool', schoolController.getSchool)
+router.post('/getSchoolAdmin', auth, schoolController.getSchoolAdmin)
 router.post('/addSchool', auth, schoolController.addSchool)
 router.post('/putSchool', auth, schoolController.putSchool)
 router.post('/verifiedSchool', auth, schoolController.verifiedSchool)

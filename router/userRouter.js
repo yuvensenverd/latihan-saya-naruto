@@ -12,6 +12,9 @@ router.post('/login', userController.userLogin);
 router.post('/loginGmail', userController.loginWithGoogle);
 router.post('/loginFacebook', userController.loginWithFacebook);
 router.get('/getschool', userController.getSchool);
+router.get('/getUser/:id', auth, userController.getDataUser);
+router.post('/editProfilePic', auth, userController.updateProfilePic);
+router.post('/editPhoneNumber', auth, userController.editPhoneNumber);
 
 router.post('/userForgotPassword', userController.getResetPasswordToken);
 router.get('/userGetResetToken', resetToken, userController.userCheckResetToken);
