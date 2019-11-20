@@ -52,6 +52,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true
       },
+      shareDescription : {
+        type : Sequelize.STRING,
+        allowNull : false
+      },
       nomorRekening : {
         type : Sequelize.STRING,
         allowNull : false

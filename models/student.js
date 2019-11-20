@@ -12,25 +12,30 @@ module.exports = (sequelize, DataTypes) => {
     isDeleted: DataTypes.INTEGER,
     userId: DataTypes.INTEGER,
 
+    // share description di scholarship atau di student
+
 
     story: DataTypes.STRING,
+    shareDescription : DataTypes.STRING,
     cabangBank : DataTypes.STRING,
 
-    // nomorRekening : DataTypes.STRING,
-    // pemilikRekening : DataTypes.STRING,
-    // alamatSekolah : DataTypes.STRING,
-    // bank : DataTypes.STRING,
-    // teleponSekolah : DataTypes.STRING,
-    // namaSekolah : DataTypes.STRING,
-    // kartuSiswa : DataTypes.STRING,
-    // raportTerakhir : DataTypes.STRING,
-    // kartuKeluarga : DataTypes.STRING,
-    // jumlahSaudara : DataTypes.INTEGER,
-    // biayaSekolah : DataTypes.INTEGER,
-    // kelas : DataTypes.INTEGER,
-    // dataPenghasilan : DataTypes.STRING,
+    nomorRekening : DataTypes.STRING,
+    pemilikRekening : DataTypes.STRING,
+    alamatSekolah : DataTypes.STRING,
+    bank : DataTypes.STRING,
+    teleponSekolah : DataTypes.STRING,
+    namaSekolah : DataTypes.STRING,
+    kartuSiswa : DataTypes.STRING,
+    raportTerakhir : DataTypes.STRING,
+    kartuKeluarga : DataTypes.STRING,
+    jumlahSaudara : DataTypes.INTEGER,
+    biayaSekolah : DataTypes.INTEGER,
+    kelas : DataTypes.INTEGER,
+    dataPenghasilan : DataTypes.STRING,
     dataStatus: DataTypes.STRING,
     statusNote: DataTypes.STRING
+
+    // kartusiswa, kartukeluarga, dataPenghasilan, jumlahsaudara, shareDescription, 
   }, {});
   Student.associate = function(models) {
     // associations can be defined here

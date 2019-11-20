@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     isDeleted: DataTypes.INTEGER,
     userId: DataTypes.INTEGER,
     story: DataTypes.STRING,
+    shareDescription : DataTypes.STRING,
     
 
     nomorRekening : DataTypes.STRING,
