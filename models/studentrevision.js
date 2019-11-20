@@ -12,13 +12,30 @@ module.exports = (sequelize, DataTypes) => {
     isDeleted: DataTypes.INTEGER,
     userId: DataTypes.INTEGER,
     story: DataTypes.STRING,
-    schoolId: DataTypes.INTEGER,
-    studentId : DataTypes.INTEGER
+    
+
+    nomorRekening : DataTypes.STRING,
+    pemilikRekening : DataTypes.STRING,
+    alamatSekolah : DataTypes.STRING,
+    bank : DataTypes.STRING,
+    cabangBank : DataTypes.STRING,
+    teleponSekolah : DataTypes.STRING,
+    namaSekolah : DataTypes.STRING,
+    kartuSiswa : DataTypes.STRING,
+    raportTerakhir : DataTypes.STRING,
+    kartuKeluarga : DataTypes.STRING,
+    jumlahSaudara : DataTypes.INTEGER,
+    biayaSekolah : DataTypes.INTEGER,
+    kelas : DataTypes.INTEGER,
+    dataPenghasilan : DataTypes.STRING,
+    studentId :  DataTypes.INTEGER,
+    dataStatus: DataTypes.STRING,
+    statusNote: DataTypes.STRING
   }, {});
   StudentRevision.associate = function(models) {
     // associations can be defined here
     StudentRevision.belongsTo(models.User, {foreignKey: 'userId'})
-    StudentRevision.belongsTo(models.School, {foreignKey : 'schoolId'})
+
     StudentRevision.belongsTo(models.Student, {foreignKey : 'studentId'})
   };
   return StudentRevision;

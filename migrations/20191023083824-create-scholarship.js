@@ -20,14 +20,6 @@ module.exports = {
           key : 'id'
         },
       },
-      schoolId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references : {
-          model : 'Schools',
-          key : 'id'
-        },
-      },
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -35,6 +27,10 @@ module.exports = {
           model : 'Users',
           key : 'id'
         },
+      },
+      currentValue : {
+        type: Sequelize.INTEGER,
+        allowNull: true
       },
       nominal: {
         type: Sequelize.INTEGER,

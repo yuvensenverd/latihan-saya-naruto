@@ -93,7 +93,10 @@ module.exports = {
             .then(() => {
                 StudentDetail.findAll({where: {studentId}})
                 .then((results2) => {
-                    res.send(results2);
+                    return res.status(200).send(results2)
+                })
+                .catch((error)=>{
+                    return res.status(500).send(error)
                 })
             })
         }).catch((err) => {

@@ -1,5 +1,5 @@
 
-const { Sequelize, sequelize,  Student, School} = require('../models')
+const { Sequelize, sequelize,  Student, School, scholarship} = require('../models')
 const Moment=require('moment')
 const Op = Sequelize.Op
 const {uploader}=require('../helpers/uploader')
@@ -191,6 +191,7 @@ module.exports={
         var listpendidikan = ['SMA', 'SMK', 'S1', 'SD', 'SMP', 'TK']
    
         var offset=(page*limit)-limit
+
         Student.findAndCountAll({
             // limit:parseInt(limit),
             // offset:offset,
@@ -251,9 +252,70 @@ module.exports={
         })
         .then((result) => {
             console.log(result)
-            return res.send(result)
+            return res.status(200).send(result)
         }).catch((err)=>{
             console.log(err)
+            return res.status(500).send({err})
+        })
+    },
+
+    getStudentAdmin : (req,res) =>{
+        // var { page, limit, sekolah,  pendidikan} = req.body;
+        // var listpendidikan = ['SMA', 'SMK', 'S1', 'SD', 'SMP', 'TK']
+   
+        // var offset=(page*limit)-limit
+        
+        Student.findAndCountAll({
+            // limit:parseInt(limit),
+            // offset:offset,
+            // order:[['id','asc']],
+            attributes:{
+                include : [
+                    [sequelize.col('scholarship.judul'), 'judulScholarship'],
+                    [sequelize.col('scholarship.id'), 'idScholarship'],
+                    // [sequelize.col('scholarship.id'), 'idScholarship']
+                ],
+                exclude:['createdAt','updatedAt']
+            },
+            include : [
+                {
+                    model : School,
+                    required : true,
+                    attributes : [['nama', 'schoolName']],
+                    where : {
+                        nama : {
+                            [Op.like] : `%%`,
+                            // [Op.like] : `%${sekolah ? sekolah : ''}%`
+                        },
+                  
+                    },
+               
+                },
+                {
+                    model : scholarship,
+                    required : false,
+                    attributes : []
+                }
+            ],
+            where : {
+                // userId: req.user.userId,
+                isDeleted : 0
+            }
+            // where:{
+            //     isDeleted:0,
+            //     // pendidikanTerakhir : {
+            //     //     [Op.in] : pendidikan ? pendidikan : listpendidikan
+            //     // },
+            //     userId : req.user.userId
+            //     // [School.nama] : `%${sekolah ? sekolah : ''}%`
+            // }
+        })
+        .then((result)=>{
+            console.log('======> hasilnya')
+            console.log(result)
+            return res.status(200).send(result)
+        }).catch((err)=>{
+            return res.status(500).send({message:'error post', error:err})
         })
     }
 

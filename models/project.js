@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.STRING,
     projectCreated: DataTypes.DATE,
     projectEnded: DataTypes.DATE,
+    currentValue : DataTypes.INTEGER,
     totalTarget: DataTypes.INTEGER,
     projectImage: DataTypes.STRING,
     shareDescription: DataTypes.STRING,

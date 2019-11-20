@@ -1,4 +1,4 @@
-const { Sequelize, sequelize, Payment, User, Project }  = require('../models')
+const { Sequelize, sequelize, Payment, User, Project, scholarship, Student }  = require('../models')
 const midtransClient                                    = require('midtrans-client')
 const moment                                            = require('moment')
 const Axios = require('axios')
@@ -208,19 +208,19 @@ module.exports = {
 
     //====================// end of midtrans //====================
 
-    getPayment : (req, res)=>{
-        console.log('payment')
-        res.send('payment')
-        Payment.findAll()
-        .then((result)=>{
-            console.log(Payment)
-            console.log(result)
-            res.status(200).send(result)
-        })
-        .catch((err)=>{
-            console.log(err)
-        })
-    },
+    // getPayment : (req, res)=>{
+    //     console.log('payment')
+    //     res.send('payment')
+    //     Payment.findAll()
+    //     .then((result)=>{
+    //         console.log(Payment)
+    //         console.log(result)
+    //         res.status(200).send(result)
+    //     })
+    //     .catch((err)=>{
+    //         console.log(err)
+    //     })
+    // },
     updatePayment : (req, res) => {
         console.log('masuk update payment ===> ')
         console.log(req.body)
@@ -240,7 +240,7 @@ module.exports = {
             Payment.findAll({ where : { order_id}})
             .then((result) => {
                 console.log(result)
-                res.send(result)
+                return res.status(200).send(result)
             })
         })
         .catch((err) => {
@@ -248,34 +248,143 @@ module.exports = {
         })
     },
     getHistory: (req, res) => {
-        console.log('masuk history')
-        let {userId} = req.body
-        console.log(req.body)
-        Payment.findAll({
-            attributes: ['nominal', 'statusPayment', 'updatedAt', 'isAnonim', 'komentar', 'createdAt', 'order_id', 'paymentType'],
-            where: { userId },
-            include: [
-                {
-                    model: User,
-                    attributes: ['nama']
-                },
-                {
-                    model: Project,
-                    attributes: [
-                        ['name', 'projectName'],
-                        'projectImage'
-                    ]
-                }
-            ]
-        })
-        .then((result)=>{
-            console.log(result)
-            res.send(result)
-        })
-        .catch((err) => {
-            console.log(err)
-        })
+      console.log(req.body)
+      const userId = req.body.userId
+      const offset = req.body.offset
+      const limit = req.body.limit
+
+      Payment.findAndCountAll({
+        limit:parseInt(limit),
+        // limit : 10,
+        offset:offset,
+        // subQuery: false,
+          attributes : [
+            'paymentType',
+            'paymentSource',
+            'nominal',
+            'statusPayment',
+            [sequelize.col('scholarship.judul'), 'judulScholarship'],
+            [sequelize.col('project.name'), 'namaProject'],
+            [sequelize.col('project.id'), 'projectId'],
+            [sequelize.col('project.projectImage'), 'gambarProject'],
+            [sequelize.col('scholarship.id'), 'scholarshipId'],
+            [sequelize.col('scholarship->student.name'), 'namaMurid'],
+            [sequelize.col('scholarship->student.studentImage'), 'fotoMurid'],
+            'order_id',
+            'komentar',
+            'createdAt',
+            'updatedAt',
+            'id'
+          ],
+          where : {
+              isRefund : 0,
+              userId
+          },
+          include : [
+            {
+                model : Project,
+                required : false,
+                attributes : []
+            },
+            {
+                model : scholarship,
+                required : false,
+                attributes : [],
+                include : [
+                    {
+                        model : Student,
+                        attributes : [],
+                        required : true
+                    }
+                ]
+            }
+          ],
+          order: [
+              ['createdAt', 'DESC']
+          ]
+      }).then((result)=>{
+        console.log('erresult')
+        // console.log(result)
+        console.log(result.count)
+        
+        return res.status(200).send({result : result.rows, count : result.count})
+      }).catch((err)=>{
+          console.log(err)
+        return res.status(500).send({message : err})
+      })
     },
+    getHistoryAdmin: (req, res) => {
+        // console.log(req.body)
+        // const userId = req.body.userId
+        // const offset = req.body.offset
+        // const limit = req.body.limit
+  
+        Payment.findAndCountAll({
+        //   limit:parseInt(limit),
+        //   // limit : 10,
+        //   offset:offset,
+          // subQuery: false,
+            attributes : [
+              'paymentType',
+              'paymentSource',
+              'nominal',
+              'statusPayment',
+              [sequelize.col('scholarship.judul'), 'judulScholarship'],
+              [sequelize.col('project.name'), 'namaProject'],
+              [sequelize.col('project.id'), 'projectId'],
+              [sequelize.col('project.projectImage'), 'gambarProject'],
+              [sequelize.col('scholarship.id'), 'scholarshipId'],
+              [sequelize.col('scholarship->student.name'), 'namaMurid'],
+              [sequelize.col('scholarship->student.studentImage'), 'fotoMurid'],
+              [sequelize.col('user.nama'), 'username'],
+              'order_id',
+              'komentar',
+              'createdAt',
+              'updatedAt',
+              'id'
+            ],
+            where : {
+                isRefund : 0,
+                isDeleted : 0
+            },
+            include : [
+              {
+                  model : Project,
+                  required : false,
+                  attributes : []
+              },
+              {
+                  model : User,
+                  required : true,
+                  attributes : [] 
+              },
+              {
+                  model : scholarship,
+                  required : false,
+                  attributes : [],
+                  include : [
+                      {
+                          model : Student,
+                          attributes : [],
+                          required : true
+                      }
+                  ]
+              }
+            ],
+            order: [
+                ['createdAt', 'DESC']
+            ]
+        }).then((result)=>{
+          console.log('erresult')
+          // console.log(result)
+          console.log(result.count)
+          
+          return res.status(200).send({result : result.rows, count : result.count})
+        }).catch((err)=>{
+            console.log(err)
+          return res.status(500).send({message : err})
+        })
+      },
     getDonasiProject: (req,res) => {
         // console.log('masuk getDonasiProject')
         let { projectId, scholarshipId } = req.body
@@ -298,10 +407,11 @@ module.exports = {
         .then((result) => {
             // console.log('===========>>>>>>>')
             // console.log(result)
-            res.send(result)
+            return res.status(200).send(result)
         })
         .catch((err)=>{
             console.log(err)
+            return res.status(500).send({ message : 'there is an error ' , err})
         }
         )
     },
@@ -312,7 +422,9 @@ module.exports = {
             },
             attributes: ['subscriptionStatus', 'subscriptionNominal']
         }).then((results) => {
-            res.status(200).send(results)
+            return res.status(200).send(results)
+        }).catch((error)=>{
+            return res.status(500).send(error)
         })
     },
     applySubscription : (req,res) => {
