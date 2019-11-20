@@ -1,4 +1,4 @@
-const { Sequelize, sequelize, User, Student, StudenDetail, School, scholarship, Subscription, Payment } = require('../models')
+const { Sequelize, sequelize, User, Student , scholarship, Subscription, Payment } = require('../models')
 const Op = Sequelize.Op
 const moment = require('moment')
 const {uploader} = require('../helpers/uploader')
@@ -11,7 +11,7 @@ module.exports = {
         const { 
             judul, 
             studentId, 
-            schoolId, 
+            // schoolId, 
             userId, 
             nominal, 
             durasi, 
@@ -24,7 +24,7 @@ module.exports = {
         scholarship.create({
             judul,
             studentId,
-            schoolId,
+            // schoolId,
             userId,
             nominal,
             durasi,
@@ -66,7 +66,7 @@ module.exports = {
     getScholarshipPerUser : ( req, res) =>{
         console.log('------------------------> masuk per user')
         console.log(req.query)
-        const {id} = req.query
+        const { userId } = req.user
                 scholarship.findAll({
                     attributes : [
                         "id",
@@ -90,17 +90,18 @@ module.exports = {
                                 "studentImage"
                             ]
                         },
-                        {
-                            model : School,
-                            attributes : [
+                        // {
+                        //     model : School,
+                        //     attributes : [
 
-                                ["nama", "namaSekolah"]
-                            ]
-                        },
+                        //         ["nama", "namaSekolah"]
+                        //     ]
+                        // },
                     
                     ],
                     where : {
-                        userId : id
+                        // isOngoing : 1,
+                        userId
                     },
                      
                 })
@@ -196,12 +197,12 @@ module.exports = {
                             "studentImage"
                         ]
                     },
-                    {
-                        model : School,
-                        attributes : [
-                            ["nama", "namaSekolah"], "namaPemilikRekening", "nomorRekening" , "bank", "email"
-                        ]
-                    },
+                    // {
+                    //     model : School,
+                    //     attributes : [
+                    //         ["nama", "namaSekolah"], "namaPemilikRekening", "nomorRekening" , "bank", "email"
+                    //     ]
+                    // },
                     // {
                     //     model : Subscription,
                     //     attributes :   [
@@ -278,12 +279,12 @@ module.exports = {
                             "tanggalLahir"
                         ]
                     },
-                    {
-                        model : School,
-                        attributes : [
-                            ["nama", "namaSekolah"]
-                        ]
-                    },
+                    // {
+                    //     model : School,
+                    //     attributes : [
+                    //         ["nama", "namaSekolah"]
+                    //     ]
+                    // },
                     // {
                     //     model : Subscription,
                     //     attributes :   [
