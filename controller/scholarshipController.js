@@ -174,20 +174,18 @@ module.exports = {
                     attributes : [
                         "id",
                         "judul",
-                        "nominal",
-                        "durasi",
-                        "description",
+                        // "nominal",
+                        // "durasi",
+                        // "description",
                         "studentId",
-                        "shareDescription",
-                        "scholarshipStart",
+                        // "shareDescription",
+                        // "scholarshipStart",
                         // "paymentSource",
-                        "scholarshipEnded",
-                        [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],
+                        // "scholarshipEnded",
+                        // [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],
                         // [sequelize.fn('SUM', sequelize.col('Subscriptions.nominalSubscription')), 'currentSubs'],
                         [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totaldonation'],
                         [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'jumlahdonation'],
-                        
-        
                     ],
                     
                     include : [{
@@ -254,15 +252,15 @@ module.exports = {
                     attributes : [
                         "id",
                         "judul",
-                        "nominal",
-                        "durasi",
-                        "description",
+                        // "nominal",
+                        // // "durasi",
+                        // "description",
                         "studentId",
-                        "shareDescription",
-                        "scholarshipStart",
+                        // "shareDescription",
+                        // "scholarshipStart",
                         // "paymentSource",
-                        "scholarshipEnded",
-                        [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],
+                        // "scholarshipEnded",
+                        // [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],
                         // [sequelize.fn('SUM', sequelize.col('Subscriptions.nominalSubscription')), 'currentSubs'],
                         [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totaldonation'],
                         [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'jumlahdonation'],
@@ -276,7 +274,8 @@ module.exports = {
                         attributes : [
                             ["name", "namaSiswa"],
                             "studentImage",
-                            "tanggalLahir"
+                            "tanggalLahir",
+                            "biayaSekolah"
                         ]
                     },
                     // {
@@ -331,6 +330,7 @@ module.exports = {
                         }
                     })
                     .then((resultTotalScholarship) => {
+                        console.log(results)
                         var total = resultTotalScholarship;
 
                         return res.status(200).send({message: 'Success Get All Scholarship', results, total})
@@ -471,12 +471,12 @@ module.exports = {
                             "tanggalLahir"
                         ]
                     },
-                    {
-                        model : School,
-                        attributes : [
-                            ["nama", "namaSekolah"]
-                        ]
-                    },
+                    // {
+                    //     model : School,
+                    //     attributes : [
+                    //         ["nama", "namaSekolah"]
+                    //     ]
+                    // },
                     // {
                     //     model : Subscription,
                     //     attributes :   [

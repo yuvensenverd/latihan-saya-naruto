@@ -11,21 +11,21 @@ module.exports = {
                 where: {
                     id: id,
                 },
-                include: [
-                    {
-                        model: StudentDetail,
-                        require: true,
-                        // attributes: ['name']
-                        // separate:true,
-                        attributes: {
-                            exclude: ['createdAt', 'updatedAt']
-                        }
-                    },
-                    {
-                        model: School,
-                        attributes: ['id',['nama', 'namaSekolah']]
-                    }
-                ],
+                // include: [
+                //     {
+                //         model: StudentDetail,
+                //         require: true,
+                //         // attributes: ['name']
+                //         // separate:true,
+                //         attributes: {
+                //             exclude: ['createdAt', 'updatedAt']
+                //         }
+                //     },
+                //     {
+                //         model: School,
+                //         attributes: ['id',['nama', 'namaSekolah']]
+                //     }
+                // ],
                 attributes: {
                     exclude: ['createdAt', 'updatedAt']
                 }
