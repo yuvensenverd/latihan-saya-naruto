@@ -60,16 +60,16 @@ module.exports = {
         //######## INSERT DATABASE 
         console.log('------------------------------> Masuk Add payment')
         const {userId, paymentType, gross_amount, statusPayment, projectId, scholarshipId, komentar, anonim, order_id, paymentSource, noPembayaran} = req.body
-        Payment.findAll({
+        Payment.findOne({
             attributes: {
                 exclude: ['createdAt', 'updatedAt']
             },
-            where:({
+            where:{
                 order_id
-            })
+            }
         }).then((result) => {
             console.log(result)
-            if(result.length === 0){
+            if(!result){
                 console.log('insert--------')
                 Payment.create({
                     paymentType,
@@ -89,7 +89,7 @@ module.exports = {
                     Payment.findAll()
                     .then((result)=>{
                         console.log(result)
-                        res.status(200).send({message: 'create Payment Success ', result})
+                        return res.status(200).send({message: 'create Payment Success ', result})
                     })
                 }).catch((err)=>{
                     console.log(err)
@@ -152,9 +152,9 @@ module.exports = {
             }
             console.log(status)
 
-            
+            console.log('status_transaction' + order_id)
             //kirim respond status payment ke ui payment page dari push notification midtrans lewat socket io
-            req.app.io.emit(`status_transaction`, status)
+            req.app.io.emit(`status_transaction`+ order_id, status)
             
             // update payment status on database
             Payment.findAll({
@@ -203,6 +203,45 @@ module.exports = {
             //     })
             return res.status(200).send(status)
             })
+    },
+    onFailureGetInfo : (req,res) =>{
+        const order_id = req.body.order_id
+        console.log(order_id)
+        Payment.findOne({
+            attributes : [
+                'id',
+                'projectId',
+                'scholarshipId',
+                'paymentSource',
+                [sequelize.col('scholarship.judul'), 'judulScholarship'],
+                [sequelize.col('project.name'), 'judulProject'],
+
+
+            ] ,
+            include : [
+                {
+                    model : scholarship,
+                    attributes : [],
+                    required : false
+                },
+                {
+                    model : Project,
+                    attributes : [],
+                    required : false
+                }
+            ],
+
+            where : {
+                order_id : order_id
+            }
+        }).then((result)=>{
+            console.log('ONFAILURE______')
+            console.log(result)
+            return res.status(200).send({message : 'success', result : result.dataValues})
+        }).catch((err)=>{
+            return res.status(500).send({message : 'admin error' ,  err })
+        })
+
     },
 
 

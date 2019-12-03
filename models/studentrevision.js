@@ -5,16 +5,14 @@ module.exports = (sequelize, DataTypes) => {
     pendidikanTerakhir: DataTypes.STRING,
     gender: DataTypes.STRING,
     status: DataTypes.STRING,
-    provinsi : DataTypes.STRING,
     alamat: DataTypes.STRING,
     tanggalLahir: DataTypes.DATE,
     studentImage: DataTypes.STRING,
+    provinsi : DataTypes.STRING,
     isDeleted: DataTypes.INTEGER,
     userId: DataTypes.INTEGER,
     story: DataTypes.STRING,
     shareDescription : DataTypes.STRING,
-    
-
     nomorRekening : DataTypes.STRING,
     pemilikRekening : DataTypes.STRING,
     alamatSekolah : DataTypes.STRING,

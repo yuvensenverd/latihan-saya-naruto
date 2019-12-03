@@ -36,6 +36,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      provinsi : {
+        type : Sequelize.STRING,
+        allowNull : false,
+      },
       isDeleted: {
         type: Sequelize.INTEGER,
         allowNull: false,

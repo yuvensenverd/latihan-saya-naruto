@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     scholarshipId: DataTypes.INTEGER,
     userId: DataTypes.INTEGER,
     nominalSubscription: DataTypes.INTEGER,
-    remainderDate: DataTypes.DATE,
+    reminderDate: DataTypes.DATE,
     isCancelled: DataTypes.INTEGER,
     cancelledDate: DataTypes.DATE,
     monthLeft: DataTypes.INTEGER

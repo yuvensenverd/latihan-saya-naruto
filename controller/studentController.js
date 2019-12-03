@@ -66,6 +66,7 @@ module.exports={
         //    : this.state.IncomeCardImageDB,
 
                 const {
+                    userId,
                     name,
                     pendidikanTerakhir,
                     gender,
@@ -74,6 +75,7 @@ module.exports={
                     tanggalLahir,
                     story,
                     shareDescription,
+                    scholarshipTitle,
                     nomorRekening,
                     pemilikRekening,
                     alamatSekolah,
@@ -106,7 +108,7 @@ module.exports={
                         teleponSekolah,
                         namaSekolah,
                         jumlahSaudara,
-                        biayaSekolah,
+                        // biayaSekolah,
                         kelas,
                         story,
                         studentImage: listGambar[0],
@@ -119,10 +121,31 @@ module.exports={
                         statusNote: ''
                     },{transaction:t})
                     .then((result)=>{
-                        return result
+                        console.log('ini id student ========================================')
+                        console.log(result.dataValues.id)
+                        // console.log(result.Student.dataValues.id)
+                        scholarship.create({
+                            judul : scholarshipTitle,
+                            studentId : result.dataValues.id,
+                            userId,
+                            biayaSekolah : biayaSekolah * 12,
+                            currentValue : 0,
+                            totalPayout : 0,
+                            isVerified : 0,
+                            isOngoing : 0
+                        }).then((results)=>{
+                            // return res.status(200).send(results)
+                        }).catch((err)=>{
+                            console.log(err)
+                            throw new Error()
+                        })
+                        
                     }).catch((err)=>{
                         console.log(err.message)
-                        fs.unlinkSync('./public' + imagePath);
+                        for(let i = 0; i < listGambar.length; i = i + 1) {
+                            
+                            fs.unlinkSync('./public' + listGambar[i]);
+                        }
                         return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message })
                     })
                 }).then((result)=>{
@@ -131,8 +154,13 @@ module.exports={
                     // return res.status(200).send(result)
                 }).catch((err)=>{
                     console.log(err.message)
-                    fs.unlinkSync('./public' + imagePath);
-                    return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message })
+                    for(let i = 0; i < listGambar.length; i = i + 1) {
+                            
+                        fs.unlinkSync('./public' + listGambar[i]);
+                    }
+                    throw new Error()
+                    // fs.unlinkSync('./public' + imagePath);
+                    // return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message })
                 })
             })
 
@@ -141,7 +169,8 @@ module.exports={
             
         } catch (error) {
             console.log(err.message)
-            fs.unlinkSync('./public' + imagePath);
+         
+            // fs.unlinkSync('./public' + imagePath);
             return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
         }
     },
@@ -377,21 +406,6 @@ module.exports={
                 where: {
                     id: id,
                 },
-                // include: [
-                //     {
-                //         model: StudentDetail,
-                //         require: true,
-                //         // attributes: ['name']
-                //         // separate:true,
-                //         attributes: {
-                //             exclude: ['createdAt', 'updatedAt']
-                //         }
-                //     },
-                //     {
-                //         model: School,
-                //         attributes: ['id',['nama', 'namaSekolah']]
-                //     }
-                // ],
                 attributes: {
                     exclude: ['createdAt', 'updatedAt']
                 }

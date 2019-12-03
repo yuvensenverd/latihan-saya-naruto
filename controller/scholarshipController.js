@@ -265,6 +265,7 @@ module.exports = {
                         // // "durasi",
                         // "description",
                         "studentId",
+                        "biayaSekolah"
                         // "shareDescription",
                         // "scholarshipStart",
                         // "paymentSource",
@@ -284,7 +285,7 @@ module.exports = {
                             ["name", "namaSiswa"],
                             "studentImage",
                             "tanggalLahir",
-                            "biayaSekolah"
+                            // "biayaSekolah"
                         ]
                     },
                     // {

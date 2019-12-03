@@ -28,28 +28,17 @@ module.exports = {
           key : 'id'
         },
       },
+      biayaSekolah : {
+        type : Sequelize.INTEGER,
+        allowNull : false,
+      },
+      totalPayout : {
+        type : Sequelize.INTEGER,
+        allowNull : false
+      },
       currentValue : {
         type: Sequelize.INTEGER,
         allowNull: true
-      },
-      nominal: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
-      durasi: {
-        type: Sequelize.INTEGER
-      },
-      description: {
-        type: Sequelize.STRING
-      },
-      shareDescription: {
-        type: Sequelize.STRING
-      },
-      scholarshipStart: {
-        type: Sequelize.DATE
-      },
-      scholarshipEnded: {
-        type: Sequelize.DATE
       },
       isVerified: {
         type: Sequelize.STRING,
@@ -58,9 +47,6 @@ module.exports = {
       isOngoing: {
         type: Sequelize.STRING,
         defaultValue: 0
-      },
-      note: {
-        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

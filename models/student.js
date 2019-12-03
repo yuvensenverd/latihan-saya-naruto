@@ -5,20 +5,16 @@ module.exports = (sequelize, DataTypes) => {
     pendidikanTerakhir: DataTypes.STRING,
     gender: DataTypes.STRING,
     status: DataTypes.STRING,
-    provinsi : DataTypes.STRING,
     alamat: DataTypes.STRING,
     tanggalLahir: DataTypes.DATE,
     studentImage: DataTypes.STRING,
+    provinsi : DataTypes.STRING,
     isDeleted: DataTypes.INTEGER,
     userId: DataTypes.INTEGER,
-
     // share description di scholarship atau di student
-
-
     story: DataTypes.STRING,
     shareDescription : DataTypes.STRING,
     cabangBank : DataTypes.STRING,
-
     nomorRekening : DataTypes.STRING,
     pemilikRekening : DataTypes.STRING,
     alamatSekolah : DataTypes.STRING,
@@ -29,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     raportTerakhir : DataTypes.STRING,
     kartuKeluarga : DataTypes.STRING,
     jumlahSaudara : DataTypes.INTEGER,
-    biayaSekolah : DataTypes.INTEGER,
+    // biayaSekolah : DataTypes.INTEGER,
     kelas : DataTypes.INTEGER,
     dataPenghasilan : DataTypes.STRING,
     dataStatus: DataTypes.STRING,
