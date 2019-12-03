@@ -5,7 +5,7 @@ const {uploader} = require('../helpers/uploader')
 const fs = require('fs')
 
 module.exports = {
-    postScholarship : ( req, res) => {
+    postScholarship : ( req, res) => { // need changes
         // console.log('masuk post scholarship')
         var Date = moment()
         const { 
@@ -41,7 +41,7 @@ module.exports = {
             console.log(err)
         })
     },
-    putScholarship : (req, res) => {
+    putScholarship : (req, res) => { // need changes
         // console.log(req.body)
         // console.log('masuk edit scholarship')
         const {id, judul, nominal, durasi, description, shareDescription} = req.body
@@ -78,7 +78,6 @@ module.exports = {
                         "shareDescription",
                         "scholarshipStart",
                         "scholarshipEnded",
-                        "isVerified",
                         "isOngoing",
                         "note"
                     ],
@@ -114,56 +113,61 @@ module.exports = {
                 })
 
     },
-    // getScholarship : ( req, res) =>{
-    //     const {id} = req.query
-    //             scholarship.findAll({
-    //                 attributes : [
-    //                     "id",
-    //                     "userId",
-    //                     "judul",
-    //                     "nominal",
-    //                     "durasi",
-    //                     "description",
-    //                     "studentId",
-    //                     "shareDescription",
-    //                     "scholarshipStart",
-    //                     "scholarshipEnded",
-    //                     "isVerified",
-    //                     "isOngoing"
-    //                 ],
-                   
-    //                 include : [{
-    //                         model : Student,
-    //                         attributes : [
-    //                             ["name", "namaSiswa"],
-    //                             "studentImage"
-    //                         ],
-    //                         include : [{
-    //                             model : User,
-    //                             require: true,
-    //                             attributes:["nama"]
-    //                         }]
-    //                     },
-    //                     {
-    //                         model : School,
-    //                         attributes : [
-
-    //                             ["nama", "namaSekolah"]
-    //                         ]
-    //                     },
-    //                 ],
-    //                 order:[['id', 'DESC']]
-                     
-    //             })
-
-    //             .then((result) => {
-    //                 // console.log(result)
-    //                 return res.status(200).send(result)
-    //             }).catch((err)=>{
-    //                 return res.status(500).send({message: err})
-    //             })
-
-    // },
+    getScholarshipDonations: (req, res) => {
+        // console.log(req.body)
+        // const userId = req.body.userId
+        // const offset = req.body.offset
+        // const limit = req.body.limit
+  
+        Payment.findAndCountAll({
+        //   limit:parseInt(limit),
+        //   // limit : 10,
+        //   offset:offset,
+          // subQuery: false,
+            attributes : [
+              'nominal',
+              [sequelize.col('scholarship.judul'), 'judulScholarship'],
+              [sequelize.col('scholarship.id'), 'scholarshipId'],
+            //   [sequelize.col('scholarship->student.name'), 'namaMurid'],
+            //   [sequelize.col('scholarship->student.studentImage'), 'fotoMurid'],
+              [sequelize.col('user.nama'), 'donators'],
+            //   'order_id',
+              'komentar',
+              'createdAt',
+              'id'
+            ],
+            where : {
+                isRefund : 0,
+                isDeleted : 0,
+                scholarshipId : req.body.id
+                // statusPayment : 'settlement'
+            },
+            include : [
+              {
+                  model : User,
+                  required : false,
+                  attributes : [] 
+              },
+              {
+                model : scholarship,
+                required : true,
+                attributes : [] 
+            },
+            ],
+            order: [
+                ['createdAt', 'DESC']
+            ]
+        }).then((result)=>{
+          console.log('erresult')
+          console.log(result)
+          console.log(result.count)
+          
+          return res.status(200).send({result : result.rows, count : result.count})
+        }).catch((err)=>{
+            console.log(err)
+          return res.status(500).send({message : err})
+        })
+      },
     getScholarshipDetail:(req,res) => {
         const {id} = req.query
         console.log('---------------> masuk secDetail')
@@ -256,7 +260,7 @@ module.exports = {
                         // // "durasi",
                         // "description",
                         "studentId",
-                        "biayaSekolah"
+                        // "biayaSekolah"
                         // "shareDescription",
                         // "scholarshipStart",
                         // "paymentSource",
@@ -276,8 +280,13 @@ module.exports = {
                             ["name", "namaSiswa"],
                             "studentImage",
                             "tanggalLahir",
-                            // "biayaSekolah"
-                        ]
+                            "biayaSekolah"
+                        ],
+                        where : {
+                            dataStatus : "Verified"
+                        }
+
+                    
                     },
                     // {
                     //     model : School,
@@ -305,7 +314,7 @@ module.exports = {
                         },
                         // isDeleted : 0,
                         isOngoing : 1,
-                        isVerified: 1
+                        // isVerified: 1
                     },
                     order: [['id', `${date}`], ['createdAt', `${date}`]],
                     group : ['id']
@@ -318,6 +327,8 @@ module.exports = {
                     // return res.status(200).send(result)
                     // console.log(results)
                     // Kurang Counting
+
+                    console.log('masuk')
                     
                     // return res.status(200).send(result)
 
@@ -326,8 +337,7 @@ module.exports = {
                             judul : {
                                 [Op.like] : `%${name}%`
                             },
-                            isOngoing : 1,
-                            isVerified: 1
+                            isOngoing : 1
                         }
                     })
                     .then((resultTotalScholarship) => {
@@ -338,6 +348,7 @@ module.exports = {
                         // return res.status(200).send(result)
                     })
                     .catch((err) => {
+                        console.log('masukerr')
                         console.log(err)
                         return res.status(500).send({message: err})
                     })
@@ -388,11 +399,10 @@ module.exports = {
     putVerification:(req, res) => {
         console.log('--------------------> put Verification')
         let {id} = req.query
-        let { isVerified, note, isOngoing } = req.body
+        let {  note, isOngoing } = req.body
         // console.log(req.body)
         // console.log(req.query)
         scholarship.update({
-            isVerified,
             isOngoing,
             note
         },{

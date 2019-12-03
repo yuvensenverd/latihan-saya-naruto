@@ -104,10 +104,10 @@ module.exports = {
         type : Sequelize.INTEGER,
         allowNull : false
       },
-      // biayaSekolah : {
-      //   type : Sequelize.INTEGER,
-      //   allowNull : false
-      // },
+      biayaSekolah : {
+        type : Sequelize.INTEGER,
+        allowNull : false
+      },
       kelas : {
         type : Sequelize.STRING,
         allowNull : false
