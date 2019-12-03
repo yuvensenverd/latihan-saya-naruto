@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      paymentType: {
+      paymentSource: {
         type: Sequelize.STRING,
         allowNull: false
       },

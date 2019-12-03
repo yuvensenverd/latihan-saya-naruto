@@ -8,6 +8,7 @@ const { auth } = require('../helpers/auth')
 // router.get('/getPayment', paymentController.getPayment )
 router.post('/getSnapMd', auth, paymentController.getSnapMd)
 router.post('/updatePayment', paymentController.updatePayment)
+router.post('/onfailuregetinfo', paymentController.onFailureGetInfo)
 router.post('/getHistory',auth, paymentController.getHistory)
 router.get('/getHistoryAdmin', auth, paymentController.getHistoryAdmin) // BUTUH PROTEKSI ROLE = USERADMIN
 router.post('/getDonasiProject', paymentController.getDonasiProject)

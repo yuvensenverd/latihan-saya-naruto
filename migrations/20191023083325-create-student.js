@@ -36,6 +36,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      provinsi : {
+        type : Sequelize.STRING,
+        allowNull : false,
+      },
       isDeleted: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -49,7 +53,7 @@ module.exports = {
         },
       },
       story: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: true
       },
       shareDescription : {
@@ -100,10 +104,10 @@ module.exports = {
         type : Sequelize.INTEGER,
         allowNull : false
       },
-      biayaSekolah : {
-        type : Sequelize.INTEGER,
-        allowNull : false
-      },
+      // biayaSekolah : {
+      //   type : Sequelize.INTEGER,
+      //   allowNull : false
+      // },
       kelas : {
         type : Sequelize.STRING,
         allowNull : false
