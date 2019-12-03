@@ -40,10 +40,6 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: true
       },
-      isVerified: {
-        type: Sequelize.STRING,
-        defaultValue: 0
-      },
       isOngoing: {
         type: Sequelize.STRING,
         defaultValue: 0

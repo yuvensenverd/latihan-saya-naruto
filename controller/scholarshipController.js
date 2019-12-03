@@ -265,7 +265,6 @@ module.exports = {
                         // // "durasi",
                         // "description",
                         "studentId",
-                        "biayaSekolah"
                         // "shareDescription",
                         // "scholarshipStart",
                         // "paymentSource",
@@ -285,8 +284,11 @@ module.exports = {
                             ["name", "namaSiswa"],
                             "studentImage",
                             "tanggalLahir",
-                            // "biayaSekolah"
-                        ]
+                            "biayaSekolah"
+                        ],
+                        where: {
+                            dataStatus: 'Verified'
+                        }
                     },
                     // {
                     //     model : School,
@@ -313,8 +315,7 @@ module.exports = {
                             [Op.like] : `%${name}%`
                         },
                         // isDeleted : 0,
-                        isOngoing : 1,
-                        isVerified: 1
+                        isOngoing : 1
                     },
                     order: [['id', `${date}`], ['createdAt', `${date}`]],
                     group : ['id']
