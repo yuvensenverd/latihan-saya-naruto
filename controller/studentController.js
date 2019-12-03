@@ -108,7 +108,7 @@ module.exports={
                         teleponSekolah,
                         namaSekolah,
                         jumlahSaudara,
-                        // biayaSekolah,
+                        biayaSekolah,
                         kelas,
                         story,
                         studentImage: listGambar[0],
