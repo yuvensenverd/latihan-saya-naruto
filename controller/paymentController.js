@@ -2,10 +2,17 @@ const { Sequelize, sequelize, Payment, User, Project }  = require('../models')
 const midtransClient                                    = require('midtrans-client')
 const moment                                            = require('moment')
 const Axios = require('axios')
+
 const snap = new midtransClient.Snap({
     isProduction    : false,
     serverKey       : 'SB-Mid-server-Dr8HK_lJ4cuEZi4rUgNcsDUR',
     clientKey       : 'SB-Mid-client-Ttge99xVU4AOz44T'
+})
+
+const core = new midtransClient.CoreApi({
+    isProduction : false,
+    serverKey : 'SB-Mid-server-Dr8HK_lJ4cuEZi4rUgNcsDUR',
+    clientKey : 'SB-Mid-client-Ttge99xVU4AOz44T'
 })
 
 
@@ -474,6 +481,9 @@ module.exports = {
     }
 
 
+
+    // ============ core api ===============
+    
     
 
 }
