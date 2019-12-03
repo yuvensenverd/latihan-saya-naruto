@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.STRING,
     projectCreated: DataTypes.DATE,
     projectEnded: DataTypes.DATE,
+    currentValue : DataTypes.INTEGER,
     totalTarget: DataTypes.INTEGER,
     projectImage: DataTypes.STRING,
     shareDescription: DataTypes.STRING,
@@ -12,7 +13,6 @@ module.exports = (sequelize, DataTypes) => {
     isCancelled: DataTypes.INTEGER,
     cancelledDate: DataTypes.DATE,
     isGoing: DataTypes.INTEGER,
-    status : DataTypes.STRING,
     isDeleted: DataTypes.INTEGER
   }, {});
   Project.associate = function(models) {

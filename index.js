@@ -10,13 +10,6 @@ const bearerToken = require('express-bearer-token');
 const fs = require('fs')
 require('./scheduler/schedulers')
 
-
-
-
-
-
-
-
 app.use(bodyParser.json())
 app.use(cors())
 
@@ -28,31 +21,20 @@ app.use(express.static('public'))
 
 app.use(bearerToken())
 
-
-
-
-
-
-
-
-
 const {
     userRouter, 
     paymentRouter,
     studentRouter,
-    studentDetailRouter,
+    // studentDetailRouter,
     projectRouter,
     testRouter, 
     studentRevisionRouter,
     scholarshipRouter,
-    studentDetailRevisionRouter,
+    // studentDetailRevisionRouter,
     subscriptionRouter,
-    schoolRouter,
+    // schoolRouter,
     payoutRouter
 } = require('./router')
-
-
-
 
 // cloudinary.v2.uploader.upload("dog.mp4", 
 //   { resource_type: "video", 
@@ -70,13 +52,13 @@ app.use('/payment', paymentRouter)
 app.use("/user", userRouter)
 app.use('/student',studentRouter)
 app.use("/project", projectRouter)
-app.use("/studentdetail", studentDetailRouter)
+// app.use("/studentdetail", studentDetailRouter)
 app.use('/test',testRouter)
 app.use('/studentrev', studentRevisionRouter)
 app.use('/scholarship', scholarshipRouter)
-app.use('/studentdetailrev', studentDetailRevisionRouter);
+// app.use('/studentdetailrev', studentDetailRevisionRouter);
 app.use('/subscription', subscriptionRouter);
-app.use('/school', schoolRouter)
+// app.use('/school', schoolRouter)
 app.use('/payout', payoutRouter)
 
 console.log('masuk io')

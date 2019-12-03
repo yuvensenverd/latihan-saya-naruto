@@ -17,7 +17,7 @@ module.exports = {
       nominalSubscription: {
         type: Sequelize.INTEGER
       },
-      remainderDate: {
+      reminderDate: {
         type: Sequelize.DATE
       },
       isCancelled: {

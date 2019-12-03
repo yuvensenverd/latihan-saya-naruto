@@ -1,5 +1,5 @@
 
-const { Sequelize, sequelize,  Student, School} = require('../models')
+const { Sequelize, sequelize,  Student, School, scholarship} = require('../models')
 const Moment=require('moment')
 const Op = Sequelize.Op
 const {uploader}=require('../helpers/uploader')
@@ -22,21 +22,72 @@ module.exports={
     // },
     postStudentdata(req,res){
         try {
+
             const path = '/student/images'; //file save path
             const upload = uploader(path, 'STD').fields([{ name: 'image'}]);
+
             upload(req,res,(err)=>{
                 if(err){
                     return res.status(500).json({ message: 'Upload picture failed !', error: err.message });
                 }
                 const {image}=req.files;
                 console.log(image)
-                const imagePath = image ? path + '/' + image[0].filename : null;
-                console.log(imagePath)
+
+                console.log(image)
+
+                let listGambar = [];
+
+                for(let i = 0; i < image.length; i = i + 1) {
+                    const imagePath = image[i] ? path + '/' + image[i].filename : 'http://localhost:2019/defaultPhoto/defaultCategory.png';
+                    listGambar.push(imagePath)
+                }
+
+                console.log('====== gambar ')
+                console.log(listGambar)
+
+
                 const data = JSON.parse(req.body.data);
+                console.log('Data siswa ================')
                 console.log(data)
-                data.studentImage=imagePath
+
+
+
+                // const imagePath = image ? path + '/' + image[0].filename : null;
+                // console.log(imagePath)
+                // const data = JSON.parse(req.body.data);
+                // console.log(data)
+                // data.studentImage=imagePath
                 // data.tanggalLahir=Moment(data.tanggalLahir)
-                const {name,pendidikanTerakhir,gender,status,alamat,tanggalLahir,userId,story,schoolId,studentImage,provinsi}=data
+
+                //   : this.state.StudentImageDB,
+        //    : this.state.StudentCardImageDB,
+        //    : this.state.SchoolImageDB,
+        //    : this.state.FamilyCardImageDB,
+        //    : this.state.IncomeCardImageDB,
+
+                const {
+                    userId,
+                    name,
+                    pendidikanTerakhir,
+                    gender,
+                    status,
+                    alamat,
+                    tanggalLahir,
+                    story,
+                    shareDescription,
+                    scholarshipTitle,
+                    nomorRekening,
+                    pemilikRekening,
+                    alamatSekolah,
+                    bank,
+                    cabangBank,
+                    teleponSekolah,
+                    namaSekolah,
+                    jumlahSaudara,
+                    biayaSekolah,
+                    kelas,
+                    provinsi
+                } = data
                 console.log(name)
                 return sequelize.transaction(function (t){
                     return Student.create({
@@ -47,45 +98,79 @@ module.exports={
                         provinsi,
                         alamat,
                         tanggalLahir:Moment(tanggalLahir),
-                        userId,
+                        userId: req.user.userId,
+                        shareDescription,
+                        nomorRekening,
+                        pemilikRekening,
+                        alamatSekolah,
+                        bank,
+                        cabangBank,
+                        teleponSekolah,
+                        namaSekolah,
+                        jumlahSaudara,
+                        // biayaSekolah,
+                        kelas,
                         story,
-                        schoolId,
-                        studentImage,
-                        dataStatus : 'Unverified'
+                        studentImage: listGambar[0],
+                        kartuSiswa: listGambar[1],
+                        raportTerakhir: listGambar[2],
+                        kartuKeluarga: listGambar[3],
+                        dataPenghasilan: listGambar[4],
+                        isDeleted: 0,
+                        dataStatus : 'Unverified',
+                        statusNote: ''
                     },{transaction:t})
                     .then((result)=>{
-                        return result
+                        console.log('ini id student ========================================')
+                        console.log(result.dataValues.id)
+                        // console.log(result.Student.dataValues.id)
+                        scholarship.create({
+                            judul : scholarshipTitle,
+                            studentId : result.dataValues.id,
+                            userId,
+                            biayaSekolah : biayaSekolah * 12,
+                            currentValue : 0,
+                            totalPayout : 0,
+                            isVerified : 0,
+                            isOngoing : 0
+                        }).then((results)=>{
+                            // return res.status(200).send(results)
+                        }).catch((err)=>{
+                            console.log(err)
+                            throw new Error()
+                        })
+                        
                     }).catch((err)=>{
                         console.log(err.message)
-                        fs.unlinkSync('./public' + imagePath);
+                        for(let i = 0; i < listGambar.length; i = i + 1) {
+                            
+                            fs.unlinkSync('./public' + listGambar[i]);
+                        }
                         return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message })
                     })
                 }).then((result)=>{
                     console.log('success upload')
-                    Student.findAll({
-                        attributes:{
-                            exclude:['createdAt','updatedAt']
-                        },
-                        where:{
-                            isDeleted:0
-                        }
-                    })
-                    .then((result1)=>{
-                        return res.status(200).send(result1)
-                    }).catch((err)=>{
-                        res.status(500).send({message:'error post', error:err})
-                    })
+                    return res.status(200).send(result)
                     // return res.status(200).send(result)
                 }).catch((err)=>{
                     console.log(err.message)
-                    fs.unlinkSync('./public' + imagePath);
-                    return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message })
+                    for(let i = 0; i < listGambar.length; i = i + 1) {
+                            
+                        fs.unlinkSync('./public' + listGambar[i]);
+                    }
+                    throw new Error()
+                    // fs.unlinkSync('./public' + imagePath);
+                    // return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message })
                 })
             })
+
+            // console.log(req.body)
+            
             
         } catch (error) {
             console.log(err.message)
-            fs.unlinkSync('./public' + imagePath);
+         
+            // fs.unlinkSync('./public' + imagePath);
             return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
         }
     },
@@ -187,35 +272,30 @@ module.exports={
         console.log(req.body)
         console.log(req.user)
 
-        var { page, limit, sekolah,  pendidikan} = req.body;
-        var listpendidikan = ['SMA', 'SMK', 'S1', 'SD', 'SMP', 'TK']
+        var { page, limit, name, orderby } = req.body;
+        // var listpendidikan = ['SMA', 'SMK', 'S1', 'SD', 'SMP', 'TK']
    
-        var offset=(page*limit)-limit
+        var offset = ( page * limit ) - limit
+
         Student.findAndCountAll({
             // limit:parseInt(limit),
             // offset:offset,
             // order:[['id','asc']],
+            limit:parseInt(limit),
+            // limit : 10,
+            offset:offset,
+            subQuery: false,
             attributes:{
                 exclude:['createdAt','updatedAt']
             },
-            include : [
-                {
-                    model : School,
-                    required : true,
-                    attributes : [['nama', 'schoolName']],
-                    where : {
-                        nama : {
-                            [Op.like] : `%${sekolah ? sekolah : ''}%`
-                        },
-                  
-                    },
-               
-                }
-            ],
             where : {
+                name : {
+                    [Op.like] : `%${name}%`
+                },
                 userId: req.user.userId,
                 isDeleted : 0
-            }
+            },
+            order: [['createdAt', `${orderby}`]],
             // where:{
             //     isDeleted:0,
             //     // pendidikanTerakhir : {
@@ -251,11 +331,91 @@ module.exports={
         })
         .then((result) => {
             console.log(result)
-            return res.send(result)
+            return res.status(200).send(result)
         }).catch((err)=>{
             console.log(err)
+            return res.status(500).send({err})
         })
+    },
+
+    getStudentAdmin : (req,res) =>{
+        // var { page, limit, sekolah,  pendidikan} = req.body;
+        // var listpendidikan = ['SMA', 'SMK', 'S1', 'SD', 'SMP', 'TK']
+   
+        // var offset=(page*limit)-limit
+        
+        Student.findAndCountAll({
+            // limit:parseInt(limit),
+            // offset:offset,
+            // order:[['id','asc']],
+            attributes:{
+                include : [
+                    [sequelize.col('scholarship.judul'), 'judulScholarship'],
+                    [sequelize.col('scholarship.id'), 'idScholarship'],
+                    // [sequelize.col('scholarship.id'), 'idScholarship']
+                ],
+                exclude:['createdAt','updatedAt']
+            },
+            include : [
+                {
+                    model : School,
+                    required : true,
+                    attributes : [['nama', 'schoolName']],
+                    where : {
+                        nama : {
+                            [Op.like] : `%%`,
+                            // [Op.like] : `%${sekolah ? sekolah : ''}%`
+                        },
+                  
+                    },
+               
+                },
+                {
+                    model : scholarship,
+                    required : false,
+                    attributes : []
+                }
+            ],
+            where : {
+                // userId: req.user.userId,
+                isDeleted : 0
+            }
+            // where:{
+            //     isDeleted:0,
+            //     // pendidikanTerakhir : {
+            //     //     [Op.in] : pendidikan ? pendidikan : listpendidikan
+            //     // },
+            //     userId : req.user.userId
+            //     // [School.nama] : `%${sekolah ? sekolah : ''}%`
+            // }
+        })
+        .then((result)=>{
+            console.log('======> hasilnya')
+            console.log(result)
+            return res.status(200).send(result)
+        }).catch((err)=>{
+            return res.status(500).send({message:'error post', error:err})
+        })
+    },
+
+    getStudentDetails: (req, res) => {
+        const { id } = req.params
+        console.log('masuk detail')
+        console.log(id)
+            Student.findAll({
+                where: {
+                    id: id,
+                },
+                attributes: {
+                    exclude: ['createdAt', 'updatedAt']
+                }
+            })
+            .then((results) => {
+                console.log(results[0])
+                return res.status(200).send(results);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
     }
-
-
 }

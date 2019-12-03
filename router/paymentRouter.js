@@ -5,10 +5,12 @@ const { paymentController } = require('../controller')
 const { auth } = require('../helpers/auth')
 
 
-router.get('/getPayment', paymentController.getPayment )
+// router.get('/getPayment', paymentController.getPayment )
 router.post('/getSnapMd', auth, paymentController.getSnapMd)
 router.post('/updatePayment', paymentController.updatePayment)
-router.post('/getHistory', paymentController.getHistory)
+router.post('/onfailuregetinfo', paymentController.onFailureGetInfo)
+router.post('/getHistory',auth, paymentController.getHistory)
+router.get('/getHistoryAdmin', auth, paymentController.getHistoryAdmin) // BUTUH PROTEKSI ROLE = USERADMIN
 router.post('/getDonasiProject', paymentController.getDonasiProject)
 router.post('/getStatus', paymentController.getStatus)
 router.post('/createPayment', paymentController.addPayment)
