@@ -205,7 +205,8 @@ module.exports = {
                             "raportTerakhir",
                             "kartuKeluarga",
                             "biayaSekolah",
-                            "kelas"
+                            "kelas",
+                            "createdAt"
                         ]
                     },
                     // {
