@@ -178,61 +178,35 @@ module.exports = {
                     attributes : [
                         "id",
                         "judul",
-                        // "nominal",
-                        // "durasi",
-                        // "description",
                         "studentId",
-                        // "shareDescription",
-                        // "scholarshipStart",
-                        // "paymentSource",
-                        // "scholarshipEnded",
-                        // [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],
-                        // [sequelize.fn('SUM', sequelize.col('Subscriptions.nominalSubscription')), 'currentSubs'],
-                        [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totaldonation'],
+                        'currentValue',
+                        [sequelize.col('Student.biayaSekolah'), 'biayaSekolah'],
+                        [sequelize.col('Student.kelas'), 'kelas'],
+                        [sequelize.col('Student.provinsi'), 'provinsi'],
+                        [sequelize.col('Student.story'), 'story'],
+
+                        [sequelize.col('Student.shareDescription'), 'shareDescription'],
+                        [sequelize.col('Student.kartuSiswa'), 'kartuSiswa'],
+                        [sequelize.col('Student.raportTerakhir'), 'raportTerakhir'],
+                        [sequelize.col('Student.studentImage'), 'studentImage'],
+                        [sequelize.col('Student.kartuKeluarga'), 'kartuKeluarga'],
+                        [sequelize.col('Student.id'), 'siswaId'],
+                        [sequelize.col('Student.name'), 'namaSiswa'],
+                        [sequelize.col('Student.studentImage'), 'studentImage'],
+                        [sequelize.col('Student.createdAt'), 'studentCreated'],
+
+                        // [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totaldonation'],
                         [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'jumlahdonation'],
                     ],
                     
                     include : [{
                         model : Student,
-                        attributes : [
-                            ["id", "siswaId"],
-                            ["name", "namaSiswa"],
-                            "studentImage",
-                            "provinsi",
-                            "story",
-                            "shareDescription",
-                            "kartuSiswa",
-                            "raportTerakhir",
-                            "kartuKeluarga",
-                            "biayaSekolah",
-                            "kelas",
-                            "createdAt"
-                        ]
+                        attributes : []
                     },
-                    // {
-                    //     model : School,
-                    //     attributes : [
-                    //         ["nama", "namaSekolah"], "namaPemilikRekening", "nomorRekening" , "bank", "email"
-                    //     ]
-                    // },
-                    // {
-                    //     model : Subscription,
-                    //     attributes :   [
-                    //         'nominalSubscription',
-                    //         [sequelize.fn('SUM', sequelize.col('nominalSubscription')), 'currentSubs']
-                    //     ], 
-                    //     group : ['scholarshipId'],
-                       
-                                    
-                    //     separate : true
-                    // },
                     {
                         model : Payment,
                         attributes : []
-                    }
-
-
-                    ],
+                    }],
                     where : {
                         id,
                         isOngoing: 1,
@@ -269,6 +243,7 @@ module.exports = {
                         // "nominal",
                         // // "durasi",
                         // "description",
+                        "biayaSekolah",
                         "studentId",
                         // "shareDescription",
                         // "scholarshipStart",
@@ -289,7 +264,7 @@ module.exports = {
                             ["name", "namaSiswa"],
                             "studentImage",
                             "tanggalLahir",
-                            "biayaSekolah"
+                            // "biayaSekolah"
                         ],
                         where: {
                             dataStatus: 'Verified'

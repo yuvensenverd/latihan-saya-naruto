@@ -4,8 +4,8 @@ const moment                                            = require('moment')
 const Axios = require('axios')
 const snap = new midtransClient.Snap({
     isProduction    : false,
-    serverKey       : 'SB-Mid-server-Dr8HK_lJ4cuEZi4rUgNcsDUR',
-    clientKey       : 'SB-Mid-client-Ttge99xVU4AOz44T'
+    serverKey       : 'SB-Mid-server-gX4FwJuHKjMqZaQvd2pwT2GX',
+    clientKey       : 'SB-Mid-client-lM5IFUJ3Ozq3_ABW'
 })
 
 
@@ -60,45 +60,72 @@ module.exports = {
         //######## INSERT DATABASE 
         console.log('------------------------------> Masuk Add payment')
         const {userId, paymentType, gross_amount, statusPayment, projectId, scholarshipId, komentar, anonim, order_id, paymentSource, noPembayaran} = req.body
-        Payment.findOne({
-            attributes: {
-                exclude: ['createdAt', 'updatedAt']
-            },
-            where:{
-                order_id
-            }
-        }).then((result) => {
-            console.log(result)
-            if(!result){
-                console.log('insert--------')
-                Payment.create({
-                    paymentType,
-                    nominal: gross_amount,
-                    statusPayment,
-                    paymentSource,
-                    projectId: projectId ? projectId : null,
-                    scholarshipId: scholarshipId ? scholarshipId : null,
-                    userId: userId,
-                    isRefund: '0',
-                    isDeleted: '0',
-                    order_id: order_id,
-                    komentar: komentar,
-                    isAnonim: anonim,
-                    noPembayaran
-                }).then(()=>{
-                    Payment.findAll()
-                    .then((result)=>{
-                        console.log(result)
-                        return res.status(200).send({message: 'create Payment Success ', result})
+
+        return sequelize.transaction(function(t){
+            return Payment.findOne({
+                attributes: {
+                    exclude: ['createdAt', 'updatedAt']
+                },
+                where:{
+                    order_id
+                }
+            }, {transaction : t}).then((result) => {
+                console.log(result)
+                if(!result){
+                    console.log('insert--------')
+                    Payment.create({
+                        paymentType,
+                        nominal: gross_amount,
+                        statusPayment,
+                        paymentSource,
+                        projectId: projectId ? projectId : null,
+                        scholarshipId: scholarshipId ? scholarshipId : null,
+                        userId: userId,
+                        isRefund: '0',
+                        isDeleted: '0',
+                        order_id: order_id,
+                        komentar: komentar,
+                        isAnonim: anonim,
+                        noPembayaran
+                    }).then(()=>{
+                        // Payment.findAll()
+                        // .then((result)=>{
+                        //     console.log(result)
+                        //     return res.status(200).send({message: 'create Payment Success ', result})
+                        // })
+    
+                        scholarship.update(
+                            {
+                                currentValue : sequelize.literal(`currentValue + ${gross_amount}`)
+                            },
+                            {
+                                where : 
+                                    {
+                                        id : scholarshipId
+                                    }
+                            }
+                        )
+                        .then((res)=>{
+                             console.log('success')
+                             console.log(res)
+                        })
+                        .catch((err)=>{
+                            console.log(err)
+                        })
+                    }).catch((err)=>{
+                        console.log(err)
                     })
-                }).catch((err)=>{
-                    console.log(err)
-                })
-            }
-        }).catch((err)=>{
-            console.log('tidak ada')
-            console.log(err)
+                }
+            }).catch((err)=>{
+                console.log('tidak ada')
+                console.log(err)
+            })
+        }).then((results)=>{
+           return  res.status(200).send({message : 'message success',results})
+        }).catch((error)=>{
+            return res.status(500).send({message : 'theres an error', error})
         })
+        
     },
 
     getStatus:(req,res)=>{
