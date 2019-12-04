@@ -56,7 +56,7 @@ CREATE TABLE `payments` (
 
 LOCK TABLES `payments` WRITE;
 /*!40000 ALTER TABLE `payments` DISABLE KEYS */;
-INSERT INTO `payments` VALUES (1,'gopay ','Donation',15000,'pending',NULL,2,1,0,NULL,0,'dev845','-',0,'https://api.sandbox.veritrans.co.id/v2/gopay/b70995a8-cd80-4c89-bc4d-4343f2be0008/qr-code','2019-11-21 15:46:14','2019-11-21 15:59:40'),(2,'gopay','Donation',10000,'expire',NULL,0,1,0,NULL,0,'dev109','-',0,'https://api.sandbox.veritrans.co.id/v2/gopay/deff35fe-5ed4-4d9a-aa4f-aa47e6f3b590/qr-code','2019-11-21 16:01:51','2019-11-21 16:02:20'),(3,'gopay ','Donation',34634,'expire',1,NULL,1,0,NULL,0,'dev601','-',0,'https://api.sandbox.veritrans.co.id/v2/gopay/d9e43283-d905-4e86-aba8-4dcd1d2aa4bd/qr-code','2019-11-21 17:19:22','2019-11-21 17:19:22'),(4,'gopay ','Donation',3245345,'expire',0,NULL,1,0,NULL,0,'dev939','-',0,'https://api.sandbox.veritrans.co.id/v2/gopay/03f49df3-ba82-44cb-8d39-e741a76724e2/qr-code','2019-11-21 17:22:05','2019-11-21 17:22:05'),(5,'gopay ','Donation',55555,'expire',1,NULL,1,0,NULL,0,'dev475','-',0,'https://api.sandbox.veritrans.co.id/v2/gopay/651fc000-6a9c-4616-8ae7-d7a198a5210e/qr-code','2019-11-21 17:34:15','2019-11-21 17:34:15'),(6,'gopay','Donation',25000,'settlement',NULL,3,1,0,NULL,0,'dev457','-',0,'https://api.sandbox.veritrans.co.id/v2/gopay/d2b4af4d-ce9d-4b81-8ecd-00354ad28f9e/qr-code','2019-12-04 10:47:53','2019-12-04 10:47:55');
+INSERT INTO `payments` VALUES (1,'gopay ','Donation',15000,'pending',NULL,2,1,0,NULL,0,'dev845','-',0,'https://api.sandbox.veritrans.co.id/v2/gopay/b70995a8-cd80-4c89-bc4d-4343f2be0008/qr-code','2019-11-21 15:46:14','2019-11-21 15:59:40'),(2,'gopay','Donation',10000,'expire',NULL,0,1,0,NULL,0,'dev109','-',0,'https://api.sandbox.veritrans.co.id/v2/gopay/deff35fe-5ed4-4d9a-aa4f-aa47e6f3b590/qr-code','2019-11-21 16:01:51','2019-11-21 16:02:20'),(3,'gopay ','Donation',10000000,'expire',1,NULL,1,0,NULL,0,'dev601','-',0,'https://api.sandbox.veritrans.co.id/v2/gopay/d9e43283-d905-4e86-aba8-4dcd1d2aa4bd/qr-code','2019-11-21 17:19:22','2019-11-21 17:19:22'),(4,'gopay ','Donation',3245345,'expire',0,NULL,1,0,NULL,0,'dev939','-',0,'https://api.sandbox.veritrans.co.id/v2/gopay/03f49df3-ba82-44cb-8d39-e741a76724e2/qr-code','2019-11-21 17:22:05','2019-11-21 17:22:05'),(5,'gopay ','Donation',20000,'expire',1,NULL,1,0,NULL,0,'dev475','-',0,'https://api.sandbox.veritrans.co.id/v2/gopay/651fc000-6a9c-4616-8ae7-d7a198a5210e/qr-code','2019-11-21 17:34:15','2019-11-21 17:34:15'),(6,'gopay','Donation',25000,'settlement',NULL,3,1,0,NULL,0,'dev457','-',0,'https://api.sandbox.veritrans.co.id/v2/gopay/d2b4af4d-ce9d-4b81-8ecd-00354ad28f9e/qr-code','2019-12-04 10:47:53','2019-12-04 10:47:55');
 /*!40000 ALTER TABLE `payments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -122,7 +122,7 @@ CREATE TABLE `projects` (
   PRIMARY KEY (`id`),
   KEY `userId` (`userId`),
   CONSTRAINT `projects_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -131,7 +131,7 @@ CREATE TABLE `projects` (
 
 LOCK TABLES `projects` WRITE;
 /*!40000 ALTER TABLE `projects` DISABLE KEYS */;
-INSERT INTO `projects` VALUES (1,'Project1','<p>qwe</p>','2019-11-21 15:32:09','2020-11-10 07:00:00',NULL,200000,'/post/image/project/PJT1574325129159.jpg','a',1,0,NULL,1,0,'2019-11-21 15:32:09','2019-11-21 15:32:09');
+INSERT INTO `projects` VALUES (1,'Bantu guru di Sumatera Utara untuk memfasilitasi murid muridnya dengan 30 laptop ','<p>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</p>','2019-11-21 15:32:09','2020-11-10 07:00:00',NULL,20000000,'/post/image/project/PJT1573024662376.jpg','a',1,0,NULL,1,0,'2019-11-21 15:32:09','2019-11-21 15:32:09'),(2,'Bantu guru di Aceh untuk memfasilitasi murid muridnya dengan 100 tas sekolah','<p>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</p>','2019-11-21 15:32:09','2020-11-10 07:00:00',NULL,1000000,'/post/image/project/PJT1573024649971.jpg','a',1,0,NULL,1,0,'2019-11-21 15:32:09','2019-11-21 15:32:09');
 /*!40000 ALTER TABLE `projects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -380,4 +380,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-12-04 22:16:03
+-- Dump completed on 2019-12-05  5:44:46
