@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     raportTerakhir : DataTypes.STRING,
     kartuKeluarga : DataTypes.STRING,
     jumlahSaudara : DataTypes.INTEGER,
-    // biayaSekolah : DataTypes.INTEGER,
+    biayaSekolah : DataTypes.INTEGER,
     kelas : DataTypes.INTEGER,
     dataPenghasilan : DataTypes.STRING,
     dataStatus: DataTypes.STRING,
