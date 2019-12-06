@@ -1,4 +1,4 @@
-const { Sequelize, sequelize, StudentRevision, School, Student } = require('../models')
+const { Sequelize, sequelize, StudentRevision, School, Student, scholarship } = require('../models')
 const Op = Sequelize.Op
 const Moment=require('moment')
 const {uploader} = require('../helpers/uploader')
@@ -6,7 +6,7 @@ const fs = require('fs')
 
 module.exports = {
     adminGetStudent : (req,res)=>{
-        console.log('masuesk')
+        console.log('--------==========------- > masuesk')
         var value = ''
 
         if(req.query.type === 'new'){
@@ -23,13 +23,13 @@ module.exports = {
                 isDeleted:0,
                 dataStatus : value
             },
-            include : [
-                {
-                    model : School,
-                    attributes: 
-                       [ 'bank', ['alamat','alamatSekolah'], 'namaPemilikRekening', 'nomorRekening', 'telepon', ['nama', 'schoolName']]
-                }
-            ]
+            // include : [
+            //     {
+            //         model : School,
+            //         attributes: 
+            //            [ 'bank', ['alamat','alamatSekolah'], 'namaPemilikRekening', 'nomorRekening', 'telepon', ['nama', 'schoolName']]
+            //     }
+            // ]
         })
         .then((result)=>{
             return res.status(200).send(result)
@@ -234,9 +234,6 @@ module.exports = {
             })
 
         })
-    
-            
-        
     },
     newStudentApprove : (req,res) =>{
         console.log('student approve')
@@ -317,5 +314,165 @@ module.exports = {
             res.status(200).send({message : err})
         }
             
-    }
+    },
+
+    // ============================== NEW =================================
+
+    editDataStudent : async (req, res) => {
+        console.log('----------------------<<<< edit >>>>----------------------')
+        console.log(req.body)
+        const oldData = await  Student.findOne({
+            where : {
+                id : req.params.id
+            },
+            include: [
+                {
+                    model: scholarship,
+                    attributes: ['biayaSekolah']
+                }
+            ]
+        })
+        const PARSE_OLD_DATA = JSON.parse(JSON.stringify(oldData));
+        console.log('--------------------------> OLD DATA <---------------------')
+        console.log(PARSE_OLD_DATA)
+        if(PARSE_OLD_DATA){
+            console.log('-----masuk----')
+            return sequelize.transaction(t => {
+                    return StudentRevision.create({
+                        name: PARSE_OLD_DATA.name,
+                        pendidikanTerakhir: PARSE_OLD_DATA.pendidikanTerakhir,
+                        gender: PARSE_OLD_DATA.gender,
+                        status: PARSE_OLD_DATA.status,
+                        alamat: PARSE_OLD_DATA.alamat,
+                        tanggalLahir: PARSE_OLD_DATA.tanggalLahir,
+                        studentImage: PARSE_OLD_DATA.studentImage,
+                        provinsi: PARSE_OLD_DATA.provinsi,
+                        userId: PARSE_OLD_DATA.userId,
+                        story: PARSE_OLD_DATA.story,
+                        shareDescription: PARSE_OLD_DATA.shareDescription,
+                        nomorRekening: PARSE_OLD_DATA.nomorRekening,
+                        pemilikRekening: PARSE_OLD_DATA.pemilikRekening,
+                        alamatSekolah: PARSE_OLD_DATA.alamatSekolah,
+                        bank: PARSE_OLD_DATA.bank,
+                        cabangBank: PARSE_OLD_DATA.cabangBank,
+                        teleponSekolah: PARSE_OLD_DATA.teleponSekolah,
+                        namaSekolah: PARSE_OLD_DATA.namaSekolah,
+                        kartuSiswa: PARSE_OLD_DATA.kartuSiswa,
+                        raportTerakhir: PARSE_OLD_DATA.raportTerakhir,
+                        kartuKeluarga: PARSE_OLD_DATA.kartuKeluarga,
+                        jumlahSaudara: PARSE_OLD_DATA.jumlahSaudara,
+                        biayaSekolah: PARSE_OLD_DATA.scholarship.biayaSekolah,
+                        kelas: PARSE_OLD_DATA.kelas,
+                        dataPenghasilan: PARSE_OLD_DATA.dataPenghasilan,
+                        studentId: PARSE_OLD_DATA.id,
+                    },{
+                        transaction: t
+                    }) //close student revision create
+                    .then((result) => {
+                        console.log('=======> sukses backup ')
+                        console.log(result)
+                        const path = '/student/images';
+                        const upload = uploader(path, 'STD').fields([{ name: 'image'}]);
+                        upload(req, res,(err) => {
+                            if(err){
+                                return res.status(500).json({ message: 'Upload picture failed'})
+                            }
+                            const { image } = req.files;
+                            console.log('------------------------------------image <<<<<<<<<<<')
+                            // console.log(req)
+                            let listgambar = [];
+                            console.log(image)
+                            
+                            for(let i = 0; i < 5; i= i+ 1){
+                                if(image){
+                                    const imagePath = image[i] ? path + '/' + image[i].filename : null;
+                                    listgambar.push(imagePath)
+                                }else{
+                                    listgambar.push('')
+                                }
+                            }
+                            console.log(listgambar)
+    
+                            const NEWDATA = JSON.parse(req.body.data)
+                            console.log('>>>>>>>>>>>>>>> new data <<<<<<<<<<<<<')
+                            console.log(NEWDATA)
+                            console.log(NEWDATA.tanggalLahir)
+                            console.log(Moment(NEWDATA.tanggalLahir))
+                            Student.update({
+                                name: NEWDATA.name,
+                                pendidikanTerakhir: NEWDATA.pendidikanTerakhir,
+                                gender: NEWDATA.gender,
+                                status: NEWDATA.status,
+                                provinsi: NEWDATA.provinsi,
+                                alamat: NEWDATA.alamat,
+                                tanggalLahir: NEWDATA.tanggalLahir,
+                                userId: NEWDATA.userId,
+                                story: NEWDATA.story,
+                                shareDescription: NEWDATA.shareDescription,
+                                nomorRekening: NEWDATA.nomorRekening,
+                                pemilikRekening: NEWDATA.pemilikRekening,
+                                alamatSekolah: NEWDATA.alamatSekolah,
+                                bank: NEWDATA.bank,
+                                cabangBank: NEWDATA.cabangBank,
+                                teleponSekolah: NEWDATA.teleponSekolah,
+                                namaSekolah: NEWDATA.namaSekolah,
+                                kelas: NEWDATA.kelas,
+                                jumlahSaudara: NEWDATA.jumlahSaudara,
+                                studentImage: listgambar[0] ? listgambar[0] : PARSE_OLD_DATA.studentImage,
+                                kartuSiswa: listgambar[1] ? listgambar[1] : PARSE_OLD_DATA.kartuSiswa,
+                                raportTerakhir: listgambar[2] ? listgambar[2] : PARSE_OLD_DATA.raportTerakhir,
+                                kartuKeluarga: listgambar[3] ? listgambar[3] : PARSE_OLD_DATA.kartuKeluarga,
+                                dataPenghasilan: listgambar[4] ? listgambar[4] : PARSE_OLD_DATA.dataPenghasilan,
+                                statusNote: 'Unverified'
+                            },{
+                                where : {
+                                    id: req.params.id
+                                }
+                            },{ 
+                                transaction : t 
+                            })
+                            .then(result2 => {
+                                console.log('--------------------- update success --------')
+                                console.log(result2)
+                                // scholarship.update({
+                                //     biayaSekolah: NEWDATA.biayaSekolah * 12,
+                                // },{
+                                //     where: {
+                                //         id: result2.dataValues.id
+                                //     }
+                                // },{
+                                //     transaction : t
+                                // })
+                                // .then((resScholarhip) => {
+                                //     console.log('-------success res scholarship =======')
+                                //     console.log(resScholarhip)
+                                // })
+                                // .catch(err => { throw err})
+                            })
+                            .catch((err) => {
+                                console.log('error-------------------')
+                                for(let i = 0; i < listGambar.length; i = i + 1) {
+                                
+                                    fs.unlinkSync('./public' + listGambar[i]);
+                                }
+                                console.log(err)
+                                // throw err
+                            })
+                        })//close upload
+                    })
+                    .catch(err => { console.log(err)})
+            })//close transaction
+            .then((results)=>{
+                console.log(results)
+                res.send(results)
+            })
+            .catch((err)=>{
+                for(let i = 0; i < listGambar.length; i = i + 1) {
+                                
+                    fs.unlinkSync('./public' + listGambar[i]);
+                }
+                console.log(err)
+            }) 
+        } // end If
+    }//close endpoint
 }

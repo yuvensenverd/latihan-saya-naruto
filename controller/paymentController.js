@@ -5,8 +5,8 @@ const Axios = require('axios')
 
 const snap = new midtransClient.Snap({
     isProduction    : false,
-    serverKey       : 'SB-Mid-server-Dr8HK_lJ4cuEZi4rUgNcsDUR',
-    clientKey       : 'SB-Mid-client-Ttge99xVU4AOz44T'
+    serverKey       : 'SB-Mid-server-gX4FwJuHKjMqZaQvd2pwT2GX',
+    clientKey       : 'SB-Mid-client-lM5IFUJ3Ozq3_ABW'
 })
 
 const core = new midtransClient.CoreApi({
