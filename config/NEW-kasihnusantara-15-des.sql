@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.17, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.18, for Win64 (x86_64)
 --
--- Host: localhost    Database: newkasihnusantara
+-- Host: localhost    Database: kasihnusantara
 -- ------------------------------------------------------
--- Server version	8.0.17
+-- Server version	5.7.28-0ubuntu0.19.04.2
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -24,20 +24,20 @@ DROP TABLE IF EXISTS `payments`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `payments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `paymentType` varchar(255) NOT NULL,
-  `paymentSource` varchar(255) NOT NULL,
+  `paymentType` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `paymentSource` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `nominal` int(11) NOT NULL,
-  `statusPayment` varchar(255) NOT NULL,
+  `statusPayment` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `projectId` int(11) DEFAULT NULL,
   `scholarshipId` int(11) DEFAULT NULL,
   `userId` int(11) DEFAULT NULL,
   `isRefund` int(11) NOT NULL DEFAULT '0',
   `refundDate` int(11) DEFAULT NULL,
   `isDeleted` int(11) NOT NULL DEFAULT '0',
-  `order_id` varchar(255) NOT NULL,
-  `komentar` varchar(255) DEFAULT NULL,
+  `order_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `komentar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `isAnonim` int(11) NOT NULL DEFAULT '0',
-  `noPembayaran` varchar(255) NOT NULL,
+  `noPembayaran` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
@@ -72,14 +72,14 @@ CREATE TABLE `payouts` (
   `projectId` int(11) DEFAULT NULL,
   `scholarshipId` int(11) DEFAULT NULL,
   `amount` int(11) DEFAULT NULL,
-  `beneficiary_name` varchar(255) DEFAULT NULL,
-  `beneficiary_account` varchar(255) DEFAULT NULL,
-  `bank` varchar(255) DEFAULT NULL,
-  `reference_no` varchar(255) DEFAULT NULL,
-  `notes` varchar(255) DEFAULT NULL,
-  `beneficiary_email` varchar(255) DEFAULT NULL,
-  `status` varchar(255) DEFAULT NULL,
-  `created_by` varchar(255) DEFAULT NULL,
+  `beneficiary_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `beneficiary_account` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `bank` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `reference_no` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `notes` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `beneficiary_email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_by` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`)
@@ -104,14 +104,14 @@ DROP TABLE IF EXISTS `projects`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `projects` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `projectCreated` datetime NOT NULL,
   `projectEnded` datetime NOT NULL,
   `currentValue` int(11) DEFAULT NULL,
   `totalTarget` int(11) NOT NULL,
-  `projectImage` varchar(255) NOT NULL,
-  `shareDescription` varchar(255) NOT NULL,
+  `projectImage` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `shareDescription` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `userId` int(11) DEFAULT NULL,
   `isCancelled` int(11) NOT NULL DEFAULT '0',
   `cancelledDate` datetime DEFAULT NULL,
@@ -144,13 +144,13 @@ DROP TABLE IF EXISTS `scholarships`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `scholarships` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `judul` varchar(255) NOT NULL,
+  `judul` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `studentId` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
   `biayaSekolah` int(11) NOT NULL,
   `totalPayout` int(11) NOT NULL,
   `currentValue` int(11) DEFAULT NULL,
-  `isOngoing` varchar(255) DEFAULT '0',
+  `isOngoing` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '0',
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
@@ -179,7 +179,7 @@ DROP TABLE IF EXISTS `sequelizemeta`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sequelizemeta` (
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`name`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -204,32 +204,32 @@ DROP TABLE IF EXISTS `studentrevisions`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `studentrevisions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `pendidikanTerakhir` varchar(255) NOT NULL,
-  `gender` varchar(255) NOT NULL,
-  `status` varchar(255) NOT NULL,
-  `alamat` varchar(255) NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pendidikanTerakhir` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `gender` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `alamat` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tanggalLahir` datetime NOT NULL,
-  `studentImage` varchar(255) NOT NULL,
-  `provinsi` varchar(255) NOT NULL,
+  `studentImage` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `provinsi` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `isDeleted` int(11) NOT NULL DEFAULT '0',
   `userId` int(11) DEFAULT NULL,
-  `story` varchar(255) NOT NULL,
-  `shareDescription` varchar(255) NOT NULL,
-  `nomorRekening` varchar(255) NOT NULL,
-  `pemilikRekening` varchar(255) NOT NULL,
-  `alamatSekolah` varchar(255) NOT NULL,
-  `bank` varchar(255) NOT NULL,
-  `cabangBank` varchar(255) NOT NULL,
-  `teleponSekolah` varchar(255) NOT NULL,
-  `namaSekolah` varchar(255) NOT NULL,
-  `kartuSiswa` varchar(255) NOT NULL,
-  `raportTerakhir` varchar(255) NOT NULL,
-  `kartuKeluarga` varchar(255) NOT NULL,
+  `story` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `shareDescription` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nomorRekening` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pemilikRekening` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `alamatSekolah` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `bank` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `cabangBank` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `teleponSekolah` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `namaSekolah` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kartuSiswa` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `raportTerakhir` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kartuKeluarga` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `jumlahSaudara` int(11) NOT NULL,
   `biayaSekolah` int(11) NOT NULL,
-  `kelas` varchar(255) NOT NULL,
-  `dataPenghasilan` varchar(255) NOT NULL,
+  `kelas` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `dataPenghasilan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `studentId` int(11) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
@@ -259,34 +259,34 @@ DROP TABLE IF EXISTS `students`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `students` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `pendidikanTerakhir` varchar(255) NOT NULL,
-  `gender` varchar(255) NOT NULL,
-  `status` varchar(255) NOT NULL,
-  `alamat` varchar(255) NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pendidikanTerakhir` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `gender` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `alamat` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tanggalLahir` datetime NOT NULL,
-  `studentImage` varchar(255) NOT NULL,
-  `provinsi` varchar(255) NOT NULL,
+  `studentImage` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `provinsi` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `isDeleted` int(11) NOT NULL DEFAULT '0',
   `userId` int(11) DEFAULT NULL,
-  `story` text,
-  `shareDescription` varchar(255) NOT NULL,
-  `nomorRekening` varchar(255) NOT NULL,
-  `pemilikRekening` varchar(255) NOT NULL,
-  `alamatSekolah` varchar(255) NOT NULL,
-  `bank` varchar(255) NOT NULL,
-  `cabangBank` varchar(255) NOT NULL,
-  `teleponSekolah` varchar(255) NOT NULL,
-  `namaSekolah` varchar(255) NOT NULL,
-  `kartuSiswa` varchar(255) NOT NULL,
-  `raportTerakhir` varchar(255) NOT NULL,
-  `kartuKeluarga` varchar(255) NOT NULL,
+  `story` text COLLATE utf8mb4_unicode_ci,
+  `shareDescription` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nomorRekening` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pemilikRekening` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `alamatSekolah` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `bank` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `cabangBank` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `teleponSekolah` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `namaSekolah` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kartuSiswa` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `raportTerakhir` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kartuKeluarga` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `jumlahSaudara` int(11) NOT NULL,
   `biayaSekolah` int(11) NOT NULL,
-  `kelas` varchar(255) NOT NULL,
-  `dataPenghasilan` varchar(255) NOT NULL,
-  `dataStatus` varchar(255) NOT NULL,
-  `statusNote` varchar(255) NOT NULL,
+  `kelas` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `dataPenghasilan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `dataStatus` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `statusNote` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
@@ -345,20 +345,20 @@ DROP TABLE IF EXISTS `users`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nama` varchar(255) NOT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  `email` varchar(255) NOT NULL,
-  `phoneNumber` varchar(255) NOT NULL DEFAULT '-',
-  `isGoogle` varchar(255) DEFAULT NULL,
-  `isFacebook` varchar(255) DEFAULT NULL,
-  `userImage` varchar(255) NOT NULL,
+  `nama` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phoneNumber` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '-',
+  `isGoogle` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `isFacebook` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `userImage` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `lastLogin` datetime NOT NULL,
   `verified` int(11) NOT NULL DEFAULT '0',
-  `role` varchar(255) NOT NULL,
+  `role` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -367,7 +367,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'yuvens liem',NULL,'yuvensenverd@gmail.com','0','ae2c7a32b3bd66bc6b6e5c9568d92fa660491bea58b4dd274b5f120b5da446bb',NULL,'/defaultPhoto/defaultUser.png','2019-11-21 14:25:24',1,'User','2019-11-21 14:25:24','2019-11-21 14:25:24');
+INSERT INTO `users` VALUES (1,'yuvens liem',NULL,'yuvensenverd@gmail.com','0','ae2c7a32b3bd66bc6b6e5c9568d92fa660491bea58b4dd274b5f120b5da446bb',NULL,'/defaultPhoto/defaultUser.png','2019-11-21 14:25:24',1,'User','2019-11-21 14:25:24','2019-11-21 14:25:24'),(2,'tedongtedong','8321faeb1c41e8a30b887039f183284fe026c39994057d1358eeed9527cb71e2','hhhhhh@gmail.com','0',NULL,NULL,'/defaultPhoto/defaultUser.png','2019-12-13 14:27:40',0,'User','2019-12-13 14:27:40','2019-12-13 14:27:40'),(3,'BOJASJA','16a2a478131d675f651ae06a112a4984e6ca34ae4cb7064b8868121e3d6f1e06','qiwejqwij@gmail.com','0',NULL,NULL,'/defaultPhoto/defaultUser.png','2019-12-13 14:31:35',0,'User','2019-12-13 14:31:35','2019-12-13 14:31:35'),(4,'asdasdasdasdasdasd','16a2a478131d675f651ae06a112a4984e6ca34ae4cb7064b8868121e3d6f1e06','qwekqwkk@gmail.com','0',NULL,NULL,'/defaultPhoto/defaultUser.png','2019-12-13 14:32:24',0,'User','2019-12-13 14:32:24','2019-12-13 14:32:24'),(5,'qiwejqiwjeqiwj','16a2a478131d675f651ae06a112a4984e6ca34ae4cb7064b8868121e3d6f1e06','ekqowek@gmail.com','0',NULL,NULL,'/defaultPhoto/defaultUser.png','2019-12-13 14:35:43',0,'User','2019-12-13 14:35:43','2019-12-13 14:35:43');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -380,4 +380,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-12-05  5:44:46
+-- Dump completed on 2019-12-16  9:32:30
