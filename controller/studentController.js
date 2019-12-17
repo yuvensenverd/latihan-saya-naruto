@@ -116,7 +116,7 @@ module.exports={
                         kartuSiswa: listGambar[1],
                         raportTerakhir: listGambar[2],
                         kartuKeluarga: listGambar[3],
-                        dataPenghasilan: listGambar[4],
+                        // dataPenghasilan: listGambar[4],
                         isDeleted: 0,
                         dataStatus : 'Unverified',
                         statusNote: ''
@@ -277,6 +277,8 @@ module.exports={
         // var listpendidikan = ['SMA', 'SMK', 'S1', 'SD', 'SMP', 'TK']
    
         var offset = ( page * limit ) - limit
+        // console.log()
+        console.log(offset)
 
         Student.findAndCountAll({
             // limit:parseInt(limit),
@@ -296,7 +298,7 @@ module.exports={
                 userId: req.user.userId,
                 isDeleted : 0
             },
-            order: [['createdAt', `${orderby}`]],
+            order: [['id', `${orderby}`]],
             // where:{
             //     isDeleted:0,
             //     // pendidikanTerakhir : {
@@ -307,7 +309,7 @@ module.exports={
             // }
         })
         .then((result)=>{
-            console.log('======> hasilnya')
+            // console.log('======> hasilnya')
             console.log(result)
             return res.status(200).send(result)
         }).catch((err)=>{
