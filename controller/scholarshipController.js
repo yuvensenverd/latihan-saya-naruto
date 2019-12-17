@@ -226,9 +226,8 @@ module.exports = {
     },
     // DI PAGE HOME UI
     getAllScholarshipList : (req,res) =>{
-        var { page, limit, name, date} = req.body;
+        var { offset, limit, name, date} = req.body;
         
-        var offset = (page * limit) - limit
         // console.log(req.body)
         // console.log(offset)
 
@@ -245,6 +244,7 @@ module.exports = {
                         // "description",
                         "biayaSekolah",
                         "studentId",
+                        "currentValue",
                         // "shareDescription",
                         // "scholarshipStart",
                         // "paymentSource",
