@@ -121,7 +121,8 @@ module.exports = {
                 isDeleted : 0,
                 isGoing : 1
             },
-            order : [['projectCreated', `${date}`]],
+            // order : [['projectCreated', `${date}`]],
+            order: [['totalNominal', 'DESC']],
             // order : !date ? [['id', 'asc']] : [['projectCreated', `${date}`]],
             group : ['id']
         })

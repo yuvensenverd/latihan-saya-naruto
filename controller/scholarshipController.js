@@ -264,6 +264,7 @@ module.exports = {
                             ["name", "namaSiswa"],
                             "studentImage",
                             "tanggalLahir",
+                            "provinsi",
                             // "biayaSekolah"
                         ],
                         where: {
@@ -297,7 +298,8 @@ module.exports = {
                         // isDeleted : 0,
                         isOngoing : 1
                     },
-                    order: [['id', `${date}`], ['createdAt', `${date}`]],
+                    // order: [['id', `${date}`], ['createdAt', `${date}`]],
+                    order: [['currentValue', 'DESC']],
                     group : ['id']
                      
                 })
