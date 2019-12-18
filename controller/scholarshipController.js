@@ -184,6 +184,7 @@ module.exports = {
                         [sequelize.col('Student.kelas'), 'kelas'],
                         [sequelize.col('Student.provinsi'), 'provinsi'],
                         [sequelize.col('Student.story'), 'story'],
+                        [sequelize.col('Student.tanggalLahir'), 'tanggalLahir'],
 
                         [sequelize.col('Student.shareDescription'), 'shareDescription'],
                         [sequelize.col('Student.kartuSiswa'), 'kartuSiswa'],
@@ -265,6 +266,7 @@ module.exports = {
                             "studentImage",
                             "tanggalLahir",
                             "provinsi",
+                            "story"
                             // "biayaSekolah"
                         ],
                         where: {
@@ -444,8 +446,8 @@ module.exports = {
                         "durasi",
                         "description",
                         "studentId",
-                        "shareDescription",
-                        "scholarshipStart",
+                        // "shareDescription",
+                        // "scholarshipStart",
                         // "paymentSource",
                         "scholarshipEnded",
                         [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],
@@ -462,7 +464,10 @@ module.exports = {
                         attributes : [
                             ["name", "namaSiswa"],
                             "studentImage",
-                            "tanggalLahir"
+                            "tanggalLahir",
+                            "pendidikanTerakhir",
+                            "provinsi",
+                            "story"
                         ]
                     },
                     // {
@@ -486,9 +491,10 @@ module.exports = {
                     }
                     ],
                     where : {
-                        judul : {
-                            [Op.like] : `%${name}%`
-                        },
+                        // judul : {
+                        //     // [Op.like] : `%${name}%`
+                        // },
+
                         // isDeleted : 0,
                     },
                     order: [['id', `${date}`], ['createdAt', `${date}`]],
