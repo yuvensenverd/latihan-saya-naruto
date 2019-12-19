@@ -274,7 +274,9 @@ module.exports = {
                             "studentImage",
                             "tanggalLahir",
                             "provinsi",
-                            "story"
+                            "story",
+                            "kelas",
+                            "namaSekolah"
                             // "biayaSekolah"
                         ],
                         where: {
