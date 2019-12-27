@@ -235,7 +235,7 @@ module.exports = {
     },
     // DI PAGE HOME UI
     getAllScholarshipList : (req,res) =>{
-        var { offset, limit, name, date} = req.body;
+        var { offset, limit, name, date, pendidikanTerakhir, provinsiMurid} = req.body;
         
         // console.log(req.body)
         // console.log(offset)
@@ -276,11 +276,18 @@ module.exports = {
                             "provinsi",
                             "story",
                             "kelas",
-                            "namaSekolah"
+                            "namaSekolah",
+                            "pendidikanTerakhir"
                             // "biayaSekolah"
                         ],
                         where: {
-                            dataStatus: 'Verified'
+                            dataStatus: 'Verified',
+                            pendidikanTerakhir: {
+                                [Op.in] : pendidikanTerakhir
+                            }, 
+                            provinsi: {
+                                [Op.in] : provinsiMurid
+                            },
                         }
                     },
                     // {
@@ -305,8 +312,10 @@ module.exports = {
                     ],
                     where : {
                         judul : {
-                            [Op.like] : `%${name}%`
+                            [Op.like] : `%${name}%`,
                         },
+                       
+
                         // isDeleted : 0,
                         isOngoing : 1
                     },
@@ -353,6 +362,23 @@ module.exports = {
                 })
 
     },
+
+    showAvailableProvince: (req, res) => {
+        Student.findAll({
+            attributes: ['provinsi'],
+            group: ['provinsi']
+        })
+        .then((results) => {
+            console.log('Provinsi Murid')
+            let data = results.map(results => results.provinsi)
+            
+            return res.status(200).send(data)
+        })
+        .catch((err) => {
+            return res.status(500).send({message: err})
+        })
+    }, 
+    
     cancelScholarship: (req, res) => {
         // console.log(req.query)
         // console.log('--------------------------> masuk cancel')

@@ -16,8 +16,10 @@ const fs =require('fs')
 const {emailer}=require('../helpers/mailer')
 const {pdfcreate}=require('../helpers/pdfcreate')
 
-const moment=require('moment')
+const moment=require('moment');
 
+const { URL_API, UI_LINK} = require('../helpers/url_api');
+ 
 
 const createPdf = async (obj, cb) => {
     // let objObj = JSON.parse(JSON.stringify(obj)) //Forces get of Datavalues
@@ -157,6 +159,7 @@ module.exports = {
                             name,
                             email,
                             password,
+                            role
                         } = data
 
                         let hashPassword = Crypto.createHmac('sha256', 'kasihnusantara_api')
@@ -171,7 +174,7 @@ module.exports = {
                             nama: name,
                             email,
                             password: hashPassword,
-                            role: 'User',
+                            role,
                             userImage: imagePath,
                             phoneNumber: '0',
                             lastLogin: new Date(),
@@ -194,13 +197,10 @@ module.exports = {
 
                                 console.log(tokenJwt)
 
-                                // let linkVerifikasi = `http://localhost:3000/verified/${tokenJwt}`;
-                                
-                                //untuk live
-                                let linkVerifikasi = `https://sharex.purwadhikax.com/verified/${tokenJwt}`
+                                let linkVerifikasi = `${UI_LINK}/verified/${tokenJwt}`
                         
                                 let mailOptions = {
-                                    from: 'KasihNusantara Admin <rezardiansyah1997@gmail.com>',
+                                    from: 'KasihNusantara Admin <operational@kasihnusantara.com>',
                                     to: email,
                                     subject: 'Verifikasi Email for Kasih Nusantara',
                                     html: `
@@ -249,7 +249,6 @@ module.exports = {
         User.findAll({
             where: {
                 id: req.user.userId,
-                role: 'User',
                 verified: 0
             }
         })
@@ -321,10 +320,10 @@ module.exports = {
                 const tokenJwt = createJWTToken({ userId: dataUser.dataValues.id, email: dataUser.dataValues.email })
                 // let linkVerifikasi = `http://localhost:3000/verified/${tokenJwt}`;
                 //untuk live
-                let linkVerifikasi = `https://sharex.purwadhikax.com/verified/${tokenJwt}`
+                let linkVerifikasi = `${UI_LINK}/verified/${tokenJwt}`
         
                 let mailOptions = {
-                    from: 'KasihNusantara Admin <rezardiansyah1997@gmail.com>',
+                    from: 'KasihNusantara Admin <operational@kasihnusantara.com>',
                     to: req.user.email,
                     subject: 'Verifikasi Email for Kasih Nusantara',
                     html: `
@@ -396,7 +395,8 @@ module.exports = {
             }
         })
         .then((results) => {
-            if(results.dataValues) {
+            // console.log(results)
+            if(results) {
                 
                 User.update({
                     lastLogin: new Date()
@@ -429,7 +429,7 @@ module.exports = {
                 })
 
             } else {
-                return res.status(500).json({ message: "User Not Found", error: err.message });
+                return res.status(500).json({ message: "Email belum terdaftar." });
             }
         })
         .catch((err) => {
@@ -458,10 +458,10 @@ module.exports = {
 
                 // let linkVerifikasi = `http://localhost:3000/verifiedReset?token=${tokenPassword}`;
                 //untuk live
-                let linkVerifikasi = `https://sharex.purwadhikax.com/verifiedReset?token=${tokenPassword}`
+                let linkVerifikasi = `${UI_LINK}/verifiedReset?token=${tokenPassword}`
 
                 let mailOptions = {
-                    from: 'TestingUi Admin <rezardiansyah1997@gmail.com>',
+                    from: 'Kasih Nusantara Admin <operational@kasihnusantara.com>',
                     to: req.body.email,
                     subject: `Reset Password for ${req.body.email}`,
                     html: `
@@ -573,7 +573,7 @@ module.exports = {
         return res.status(200).send(email)
     },
 
-    loginWithGoogle: (req, res) => {
+    registerWithGoogle: (req, res) => {
         User.findOne({
             where: {
                 email: req.body.data.email,
@@ -618,7 +618,7 @@ module.exports = {
                     } else {
                         // Jika belum ada
                         req.body.data.isGoogle = encryptGoogleId
-                        req.body.data.role = 'User'
+                        // req.body.data.role = 'User'
                         req.body.data.verified = 1
                         req.body.data.userImage = '/defaultPhoto/defaultUser.png'
                         req.body.data.lastLogin = new Date();
@@ -665,7 +665,7 @@ module.exports = {
         })
     },
 
-    loginWithFacebook: (req, res) => {
+    registerWithFacebook: (req, res) => {
         User.findOne({
             where: {
                 email: req.body.data.email,
@@ -702,7 +702,7 @@ module.exports = {
                     } else {
                         // Jika belum ada
                         req.body.data.isFacebook = encryptFacebookId
-                        req.body.data.role = 'User'
+                        // req.body.data.role = 'User'
                         req.body.data.verified = 1
                         req.body.data.userImage = '/defaultPhoto/defaultUser.png'
                         req.body.data.lastLogin = new Date();
@@ -741,6 +741,74 @@ module.exports = {
                 .catch((err) => {
                     return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
                 })
+            }
+        })
+        .catch((err) => {
+            return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
+        })
+    },
+
+    loginWithGoogle: (req, res) => {
+        let encryptGoogleId = Crypto.createHmac('sha256', 'kasihnusantaraGoogleId_api')
+                                    .update(req.body.data.googleId).digest('hex')
+
+        User.findOne({
+            where: {
+                email: req.body.data.email,
+                isGoogle: encryptGoogleId,
+
+            }
+        })
+        .then((results) => {
+            console.log(results)
+            if(results !== null) {
+                // Kalo sudah pernah mendaftar dengan email google, dan user ingin mencoba
+                // login lewat gmail, maka muncul errornya
+
+                const tokenJwt = createJWTToken({ userId: results.dataValues.id, email: results.dataValues.email })
+
+                        // console.log(dataUser.id)
+
+                        return res.status(200).send({
+                            dataUser: results.dataValues,
+                            token: tokenJwt,
+                        });
+            } else {
+                return res.status(500).send({ status: 'error', message: `Anda Harus mendaftarkan email ini dengan Sign Up With Gmail= ${req.body.data.email}`})
+            }
+        })
+        .catch((err) => {
+            return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
+        })
+    },
+
+    loginWithFacebook: (req, res) => {
+        let encryptFacebookId = Crypto.createHmac('sha256', 'kasihnusantaraFacebookId_api')
+                                    .update(req.body.data.facebookId).digest('hex')
+
+        User.findOne({
+            where: {
+                email: req.body.data.email,
+                isFacebook: encryptFacebookId,
+
+            }
+        })
+        .then((results) => {
+            console.log(results)
+            if(results !== null) {
+                // Kalo sudah pernah mendaftar dengan email google, dan user ingin mencoba
+                // login lewat gmail, maka muncul errornya
+
+                const tokenJwt = createJWTToken({ userId: results.dataValues.id, email: results.dataValues.email })
+
+                        // console.log(dataUser.id)
+
+                        return res.status(200).send({
+                            dataUser: results.dataValues,
+                            token: tokenJwt,
+                        });
+            } else {
+                return res.status(500).send({ status: 'error', message: `Anda Harus mendaftarkan email ini dengan Sign Up With Facebook  = ${req.body.data.email}`})
             }
         })
         .catch((err) => {
@@ -1388,50 +1456,3 @@ module.exports = {
     }
     
 }
-
-
-
-// Project.findAll({
-//     attributes : 
-//         ['id', 'totalTarget', 'projectEnded']
-//     ,
-//     where : {
-//         isGoing : 1
-//     }
-// }).then((res)=>{
- 
-// }).catch((err)=>{
-//     console.log(err)
-// })
-
-
-// var listproject = res.map((val)=>{
-//     console.log(moment(val.dataValues.projectEnded).format('YYYY-MM-DD'))
-
-//     val.dataValues.projectEnded = moment(val.dataValues.projectEnded).format('YYYY-MM-DD')
-    
-
-//     return val.dataValues
-// })
-// console.log(listproject)
-// listproject.forEach(project => {
-//     //---------------------------------------------------------------------------------------------
-//     Project.update({
-//         isGoing : 0
-//     },{
-//         where : {
-//             [Op.or] : [
-//                 sequelize.where(sequelize.fn('datediff', project.projectEnded ,  sequelize.fn("NOW")), {
-//                     [Op.gte] : 0 // OR [Op.gt] : 5
-//                 })
-//             ]
-//         }
-//     }).then((res)=>{
-//         console.log('res1')
-
-//     }).catch((err)=>{
-
-//         console.log('err2')
-//     })
-//     //---------------------------------------------------------------------------------------------
-// });
