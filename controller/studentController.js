@@ -31,10 +31,11 @@ module.exports={
                     return res.status(500).json({ message: 'Upload picture failed !', error: err.message });
                 }
                 const {image}=req.files;
+                console.log('---------------- >>>>>> image <<<<< ------------------')
                 console.log(image)
 
                 console.log(image)
-
+                
                 let listGambar = [];
 
                 for(let i = 0; i < image.length; i = i + 1) {
@@ -115,7 +116,7 @@ module.exports={
                         kartuSiswa: listGambar[1],
                         raportTerakhir: listGambar[2],
                         kartuKeluarga: listGambar[3],
-                        dataPenghasilan: listGambar[4],
+                        // dataPenghasilan: listGambar[4],
                         isDeleted: 0,
                         dataStatus : 'Unverified',
                         statusNote: ''
@@ -131,7 +132,7 @@ module.exports={
                             biayaSekolah : biayaSekolah * 12,
                             currentValue : 0,
                             totalPayout : 0,
-                            isVerified : 0,
+                            // isVerified : 0,
                             isOngoing : 0
                         }).then((results)=>{
                             // return res.status(200).send(results)
@@ -276,6 +277,8 @@ module.exports={
         // var listpendidikan = ['SMA', 'SMK', 'S1', 'SD', 'SMP', 'TK']
    
         var offset = ( page * limit ) - limit
+        // console.log()
+        console.log(offset)
 
         Student.findAndCountAll({
             // limit:parseInt(limit),
@@ -295,7 +298,7 @@ module.exports={
                 userId: req.user.userId,
                 isDeleted : 0
             },
-            order: [['createdAt', `${orderby}`]],
+            order: [['id', `${orderby}`]],
             // where:{
             //     isDeleted:0,
             //     // pendidikanTerakhir : {
@@ -306,7 +309,7 @@ module.exports={
             // }
         })
         .then((result)=>{
-            console.log('======> hasilnya')
+            // console.log('======> hasilnya')
             console.log(result)
             return res.status(200).send(result)
         }).catch((err)=>{
@@ -344,6 +347,7 @@ module.exports={
    
         // var offset=(page*limit)-limit
         
+        console.log('-----------================ masuk ')
         Student.findAndCountAll({
             // limit:parseInt(limit),
             // offset:offset,
@@ -356,26 +360,26 @@ module.exports={
                 ],
                 exclude:['createdAt','updatedAt']
             },
-            include : [
-                {
-                    model : School,
-                    required : true,
-                    attributes : [['nama', 'schoolName']],
-                    where : {
-                        nama : {
-                            [Op.like] : `%%`,
-                            // [Op.like] : `%${sekolah ? sekolah : ''}%`
-                        },
+            // include : [
+            //     {
+            //         model : School,
+            //         required : true,
+            //         attributes : [['nama', 'schoolName']],
+            //         where : {
+            //             nama : {
+            //                 [Op.like] : `%%`,
+            //                 // [Op.like] : `%${sekolah ? sekolah : ''}%`
+            //             },
                   
-                    },
+            //         },
                
-                },
-                {
-                    model : scholarship,
-                    required : false,
-                    attributes : []
-                }
-            ],
+            //     },
+            //     {
+            //         model : scholarship,
+            //         required : false,
+            //         attributes : []
+            //     }
+            // ],
             where : {
                 // userId: req.user.userId,
                 isDeleted : 0
@@ -408,7 +412,13 @@ module.exports={
                 },
                 attributes: {
                     exclude: ['createdAt', 'updatedAt']
-                }
+                },
+                include:[
+                    {
+                        model: scholarship,
+                        attributes: ['biayaSekolah', 'judul']
+                    }
+                ]
             })
             .then((results) => {
                 console.log(results[0])

@@ -11,7 +11,7 @@ router.post('/postproject', auth, projectController.postProject);
 
 // getproject untuk semua user
 router.post('/getproject',auth, projectController.getProject);
-
+ 
 // searchproject untuk semua orang bisa liat project
 router.post('/searchproject', projectController.searchProject);
 

@@ -180,18 +180,25 @@ module.exports = {
                         "judul",
                         "studentId",
                         'currentValue',
-                        [sequelize.col('Student.biayaSekolah'), 'biayaSekolah'],
-                        [sequelize.col('Student.kelas'), 'kelas'],
+                        [sequelize.col('Student.id'), 'siswaId'],
+                        [sequelize.col('Student.name'), 'namaSiswa'],
+                        [sequelize.col('Student.status'), 'status'],
+                        [sequelize.col('Student.alamat'), 'alamat'],
+                        [sequelize.col('Student.gender'), 'gender'],
+                        [sequelize.col('Student.tanggalLahir'), 'tanggalLahir'],
+                        [sequelize.col('Student.pendidikanTerakhir'), 'pendidikanTerakhir'],
+                        [sequelize.col('Student.studentImage'), 'studentImage'],
                         [sequelize.col('Student.provinsi'), 'provinsi'],
                         [sequelize.col('Student.story'), 'story'],
+                        [sequelize.col('Student.alamatSekolah'), 'alamatSekolah'],
+                        [sequelize.col('Student.biayaSekolah'), 'biayaSekolah'],
+                        [sequelize.col('Student.namaSekolah'), 'namaSekolah'],
+                        [sequelize.col('Student.teleponSekolah'), 'teleponSekolah'],
+                        [sequelize.col('Student.kelas'), 'kelas'],
                         [sequelize.col('Student.shareDescription'), 'shareDescription'],
                         [sequelize.col('Student.kartuSiswa'), 'kartuSiswa'],
                         [sequelize.col('Student.raportTerakhir'), 'raportTerakhir'],
-                        [sequelize.col('Student.studentImage'), 'studentImage'],
                         [sequelize.col('Student.kartuKeluarga'), 'kartuKeluarga'],
-                        [sequelize.col('Student.id'), 'siswaId'],
-                        [sequelize.col('Student.name'), 'namaSiswa'],
-                        [sequelize.col('Student.studentImage'), 'studentImage'],
                         [sequelize.col('Student.createdAt'), 'studentCreated'],
                         // [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totaldonation'],
                         [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'jumlahdonation'],
@@ -224,7 +231,7 @@ module.exports = {
     },
     // DI PAGE HOME UI
     getAllScholarshipList : (req,res) =>{
-        var { offset, limit, name, date} = req.body;
+        var { offset, limit, name, date, pendidikanTerakhir, provinsiMurid} = req.body;
         
         // console.log(req.body)
         // console.log(offset)
@@ -262,10 +269,21 @@ module.exports = {
                             ["name", "namaSiswa"],
                             "studentImage",
                             "tanggalLahir",
+                            "provinsi",
+                            "story",
+                            "kelas",
+                            "namaSekolah",
+                            "pendidikanTerakhir"
                             // "biayaSekolah"
                         ],
                         where: {
-                            dataStatus: 'Verified'
+                            dataStatus: 'Verified',
+                            pendidikanTerakhir: {
+                                [Op.in] : pendidikanTerakhir
+                            }, 
+                            provinsi: {
+                                [Op.in] : provinsiMurid
+                            },
                         }
                     },
                     // {
@@ -290,12 +308,15 @@ module.exports = {
                     ],
                     where : {
                         judul : {
-                            [Op.like] : `%${name}%`
+                            [Op.like] : `%${name}%`,
                         },
+                       
+
                         // isDeleted : 0,
                         isOngoing : 1
                     },
-                    order: [['id', `${date}`], ['createdAt', `${date}`]],
+                    // order: [['id', `${date}`], ['createdAt', `${date}`]],
+                    order: [['currentValue', 'DESC']],
                     group : ['id']
                      
                 })
@@ -337,6 +358,23 @@ module.exports = {
                 })
 
     },
+
+    showAvailableProvince: (req, res) => {
+        Student.findAll({
+            attributes: ['provinsi'],
+            group: ['provinsi']
+        })
+        .then((results) => {
+            console.log('Provinsi Murid')
+            let data = results.map(results => results.provinsi)
+            
+            return res.status(200).send(data)
+        })
+        .catch((err) => {
+            return res.status(500).send({message: err})
+        })
+    }, 
+    
     cancelScholarship: (req, res) => {
         // console.log(req.query)
         // console.log('--------------------------> masuk cancel')
@@ -440,8 +478,8 @@ module.exports = {
                         "durasi",
                         "description",
                         "studentId",
-                        "shareDescription",
-                        "scholarshipStart",
+                        // "shareDescription",
+                        // "scholarshipStart",
                         // "paymentSource",
                         "scholarshipEnded",
                         [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],
@@ -458,7 +496,10 @@ module.exports = {
                         attributes : [
                             ["name", "namaSiswa"],
                             "studentImage",
-                            "tanggalLahir"
+                            "tanggalLahir",
+                            "pendidikanTerakhir",
+                            "provinsi",
+                            "story"
                         ]
                     },
                     // {
@@ -482,9 +523,10 @@ module.exports = {
                     }
                     ],
                     where : {
-                        judul : {
-                            [Op.like] : `%${name}%`
-                        },
+                        // judul : {
+                        //     // [Op.like] : `%${name}%`
+                        // },
+
                         // isDeleted : 0,
                     },
                     order: [['id', `${date}`], ['createdAt', `${date}`]],

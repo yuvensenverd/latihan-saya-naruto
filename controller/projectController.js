@@ -121,7 +121,8 @@ module.exports = {
                 isDeleted : 0,
                 isGoing : 1
             },
-            order : [['projectCreated', `${date}`]],
+            // order : [['projectCreated', `${date}`]],
+            order: [['totalNominal', 'DESC']],
             // order : !date ? [['id', 'asc']] : [['projectCreated', `${date}`]],
             group : ['id']
         })
@@ -151,7 +152,7 @@ module.exports = {
     },
     getAllProject : (req,res) =>{
         var { page, limit} = req.query;
-
+        console.log('disini -------> ', req.query)
         var offset=(page*limit)-limit
         sequelize.transaction(function(t){
             return (
@@ -338,10 +339,9 @@ module.exports = {
         //     limit : '3'
         // }
 
-        var { page, limit, name, date} = req.body;
-        
-  
-        var offset = (page * limit) - limit
+        var { offset, limit, name, date} = req.body;
+
+        // var offset = (page * limit) - limit
         console.log(req.body)
         console.log(offset)
         

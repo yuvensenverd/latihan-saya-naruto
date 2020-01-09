@@ -1,7 +1,7 @@
 {
   "development": {
-    "username": "enverd",
-    "password": "123123123",
+    "username": "reza_admin",
+    "password": "reza_admin10071997",
     "database": "kasihnusantara",
     "host": "localhost",
     "dialect": "mysql",

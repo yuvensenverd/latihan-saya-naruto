@@ -20,4 +20,6 @@ router.post('/GenerateURL',scholarshipController.generateImgUrlquill)
 router.post('/getScholarshipAllUserByAdmin', auth, scholarshipController.getScholarshipAllUserByAdmin)
 router.post('/scholarshipdonations', scholarshipController.getScholarshipDonations)
 
+router.post('/getAllProvinceStudent', scholarshipController.showAvailableProvince)
+
 module.exports = router;

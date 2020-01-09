@@ -14,6 +14,9 @@ router.put('/updatereject', auth, studentRevisionController.updateReject)
 router.get('/getstudentrev/:id', auth, studentRevisionController.getStudentRevisions)
 router.get('/revertchange/:id', auth, studentRevisionController.studentRejectRevert)
 
+// ==================== NEW ====================
+router.post('/editStudent/:id', studentRevisionController.editDataStudent)
+
 
 
 module.exports = router;
