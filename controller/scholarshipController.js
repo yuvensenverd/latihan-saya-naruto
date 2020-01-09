@@ -184,7 +184,6 @@ module.exports = {
                         [sequelize.col('Student.kelas'), 'kelas'],
                         [sequelize.col('Student.provinsi'), 'provinsi'],
                         [sequelize.col('Student.story'), 'story'],
-
                         [sequelize.col('Student.shareDescription'), 'shareDescription'],
                         [sequelize.col('Student.kartuSiswa'), 'kartuSiswa'],
                         [sequelize.col('Student.raportTerakhir'), 'raportTerakhir'],
@@ -194,7 +193,6 @@ module.exports = {
                         [sequelize.col('Student.name'), 'namaSiswa'],
                         [sequelize.col('Student.studentImage'), 'studentImage'],
                         [sequelize.col('Student.createdAt'), 'studentCreated'],
-
                         // [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totaldonation'],
                         [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'jumlahdonation'],
                     ],
