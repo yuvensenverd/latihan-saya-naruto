@@ -132,7 +132,7 @@ module.exports={
                             biayaSekolah : biayaSekolah * 12,
                             currentValue : 0,
                             totalPayout : 0,
-                            isVerified : 0,
+                            // isVerified : 0,
                             isOngoing : 0
                         }).then((results)=>{
                             // return res.status(200).send(results)
