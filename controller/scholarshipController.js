@@ -65,49 +65,98 @@ module.exports = {
     },
     getScholarshipPerUser : ( req, res) =>{
         console.log('------------------------> masuk per user')
-        console.log(req.query)
+        // console.log(req.query)
+        var { offset, limit, name, date, pendidikanTerakhir, provinsiMurid} = req.body;
+        console.log(req.body)
         const { userId } = req.user
+        console.log(req.user)
                 scholarship.findAll({
+                    limit:parseInt(limit),
+                    // limit : 10,
+                    offset:offset,
+                    subQuery: false,
                     attributes : [
                         "id",
                         "judul",
-                        "nominal",
-                        "durasi",
-                        "description",
+                        // "nominal",
+                        // // "durasi",
+                        // "description",
+                        "biayaSekolah",
                         "studentId",
-                        "shareDescription",
-                        "scholarshipStart",
-                        "scholarshipEnded",
-                        "isOngoing",
-                        "note"
+                        "currentValue",
+                        // "shareDescription",
+                        // "scholarshipStart",
+                        // "paymentSource",
+                        // "scholarshipEnded",
+                        // [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],
+                        // [sequelize.fn('SUM', sequelize.col('Subscriptions.nominalSubscription')), 'currentSubs'],
+                        [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totaldonation'],
+                        [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'jumlahdonation'],
+          
+              
                     ],
-                   
-                    include : [{
-                            model : Student,
-                            attributes : [
-                                ["name", "namaSiswa"],
-                                "studentImage"
-                            ]
-                        },
-                        // {
-                        //     model : School,
-                        //     attributes : [
-
-                        //         ["nama", "namaSekolah"]
-                        //     ]
-                        // },
+                 
                     
+                    include : [{
+                        model : Student,
+                        attributes : [
+                            ["name", "namaSiswa"],
+                            "studentImage",
+                            "tanggalLahir",
+                            "provinsi",
+                            "story",
+                            "kelas",
+                            "namaSekolah",
+                            "pendidikanTerakhir"
+                            // "biayaSekolah"
+                        ],
+                        where: {
+                            dataStatus: 'Verified',
+                            pendidikanTerakhir: {
+                                [Op.in] : pendidikanTerakhir
+                            }, 
+                            provinsi: {
+                                [Op.in] : provinsiMurid
+                            },
+                        }
+                    },
+                    // {
+                    //     model : School,
+                    //     attributes : [
+                    //         ["nama", "namaSekolah"]
+                    //     ]
+                    // },
+                    // {
+                    //     model : Subscription,
+                    //     attributes :   [
+                    //         'nominalSubscription',
+                    //         [sequelize.fn('SUM', sequelize.col('nominalSubscription')), 'currentSubs']
+                    //     ], 
+                    //     group : ['scholarshipId'],    
+                    //     separate : true
+                    // },
+                    {
+                        model : Payment,
+                        attributes : []
+                    }
                     ],
                     where : {
-                        // isOngoing : 1,
-                        userId
+                        judul : {
+                            [Op.like] : `%${name}%`,
+                        },
+                        userId,
+                        // isDeleted : 0,
+                        isOngoing : 1
                     },
+                    // order: [['id', `${date}`], ['createdAt', `${date}`]],
+                    order: [['currentValue', 'DESC']],
+                    group : ['id']
                      
                 })
 
-                .then((result) => {
-                    console.log(result)
-                    return res.status(200).send(result)
+                .then((results) => {
+                    console.log(results)
+                    return res.status(200).send({results})
                 }).catch((err)=>{
                     return res.status(500).send({message: err})
                 })
