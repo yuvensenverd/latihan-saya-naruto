@@ -8,7 +8,7 @@ const studentRevisionController = require('./studentRevisionController')
 const scholarshipController = require('./scholarshipController')
 // const studentDetailRevisionController = require('./studentDetailRevisionController')
 const subscriptionController = require('./subscriptionController')
-// const schoolController = require('./schoolControl')
+const schoolController = require('./schoolControl')
 const payoutController = require('./payoutController')
 
 
@@ -24,6 +24,6 @@ module.exports = {
     scholarshipController,
     // studentDetailRevisionController,
     subscriptionController,
-    // schoolController,
+    schoolController,
     payoutController
 }

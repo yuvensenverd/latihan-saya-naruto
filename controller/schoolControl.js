@@ -1,9 +1,9 @@
-const { Sequelize, sequelize, School} = require('../models')
+const { Sequelize, sequelize, school} = require('../models')
 const Op = Sequelize.Op
 
 module.exports = {
     getSchool : (req, res) => {
-        School.findAll({
+        school.findAll({
             attributes:{
                 exclude : ['createdAt', 'updatedAt']
             },
@@ -11,9 +11,9 @@ module.exports = {
                     isDeleted : 0
                 }
         })
-        .then((result)=>{
+        .then((results)=>{
             // console.log(result)
-            return res.status(200).send(result)
+            return res.status(200).send({results})
         }).catch((err)=>{
             return res.status(500).send({message: 'error', error: err})
         })
@@ -22,7 +22,7 @@ module.exports = {
         console.log('--------------->')
         const {id} = req.query
         let kondisi = `where : { ${id} }`
-        School.findAll({
+        school.findAll({
             attributes: {
                 exclude: ['createdAt', 'updatedAt']
             },
@@ -39,7 +39,7 @@ module.exports = {
     },
     addSchool : (req, res) => {
         const {nama, alamat, telepon, namaPemilikRekening, nomorRekening, bank, email} = req.body
-        School.create({
+        school.create({
             nama,
             alamat,
             telepon,
@@ -56,7 +56,7 @@ module.exports = {
     putSchool : (req,res) => {
         const {id} = req.query
         const {nama, alamat, telepon, namaPemilikRekening, nomorRekening, bank, email} = req.body
-        School.update({
+        school.update({
             nama,
             alamat,
             telepon,
@@ -64,7 +64,7 @@ module.exports = {
             nomorRekening,
             bank,
             email,
-            isVerified: '0'
+            isVerified: 0
         },{
             where : {
                 id
@@ -79,8 +79,8 @@ module.exports = {
     verifiedSchool : (req, res) => {
         const {id} = req.query
         console.log(id)
-        School.update({
-            isVerified: '1'
+        school.update({
+            isVerified: 1
         },{
             where: {
                 id
@@ -95,15 +95,15 @@ module.exports = {
     deleteSchool : (req, res) => {
         console.log('---------------------> masuk delete school')
         const {id} = req.query
-        School.update({
-            isDeleted: '1'
+        school.update({
+            isDeleted: 1
         }, {
             where: {
                 id
             }
         })
         .then((result) => {
-            return res.status(200).send(result)
+            return res.status(200).send({result})
         }).catch((err) => {
             return res.status(500).send(err)
         })
@@ -112,7 +112,7 @@ module.exports = {
     getSelectedSchool : (req, res) => {
         const { id } = req.query
         console.log(id)
-        School.findOne({
+        school.findOne({
             attributes:{
                 exclude : ['createAt', 'updateAt']
             },
@@ -125,6 +125,39 @@ module.exports = {
             // console.log(result.dataValues)
             return res.status(200).send(result.dataValues)
         }).catch((err)=>{
+            return res.status(500).send({message: 'error', error: err})
+        })
+    },
+
+    getAllSchoolByAdmin: (req, res) => {
+        const { id } = req.user;
+
+        User.findOne({
+            where: {
+                id,
+                role: 'Admin'
+            }
+        })
+        .then((result) => {
+            if(result) {
+                school.findAll({
+                    attributes:{
+                        exclude : ['createdAt', 'updatedAt']
+                    },
+                        where : {
+                            isDeleted : 0
+                        }
+                })
+                .then((results)=>{
+                    return res.status(200).send({results})
+                }).catch((err)=>{
+                    return res.status(500).send({message: 'error', error: err})
+                })
+            } else {
+                return res.status(200).send({results: 'NotAdmin'})
+            }
+        })
+        .catch((err) => {
             return res.status(500).send({message: 'error', error: err})
         })
     }

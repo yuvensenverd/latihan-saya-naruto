@@ -8,7 +8,7 @@ const studentRevisionRouter = require('./studentRevisionRouter')
 const scholarshipRouter = require('./scholarshipRouter')
 // const studentDetailRevisionRouter = require('./studentDetailRevisionRouter');
 const subscriptionRouter = require('./subscriptionRouter')
-// const schoolRouter = require('./schoolRouter')
+const schoolRouter = require('./schoolRouter')
 const payoutRouter = require('./payoutRouter')
 
 module.exports = {
@@ -23,6 +23,6 @@ module.exports = {
     // studentDetailRevisionRouter,
     subscriptionRouter,
     scholarshipRouter,
-    // schoolRouter,
+    schoolRouter,
     payoutRouter
 }
