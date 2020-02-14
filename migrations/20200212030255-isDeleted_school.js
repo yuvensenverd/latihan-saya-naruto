@@ -9,7 +9,7 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.addColumn('schools', 'isDeleted', {
+    return queryInterface.removeColumn('schools', 'isDeleted', {
       type: Sequelize.INTEGER,
       defaultValue: 0
     });

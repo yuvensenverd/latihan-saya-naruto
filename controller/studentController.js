@@ -51,21 +51,6 @@ module.exports={
                 console.log('Data siswa ================')
                 console.log(data)
 
-
-
-                // const imagePath = image ? path + '/' + image[0].filename : null;
-                // console.log(imagePath)
-                // const data = JSON.parse(req.body.data);
-                // console.log(data)
-                // data.studentImage=imagePath
-                // data.tanggalLahir=Moment(data.tanggalLahir)
-
-                //   : this.state.StudentImageDB,
-        //    : this.state.StudentCardImageDB,
-        //    : this.state.SchoolImageDB,
-        //    : this.state.FamilyCardImageDB,
-        //    : this.state.IncomeCardImageDB,
-
                 const {
                     userId,
                     name,

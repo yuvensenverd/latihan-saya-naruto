@@ -1,5 +1,6 @@
-const { Sequelize, sequelize, school} = require('../models')
-const Op = Sequelize.Op
+const { Sequelize, sequelize, school, school_pictures} = require('../models')
+const Op = Sequelize.Op;
+const { uploader } = require('../helpers/uploader');
 
 module.exports = {
     getSchool : (req, res) => {
@@ -8,7 +9,8 @@ module.exports = {
                 exclude : ['createdAt', 'updatedAt']
             },
                 where : {
-                    isDeleted : 0
+                    isDeleted : 0,
+                    isVerified: 1
                 }
         })
         .then((results)=>{
@@ -37,22 +39,85 @@ module.exports = {
             return res.status(500).send(err)
         })
     },
+
     addSchool : (req, res) => {
-        const {nama, alamat, telepon, namaPemilikRekening, nomorRekening, bank, email} = req.body
-        school.create({
-            nama,
-            alamat,
-            telepon,
-            namaPemilikRekening,
-            nomorRekening,
-            bank,
-            email
-        }).then((result) => {
-            return res.status(200).send(result)
-        }).catch((err) => {
-            return res.status(200).send(err.message)
-        })
+        try {
+            const path = '/school';
+            const upload = uploader(path, 'sekolah').fields([{name: 'image'}])
+        
+            upload(req, res, (err) => {
+                if(err) {
+                    return res.status(500).json({ message: 'Upload picture failed !', error: err.message });
+                }
+
+                const { image } = req.files;
+
+                const data = JSON.parse(req.body.data);
+
+                const {
+                    nama,
+                    alamat, 
+                    telepon,
+                    namaPemilikRekening,
+                    nomorRekening,
+                    bank, 
+                    email
+                } = data
+
+                return sequelize.transaction(function(t) {
+                    return school.create({
+                        nama,
+                        alamat,
+                        telepon,
+                        namaPemilikRekening,
+                        nomorRekening,
+                        bank,
+                        email
+                    }, {transaction: t})
+                    .then((result) => {
+                        let schoolId = result.dataValues.id
+
+                        let listImage = [];
+                        for(let i=0; i < image.length; i++){
+                            const imagePath = path + '/' + image[i].filename
+                            listImage.push({
+                                schoolId,
+                                imagePath
+                            })
+                        }
+                        return school_pictures.bulkCreate(listImage, {transaction: t})
+                        .then((result2) => {
+                            return res.status(200).send(result2)
+                        })
+                        .catch((err) => {
+                            throw new Error()
+                        })
+                    })
+                    .catch((err) => {
+                        throw new Error()
+                    })
+                })
+
+                // school.create({
+                //     nama,
+                //     alamat,
+                //     telepon,
+                //     namaPemilikRekening,
+                //     nomorRekening,
+                //     bank,
+                //     email
+                // }).then((result) => {
+                //     return res.status(200).send(result)
+                // }).catch((err) => {
+                //     return res.status(200).send(err.message)
+                // })
+            })
+        } catch (error) {
+            return res.status(200).send(error.message)
+        }
+        // const {nama, alamat, telepon, namaPemilikRekening, nomorRekening, bank, email} = req.body
     },
+
     putSchool : (req,res) => {
         const {id} = req.query
         const {nama, alamat, telepon, namaPemilikRekening, nomorRekening, bank, email} = req.body
