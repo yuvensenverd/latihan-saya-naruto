@@ -3,23 +3,23 @@ const Op = Sequelize.Op;
 const { uploader } = require('../helpers/uploader');
 
 module.exports = {
-    getSchool : (req, res) => {
-        school.findAll({
-            attributes:{
-                exclude : ['createdAt', 'updatedAt']
-            },
-                where : {
-                    isDeleted : 0,
-                    isVerified: 1
-                }
-        })
-        .then((results)=>{
-            // console.log(result)
-            return res.status(200).send({results})
-        }).catch((err)=>{
-            return res.status(500).send({message: 'error', error: err})
-        })
-    },
+    // getSchool : (req, res) => {
+    //     school.findAll({
+    //         attributes:{
+    //             exclude : ['createdAt', 'updatedAt']
+    //         },
+    //             where : {
+    //                 isDeleted : 0,
+    //                 isVerified: 1
+    //             }
+    //     })
+    //     .then((results)=>{
+    //         // console.log(result)
+    //         return res.status(200).send({results})
+    //     }).catch((err)=>{
+    //         return res.status(500).send({message: 'error', error: err})
+    //     })
+    // },
     getAllSchool : (req,res) => {
         console.log(req.body)
         const offset = req.body.offset ? req.body.offset : 0
@@ -51,6 +51,30 @@ module.exports = {
             console.log(results)
             return res.status(200).send({result : results.rows, count : results.count-1})
         }).catch((err)=>{
+            console.log(err)
+            return res.status(500).send({message: 'error', error: err})
+        })
+    },
+    getSchoolDetails : (req,res) => {
+        console.log('School Details ---- > with id  ', req.params.id)
+
+        school.findOne({
+            attributes : {
+                exclude : ['createdAt', 'updatedAt']
+            },
+            where : {
+                id : req.params.id,
+                isDeleted : 0,
+                isVerified: 1
+            },
+            include : [{
+                model : school_pictures,
+                attributes : ['imagePath']
+            }]
+        }).then(result => {
+            // console.log(res)
+            return res.status(200).send({result : result})
+        }).catch(err => {
             console.log(err)
             return res.status(500).send({message: 'error', error: err})
         })
