@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   school_pictures.associate = function(models) {
     // associations can be defined here
+    school_pictures.belongsTo(models.school, { foreignKey : 'schoolId'})
   };
   return school_pictures;
 };
