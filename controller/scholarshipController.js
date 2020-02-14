@@ -1,4 +1,4 @@
-const { Sequelize, sequelize, User, Student , scholarship, Subscription, Payment } = require('../models')
+const { Sequelize, sequelize, User, Student , scholarship, Subscription, Payment, school} = require('../models')
 const Op = Sequelize.Op
 const moment = require('moment')
 const {uploader} = require('../helpers/uploader')
@@ -106,9 +106,24 @@ module.exports = {
                             "provinsi",
                             "story",
                             "kelas",
-                            "namaSekolah",
                             "pendidikanTerakhir"
                             // "biayaSekolah"
+                        ],
+                        include: [
+                            {
+                                model : school,
+                                attributes : [
+                                    ['nama', 'namaSekolah'],
+                                    ['alamat', 'alamatSekolah'],
+                                    'cabangBank',
+                                    'bank',
+                                    'email',
+                                    ['telepon', 'teleponSekolah'],
+                                    'namaPemilikRekening',
+                                    'nomorRekening'
+
+                                ]
+                            },
                         ],
                         where: {
                             dataStatus: 'Verified',
@@ -221,46 +236,84 @@ module.exports = {
         const {id} = req.query
         console.log('---------------> masuk secDetail')
         console.log(req.query)
-        sequelize.transaction(function(t){
-            return(
+        // sequelize.transaction(function(t){
+        //     return(
                 scholarship.findAll({
+                    subQuery: false,
                     attributes : [
                         "id",
                         "judul",
                         "studentId",
                         'currentValue',
-                        [sequelize.col('Student.id'), 'siswaId'],
-                        [sequelize.col('Student.name'), 'namaSiswa'],
-                        [sequelize.col('Student.status'), 'status'],
-                        [sequelize.col('Student.alamat'), 'alamat'],
-                        [sequelize.col('Student.gender'), 'gender'],
-                        [sequelize.col('Student.tanggalLahir'), 'tanggalLahir'],
-                        [sequelize.col('Student.pendidikanTerakhir'), 'pendidikanTerakhir'],
-                        [sequelize.col('Student.studentImage'), 'studentImage'],
-                        [sequelize.col('Student.provinsi'), 'provinsi'],
-                        [sequelize.col('Student.story'), 'story'],
-                        [sequelize.col('Student.alamatSekolah'), 'alamatSekolah'],
-                        [sequelize.col('Student.biayaSekolah'), 'biayaSekolah'],
-                        [sequelize.col('Student.namaSekolah'), 'namaSekolah'],
-                        [sequelize.col('Student.teleponSekolah'), 'teleponSekolah'],
-                        [sequelize.col('Student.kelas'), 'kelas'],
+                        // [sequelize.col('Student.id'), 'siswaId'],
+                        // [sequelize.col('Student.name'), 'namaSiswa'],
+                        // [sequelize.col('Student.status'), 'status'],
+                        // [sequelize.col('Student.alamat'), 'alamat'],
+                        // [sequelize.col('Student.gender'), 'gender'],
+                        // [sequelize.col('Student.tanggalLahir'), 'tanggalLahir'],
+                        // [sequelize.col('Student.pendidikanTerakhir'), 'pendidikanTerakhir'],
+                        // [sequelize.col('Student.studentImage'), 'studentImage'],
+                        // [sequelize.col('Student.provinsi'), 'provinsi'],
+                        // [sequelize.col('Student.story'), 'story'],
+                        // [sequelize.col('Student.alamatSekolah'), 'alamatSekolah'],
+                        // [sequelize.col('Student.biayaSekolah'), 'biayaSekolah'],
+                        // [sequelize.col('Student.namaSekolah'), 'namaSekolah'],
+                        // [sequelize.col('Student.teleponSekolah'), 'teleponSekolah'],
+                        // [sequelize.col('Student.kelas'), 'kelas'],
 
                         
 
-                        [sequelize.col('Student.shareDescription'), 'shareDescription'],
-                        [sequelize.col('Student.kartuSiswa'), 'kartuSiswa'],
-                        [sequelize.col('Student.raportTerakhir'), 'raportTerakhir'],
-                        [sequelize.col('Student.kartuKeluarga'), 'kartuKeluarga'],
-                        [sequelize.col('Student.createdAt'), 'studentCreated'],
+                        // [sequelize.col('Student.shareDescription'), 'shareDescription'],
+                        // [sequelize.col('Student.kartuSiswa'), 'kartuSiswa'],
+                        // [sequelize.col('Student.raportTerakhir'), 'raportTerakhir'],
+                        // [sequelize.col('Student.kartuKeluarga'), 'kartuKeluarga'],
+                        // [sequelize.col('Student.createdAt'), 'studentCreated'],
+
+                        // [sequelize.col('Student->school.nama'), 'namaSekolah'],
 
                         // [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totaldonation'],
                         [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'jumlahdonation'],
                     ],
                     
-                    include : [{
+                    include : [
+                        {
                         model : Student,
-                        attributes : []
+                        attributes : [
+                            ['id', 'siswaId'],
+                            ['name', 'namaSiswa'],
+                            'status',
+                            'alamat',
+                            'gender',
+                            'tanggalLahir',
+                            'pendidikanTerakhir',
+                            'studentImage',
+                            'provinsi',
+                            'story',
+                            'biayaSekolah',
+                            'kelas',
+                            'shareDescription',
+                            ['createdAt', 'studentCreated']
+
+                        ],
+                        include: [
+                            {
+                                model : school,
+                                attributes : [
+                                    ['nama', 'namaSekolah'],
+                                    ['alamat', 'alamatSekolah'],
+                                    'cabangBank',
+                                    'bank',
+                                    'email',
+                                    ['telepon', 'teleponSekolah'],
+                                    'namaPemilikRekening',
+                                    'nomorRekening'
+
+                                ],
+
+                            },
+                        ]
                     },
+                    
                     {
                         model : Payment,
                         attributes : []
@@ -274,13 +327,14 @@ module.exports = {
                 })
 
                 .then((result) => {
+                    console.log(result)
                     // console.log(result)
                     return res.status(200).send(result)
                 }).catch((err)=>{
                     return res.status(500).send({message: err})
                 })
-            )
-        })
+        //     )
+        // })
     },
     // DI PAGE HOME UI
     getAllScholarshipList : (req,res) =>{
@@ -316,7 +370,8 @@ module.exports = {
                     ],
                  
                     
-                    include : [{
+                    include : [
+                        {
                         model : Student,
                         attributes : [
                             ["name", "namaSiswa"],
@@ -325,10 +380,19 @@ module.exports = {
                             "provinsi",
                             "story",
                             "kelas",
-                            "namaSekolah",
                             "pendidikanTerakhir"
                             // "biayaSekolah"
                         ],
+
+                        include: [
+                            {
+                                model : school,
+                                attributes : [
+                                    ["nama", "namaSekolah"]
+                                ]
+                            },
+                        ],
+                        
                         where: {
                             dataStatus: 'Verified',
                             pendidikanTerakhir: {

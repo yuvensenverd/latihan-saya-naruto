@@ -8,7 +8,10 @@ module.exports = {
       await queryInterface.removeColumn('Students', 'alamatSekolah'),
       await queryInterface.removeColumn('Students', 'bank'),
       await queryInterface.removeColumn('Students', 'cabangBank'),
-      await queryInterface.removeColumn('Students', 'namaSekolah')
+      await queryInterface.removeColumn('Students', 'namaSekolah'),
+      await queryInterface.removeColumn('Students', 'teleponSekolah'),
+      await queryInterface.removeColumn('Students', 'raportTerakhir'),
+      await queryInterface.removeColumn('Students', 'dataPenghasilan')
     ];
  
   },
@@ -20,7 +23,10 @@ module.exports = {
       await queryInterface.removeColumn('Students', 'alamatSekolah'),
       await queryInterface.removeColumn('Students', 'bank'),
       await queryInterface.removeColumn('Students', 'cabangBank'),
-      await queryInterface.removeColumn('Students', 'namaSekolah')
+      await queryInterface.removeColumn('Students', 'namaSekolah'),
+      await queryInterface.removeColumn('Students', 'teleponSekolah'),
+      await queryInterface.removeColumn('Students', 'raportTerakhir'),
+      await queryInterface.removeColumn('Students', 'dataPenghasilan')
     ];
   }
 };
