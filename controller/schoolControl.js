@@ -20,10 +20,44 @@ module.exports = {
             return res.status(500).send({message: 'error', error: err})
         })
     },
+    getAllSchool : (req,res) => {
+        console.log(req.body)
+        const offset = req.body.offset ? req.body.offset : 0
+        const limit = req.body.limit ? req.body.limit : 6
+        const text = req.body.text ? req.body.text : ''
+        school.findAndCountAll({
+            offset : offset,
+            limit : limit,
+            attributes:{
+                exclude : ['createdAt', 'updatedAt']
+            },
+            where : {
+                isDeleted : 0,
+                isVerified: 1,
+                nama : {
+                    [Op.like] : `%${text}%`
+                },
+            },
+            include : [{
+                model : school_pictures,
+            },
+     
+        
+           ]
+        })
+        .then((results)=>{
+            // console.log(result)
+            // return res.status(200).send(results)
+            console.log(results)
+            return res.status(200).send({result : results.rows, count : results.count-1})
+        }).catch((err)=>{
+            console.log(err)
+            return res.status(500).send({message: 'error', error: err})
+        })
+    },
     getSelectedSchool: (req, res) => {
         console.log('--------------->')
         const {id} = req.query
-        let kondisi = `where : { ${id} }`
         school.findAll({
             attributes: {
                 exclude: ['createdAt', 'updatedAt']
