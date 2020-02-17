@@ -33,6 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     Student.belongsTo(models.User, {foreignKey : 'userId'})
     Student.hasOne(models.scholarship, {foreignKey : 'studentId'})
     Student.hasMany(models.StudentRevision, {foreignKey : 'studentId'})
+    Student.hasMany(models.dokumen_siswa, { foreignKey: 'studentId'})
     Student.belongsTo(models.school, { foreignKey: 'schoolId'})
 
     // Student.hasMany(models.StudentDetailRevision, {foreignKey : 'studentId'})
