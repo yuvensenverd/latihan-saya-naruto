@@ -10,6 +10,7 @@ const scholarshipRouter = require('./scholarshipRouter')
 const subscriptionRouter = require('./subscriptionRouter')
 const schoolRouter = require('./schoolRouter')
 const payoutRouter = require('./payoutRouter')
+const dokumen_siswaRouter = require('./dokumen_siswaRouter')
 
 module.exports = {
     userRouter,
@@ -24,5 +25,6 @@ module.exports = {
     subscriptionRouter,
     scholarshipRouter,
     schoolRouter,
-    payoutRouter
+    payoutRouter,
+    dokumen_siswaRouter
 }

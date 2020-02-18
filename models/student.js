@@ -35,7 +35,6 @@ module.exports = (sequelize, DataTypes) => {
     Student.hasMany(models.StudentRevision, {foreignKey : 'studentId'})
     Student.hasMany(models.dokumen_siswa, { foreignKey: 'studentId'})
     Student.belongsTo(models.school, { foreignKey: 'schoolId'})
-
     // Student.hasMany(models.StudentDetailRevision, {foreignKey : 'studentId'})
   };
   return Student;

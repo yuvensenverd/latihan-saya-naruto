@@ -92,9 +92,9 @@ module.exports={
                         story,
 
                         studentImage: listGambar[0],
-                        kartuSiswa: listGambar[1],
+                        // kartuSiswa: listGambar[1],
                         // raportTerakhir: listGambar[2],
-                        kartuKeluarga: listGambar[2],
+                        // kartuKeluarga: listGambar[2],
                         // dataPenghasilan: listGambar[4],
 
                         isDeleted: 0,
@@ -106,6 +106,28 @@ module.exports={
                         console.log(result.dataValues.id)
                         let listImage = [];
                         let studentId = result.dataValues.id
+
+                        for(let i = 1; i < listGambar.length; i++) {
+                            if(i === 1) {
+                                const dokumenPath = path + '/' + listGambar[i].filename
+                                keterangan = `kartu-siswa`
+                                listImage.push({
+                                    studentId,
+                                    dokumenPath,
+                                    keterangan
+                                })
+                            }
+
+                            if(i === 2) {
+                                const dokumenPath = path + '/' + listGambar[i].filename
+                                keterangan = `kartu-keluarga`
+                                listImage.push({
+                                    studentId,
+                                    dokumenPath,
+                                    keterangan
+                                })
+                            }
+                        }
 
                         if(raport) {
                             for(let i = 0; i < raport.length; i++) {
@@ -128,22 +150,14 @@ module.exports={
 
                         if(ijazah) {
                             for(let i = 0; i < ijazah.length; i++) {
-                                if(pendidikanTerakhir === jenjang_pendidikan[2] || pendidikanTerakhir === jenjang_pendidikan[3]) {
-                                    const dokumenPath = path + '/' + ijazah[i].filename
+                               
                                     keterangan = `ijazah-${jenjang_pendidikan[i]}`
                                     listImage.push({
                                         studentId,
                                         dokumenPath,
                                         keterangan
                                     })
-                                } else {
-                                    keterangan = `ijazah-${jenjang_pendidikan[i]}`
-                                    listImage.push({
-                                        studentId,
-                                        dokumenPath,
-                                        keterangan
-                                    })
-                                }
+                                
                             }
                         }
 

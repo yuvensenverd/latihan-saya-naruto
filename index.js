@@ -33,7 +33,8 @@ const {
     // studentDetailRevisionRouter,
     subscriptionRouter,
     schoolRouter,
-    payoutRouter
+    payoutRouter,
+    dokumen_siswaRouter
 } = require('./router')
 
 // cloudinary.v2.uploader.upload("dog.mp4", 
@@ -60,6 +61,7 @@ app.use('/scholarship', scholarshipRouter)
 app.use('/subscription', subscriptionRouter);
 app.use('/school', schoolRouter)
 app.use('/payout', payoutRouter)
+app.use('/dokumen_siswa', dokumen_siswaRouter);
 
 console.log('masuk io')
 io.on('connection', (socket) => {

@@ -1,25 +1,25 @@
-const { Sequelize, sequelize, school, school_pictures} = require('../models')
+const { Sequelize, sequelize, school, school_pictures, User} = require('../models')
 const Op = Sequelize.Op;
 const { uploader } = require('../helpers/uploader');
 
 module.exports = {
-    // getSchool : (req, res) => {
-    //     school.findAll({
-    //         attributes:{
-    //             exclude : ['createdAt', 'updatedAt']
-    //         },
-    //             where : {
-    //                 isDeleted : 0,
-    //                 isVerified: 1
-    //             }
-    //     })
-    //     .then((results)=>{
-    //         // console.log(result)
-    //         return res.status(200).send({results})
-    //     }).catch((err)=>{
-    //         return res.status(500).send({message: 'error', error: err})
-    //     })
-    // },
+    getSchool : (req, res) => {
+        school.findAll({
+            attributes:{
+                exclude : ['createdAt', 'updatedAt']
+            },
+                where : {
+                    isDeleted : 0,
+                    isVerified: 1
+                }
+        })
+        .then((results)=>{
+            // console.log(result)
+            return res.status(200).send({results})
+        }).catch((err)=>{
+            return res.status(500).send({message: 'error', error: err})
+        })
+    },
     getAllSchool : (req,res) => {
         console.log(req.body)
         const offset = req.body.offset ? req.body.offset : 0
@@ -40,16 +40,15 @@ module.exports = {
             },
             include : [{
                 model : school_pictures,
+                limit: 1
             },
-     
-        
            ]
         })
         .then((results)=>{
             // console.log(result)
             // return res.status(200).send(results)
             console.log(results)
-            return res.status(200).send({result : results.rows, count : results.count-1})
+            return res.status(200).send({result : results.rows, count : results.count})
         }).catch((err)=>{
             console.log(err)
             return res.status(500).send({message: 'error', error: err})
@@ -119,7 +118,9 @@ module.exports = {
                     namaPemilikRekening,
                     nomorRekening,
                     bank, 
-                    email
+                    email,
+                    cabangBank,
+                    provinsi
                 } = data
 
                 return sequelize.transaction(function(t) {
@@ -130,7 +131,9 @@ module.exports = {
                         namaPemilikRekening,
                         nomorRekening,
                         bank,
-                        email
+                        email,
+                        cabangBank,
+                        provinsi
                     }, {transaction: t})
                     .then((result) => {
                         let schoolId = result.dataValues.id
@@ -281,6 +284,24 @@ module.exports = {
             }
         })
         .catch((err) => {
+            return res.status(500).send({message: 'error', error: err})
+        })
+    },
+
+    getSchoolPerUser: (req, res) => {
+        school.findAll({
+            attributes:{
+                exclude : ['createdAt', 'updatedAt']
+            },
+                where : {
+                    isDeleted : 0,
+                    isVerified: 1
+                }
+        })
+        .then((results)=>{
+            // console.log(result)
+            return res.status(200).send({results})
+        }).catch((err)=>{
             return res.status(500).send({message: 'error', error: err})
         })
     }

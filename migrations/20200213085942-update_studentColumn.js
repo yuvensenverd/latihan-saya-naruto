@@ -11,7 +11,7 @@ module.exports = {
       await queryInterface.removeColumn('Students', 'namaSekolah'),
       await queryInterface.removeColumn('Students', 'teleponSekolah'),
       await queryInterface.removeColumn('Students', 'raportTerakhir'),
-      await queryInterface.removeColumn('Students', 'dataPenghasilan')
+      await queryInterface.removeColumn('Students', 'dataPenghasilan'),
     ];
  
   },
@@ -26,7 +26,7 @@ module.exports = {
       await queryInterface.removeColumn('Students', 'namaSekolah'),
       await queryInterface.removeColumn('Students', 'teleponSekolah'),
       await queryInterface.removeColumn('Students', 'raportTerakhir'),
-      await queryInterface.removeColumn('Students', 'dataPenghasilan')
+      await queryInterface.removeColumn('Students', 'dataPenghasilan'),
     ];
   }
 };

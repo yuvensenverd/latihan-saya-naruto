@@ -1,4 +1,4 @@
-const { Sequelize, sequelize, User, Student , scholarship, Subscription, Payment, school} = require('../models')
+const { Sequelize, sequelize, User, Student , scholarship, Subscription, Payment, school, dokumen_siswa} = require('../models')
 const Op = Sequelize.Op
 const moment = require('moment')
 const {uploader} = require('../helpers/uploader')
@@ -309,8 +309,7 @@ module.exports = {
                                     'nomorRekening'
 
                                 ],
-
-                            },
+                            }
                         ]
                     },
                     
