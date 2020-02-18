@@ -152,7 +152,7 @@ module.exports={
 
                         if(ijazah) {
                             for(let i = 0; i < ijazah.length; i++) {
-                               
+                                    dokumenPath = path + '/' + ijazah[i].filename
                                     keterangan = `ijazah`
                                     listImage.push({
                                         studentId,
