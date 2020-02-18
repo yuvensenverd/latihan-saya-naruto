@@ -111,7 +111,7 @@ module.exports={
 
                         for(let i = 1; i < listGambar.length; i++) {
                             if(i === 1) {
-                                dokumenPath = path + '/' + listGambar[i].filename
+                                dokumenPath = listGambar[i]
                                 keterangan = `kartu-siswa`
                                 listImage.push({
                                     studentId,
@@ -121,7 +121,7 @@ module.exports={
                             }
 
                             if(i === 2) {
-                                dokumenPath = path + '/' + listGambar[i].filename
+                                dokumenPath = listGambar[i]
                                 keterangan = `kartu-keluarga`
                                 listImage.push({
                                     studentId,
@@ -134,7 +134,7 @@ module.exports={
                         if(raport) {
                             for(let i = 0; i < raport.length; i++) {
                                 dokumenPath = path + '/' + raport[i].filename
-                                keterangan = `raport-${pendidikanTerakhir}-kelas-${i + 1}`
+                                keterangan = `raport`
                                 listImage.push({
                                     studentId,
                                     dokumenPath,
@@ -153,7 +153,7 @@ module.exports={
                         if(ijazah) {
                             for(let i = 0; i < ijazah.length; i++) {
                                
-                                    keterangan = `ijazah-${jenjang_pendidikan[i]}`
+                                    keterangan = `ijazah`
                                     listImage.push({
                                         studentId,
                                         dokumenPath,
