@@ -133,7 +133,9 @@ module.exports = {
                         bank,
                         email,
                         cabangBank,
-                        provinsi
+                        provinsi,
+                        isDeleted: 0,
+                        isVerified: 1
                     }, {transaction: t})
                     .then((result) => {
                         let schoolId = result.dataValues.id

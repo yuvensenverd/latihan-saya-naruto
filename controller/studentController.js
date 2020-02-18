@@ -98,7 +98,8 @@ module.exports={
                         // dataPenghasilan: listGambar[4],
 
                         isDeleted: 0,
-                        dataStatus : 'Unverified',
+                        // dataStatus : 'Unverified',
+                        dataStatus : 'Verified',
                         statusNote: ''
                     },{transaction:t})
                     .then((result)=>{
@@ -106,10 +107,11 @@ module.exports={
                         console.log(result.dataValues.id)
                         let listImage = [];
                         let studentId = result.dataValues.id
+                        let dokumenPath = ''
 
                         for(let i = 1; i < listGambar.length; i++) {
                             if(i === 1) {
-                                const dokumenPath = path + '/' + listGambar[i].filename
+                                dokumenPath = path + '/' + listGambar[i].filename
                                 keterangan = `kartu-siswa`
                                 listImage.push({
                                     studentId,
@@ -119,7 +121,7 @@ module.exports={
                             }
 
                             if(i === 2) {
-                                const dokumenPath = path + '/' + listGambar[i].filename
+                                dokumenPath = path + '/' + listGambar[i].filename
                                 keterangan = `kartu-keluarga`
                                 listImage.push({
                                     studentId,
@@ -131,7 +133,7 @@ module.exports={
 
                         if(raport) {
                             for(let i = 0; i < raport.length; i++) {
-                                const dokumenPath = path + '/' + raport[i].filename
+                                dokumenPath = path + '/' + raport[i].filename
                                 keterangan = `raport-${pendidikanTerakhir}-kelas-${i + 1}`
                                 listImage.push({
                                     studentId,
@@ -164,7 +166,7 @@ module.exports={
                         
 
                         for(let i=0; i < image2.length; i++){
-                            const dokumenPath = path + '/' + image2[i].filename
+                            dokumenPath = path + '/' + image2[i].filename
                             let keterangan = ''
                             if(i === 0) {
                                 keterangan = 'rekom-kepala-sekolah'
@@ -215,7 +217,7 @@ module.exports={
                         }
 
                         for(let i=0; i < image3.length; i++){
-                            const dokumenPath = path + '/' + image3[i].filename
+                            dokumenPath = path + '/' + image3[i].filename
                             let keterangan = 'sertifikat'
                             listImage.push({
                                 studentId,
@@ -235,7 +237,8 @@ module.exports={
                                 currentValue : 0,
                                 totalPayout : 0,
                                 // isVerified : 0,
-                                isOngoing : 0
+                                // isOngoing : 0
+                                isOngoing : 1
                             }).then((results)=>{
                                 // return res.status(200).send(results)
                             }).catch((err)=>{
