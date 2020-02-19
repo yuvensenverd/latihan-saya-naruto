@@ -1,8 +1,8 @@
 {
   "development": {
-    "username": "reza_db",
-    "password": "reza_db10071997",
-    "database": "kasihnusantara",
+    "username": "hisbu",
+    "password": "P@ssw0rd",
+    "database": "kasihnusantara2",
     "host": "localhost",
     "dialect": "mysql",
     "timezone": "+07:00"
