@@ -106,7 +106,9 @@ module.exports = {
                             "provinsi",
                             "story",
                             "kelas",
-                            "pendidikanTerakhir"
+                            "pendidikanTerakhir",
+                            'nisn',
+                            'kegiatanSosial'
                             // "biayaSekolah"
                         ],
                         include: [
@@ -292,6 +294,8 @@ module.exports = {
                             'biayaSekolah',
                             'kelas',
                             'shareDescription',
+                            'nisn',
+                            'kegiatanSosial',
                             ['createdAt', 'studentCreated']
 
                         ],

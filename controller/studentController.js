@@ -70,7 +70,9 @@ module.exports={
                     jumlahSaudara,
                     biayaSekolah,
                     kelas,
-                    provinsi
+                    provinsi,
+                    nisn, 
+                    kegiatanSosial
                 } = data
 
                 console.log(name)
@@ -90,6 +92,8 @@ module.exports={
                         biayaSekolah,
                         kelas,
                         story,
+                        nisn,
+                        kegiatanSosial,
 
                         studentImage: listGambar[0],
                         // kartuSiswa: listGambar[1],
@@ -110,17 +114,26 @@ module.exports={
                         let dokumenPath = ''
 
                         for(let i = 1; i < listGambar.length; i++) {
-                            if(i === 1) {
-                                dokumenPath = listGambar[i]
-                                keterangan = `kartu-siswa`
-                                listImage.push({
-                                    studentId,
-                                    dokumenPath,
-                                    keterangan
-                                })
-                            }
+                            // if(i === 1) {
+                            //     dokumenPath = listGambar[i]
+                            //     keterangan = `kartu-siswa`
+                            //     listImage.push({
+                            //         studentId,
+                            //         dokumenPath,
+                            //         keterangan
+                            //     })
+                            // }
 
-                            if(i === 2) {
+                            // if(i === 2) {
+                            //     dokumenPath = listGambar[i]
+                            //     keterangan = `kartu-keluarga`
+                            //     listImage.push({
+                            //         studentId,
+                            //         dokumenPath,
+                            //         keterangan
+                            //     })
+                            // }
+                            if(i === 1) {
                                 dokumenPath = listGambar[i]
                                 keterangan = `kartu-keluarga`
                                 listImage.push({
@@ -186,33 +199,33 @@ module.exports={
                                 })
                             }
 
-                            if(i === 2) {
-                                keterangan = 'rekom-guru1-sekolah'
-                                listImage.push({
-                                    studentId,
-                                    dokumenPath,
-                                    keterangan
-                                })
-                            }
+                            // if(i === 2) {
+                            //     keterangan = 'rekom-guru1-sekolah'
+                            //     listImage.push({
+                            //         studentId,
+                            //         dokumenPath,
+                            //         keterangan
+                            //     })
+                            // }
 
-                            if(i === 3) {
-                                keterangan = 'rekom-guru2-sekolah'
-                                listImage.push({
-                                    studentId,
-                                    dokumenPath,
-                                    keterangan
-                                })
-                            }
+                            // if(i === 3) {
+                            //     keterangan = 'rekom-guru2-sekolah'
+                            //     listImage.push({
+                            //         studentId,
+                            //         dokumenPath,
+                            //         keterangan
+                            //     })
+                            // }
 
                             if(pendidikanTerakhir === 'SMA' || pendidikanTerakhir === 'SMK' || pendidikanTerakhir === 'KULIAH') {
-                                if(i === 4) {
-                                    keterangan = 'kegiatan-sosial-siswa'
-                                    listImage.push({
-                                        studentId,
-                                        dokumenPath,
-                                        keterangan
-                                    })
-                                }
+                                // if(i === 4) {
+                                //     keterangan = 'kegiatan-sosial-siswa'
+                                //     listImage.push({
+                                //         studentId,
+                                //         dokumenPath,
+                                //         keterangan
+                                //     })
+                                // }
                             }
                         }
 

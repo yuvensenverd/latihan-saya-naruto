@@ -23,8 +23,10 @@ module.exports = (sequelize, DataTypes) => {
     kelas : DataTypes.INTEGER,
     dataPenghasilan : DataTypes.STRING,
     dataStatus: DataTypes.STRING,
-    statusNote: DataTypes.STRING
-
+    statusNote: DataTypes.STRING,
+    
+    nisn: DataTypes.STRING,
+    kegiatanSosial: DataTypes.TEXT
     // kartusiswa, kartukeluarga, dataPenghasilan, jumlahsaudara, shareDescription, 
   }, {});
   Student.associate = function(models) {
