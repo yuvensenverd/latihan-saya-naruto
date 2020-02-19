@@ -14,13 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     // share description di scholarship atau di student
     story: DataTypes.STRING,
     shareDescription : DataTypes.STRING,
-    cabangBank : DataTypes.STRING,
-    nomorRekening : DataTypes.STRING,
-    pemilikRekening : DataTypes.STRING,
-    alamatSekolah : DataTypes.STRING,
-    bank : DataTypes.STRING,
-    teleponSekolah : DataTypes.STRING,
-    namaSekolah : DataTypes.STRING,
+    schoolId: DataTypes.INTEGER,
     kartuSiswa : DataTypes.STRING,
     raportTerakhir : DataTypes.STRING,
     kartuKeluarga : DataTypes.STRING,
@@ -29,8 +23,10 @@ module.exports = (sequelize, DataTypes) => {
     kelas : DataTypes.INTEGER,
     dataPenghasilan : DataTypes.STRING,
     dataStatus: DataTypes.STRING,
-    statusNote: DataTypes.STRING
-
+    statusNote: DataTypes.STRING,
+    
+    nisn: DataTypes.STRING,
+    kegiatanSosial: DataTypes.TEXT
     // kartusiswa, kartukeluarga, dataPenghasilan, jumlahsaudara, shareDescription, 
   }, {});
   Student.associate = function(models) {
@@ -38,9 +34,9 @@ module.exports = (sequelize, DataTypes) => {
     // Student.hasMany(models.StudentDetail, {foreignKey : 'studentId'})
     Student.belongsTo(models.User, {foreignKey : 'userId'})
     Student.hasOne(models.scholarship, {foreignKey : 'studentId'})
-    
     Student.hasMany(models.StudentRevision, {foreignKey : 'studentId'})
-
+    Student.hasMany(models.dokumen_siswa, { foreignKey: 'studentId'})
+    Student.belongsTo(models.school, { foreignKey: 'schoolId'})
     // Student.hasMany(models.StudentDetailRevision, {foreignKey : 'studentId'})
   };
   return Student;

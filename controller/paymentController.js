@@ -155,7 +155,7 @@ module.exports = {
             let noPembayaran = ''
             if(Response.va_numbers){
                 bank = `${Response.va_numbers[0].bank}`
-                noPembayaran = Response.va_numbers
+                noPembayaran = Response.va_numbers[0].va_number
                 console.log('1')
             }else if(Response.biller_code){
                 bank = 'mandiri'

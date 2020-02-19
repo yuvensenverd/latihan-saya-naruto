@@ -8,7 +8,7 @@ router.get('/getScholarshipDetail', scholarshipController.getScholarshipDetail)
 router.post('/getscholarship', scholarshipController.getAllScholarshipList)
 
 router.post('/addScholarship', auth, scholarshipController.postScholarship)
-router.get('/getScholarshipPerUser', auth, scholarshipController.getScholarshipPerUser )
+router.post('/getScholarshipPerUser', auth, scholarshipController.getScholarshipPerUser)
 // router.get('/getScholarship', scholarshipController.getScholarship)
 router.put('/putScholarship', auth, scholarshipController.putScholarship)
 router.put('/cancelScholarship', auth, scholarshipController.cancelScholarship)
