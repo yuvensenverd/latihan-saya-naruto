@@ -102,8 +102,8 @@ module.exports={
                         // dataPenghasilan: listGambar[4],
 
                         isDeleted: 0,
-                        // dataStatus : 'Unverified',
-                        dataStatus : 'Verified',
+                        dataStatus : 'Unverified',
+                        // dataStatus : 'Verified',
                         statusNote: ''
                     },{transaction:t})
                     .then((result)=>{

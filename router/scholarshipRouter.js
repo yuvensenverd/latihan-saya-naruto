@@ -22,4 +22,7 @@ router.post('/scholarshipdonations', scholarshipController.getScholarshipDonatio
 
 router.post('/getAllProvinceStudent', scholarshipController.showAvailableProvince)
 
+// User 
+router.post('/getAvailableScholarship', auth, scholarshipController.getAvailableScholarship)
+
 module.exports = router;
