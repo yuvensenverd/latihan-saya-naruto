@@ -22,6 +22,29 @@ module.exports = {
         .catch((err) => {
             return res.status(500).send({message: err})
         })
+    },
+
+    getDokumenByAdmin: (req, res) => {
+        const { idSiswa } = req.body
+
+        // console.log(req.body)
+
+        dokumen_siswa.findAll({
+            attributes : [
+                'dokumenPath',
+                'keterangan'
+            ],
+            where: {
+                studentId: idSiswa
+            }
+        })
+        .then((results) => {
+            console.log(results)
+            return res.status(200).send({results})
+        })
+        .catch((err) => {
+            return res.status(500).send({message: err})
+        })
     }
 }
 

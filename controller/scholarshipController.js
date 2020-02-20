@@ -63,7 +63,7 @@ module.exports = {
             return res.status(500).send(err)
         })
     },
-    getScholarshipPerUser : ( req, res) =>{
+    getScholarshipPerUser : ( req, res) => {
         console.log('------------------------> masuk per user')
         var { offset, limit, name, date, pendidikanTerakhir, provinsiMurid, isVerified} = req.body;
 
@@ -104,6 +104,7 @@ module.exports = {
                     include : [{
                         model : Student,
                         attributes : [
+                            ["id", "idSiswa"],
                             ["name", "namaSiswa"],
                             "studentImage",
                             "tanggalLahir",
@@ -285,7 +286,7 @@ module.exports = {
                         {
                         model : Student,
                         attributes : [
-                            ['id', 'siswaId'],
+                            ["id", "idSiswa"],
                             ['name', 'namaSiswa'],
                             'status',
                             'alamat',
@@ -584,12 +585,12 @@ module.exports = {
     // GetScholarshipAllUserByAdmin
     getScholarshipAllUserByAdmin: (req, res)  => {
         
-        var { page, limit, name, date} = req.body;
-        
-        var offset = (page * limit) - limit
-        console.log(req.body)
-        console.log(offset)
+        console.log('------------------------> masuk per user')
+        var { offset, limit, name, date, pendidikanTerakhir, provinsiMurid, isVerified} = req.body;
 
+        console.log(req.body)
+        const { userId } = req.user
+        console.log(req.user)
                 scholarship.findAll({
                     limit:parseInt(limit),
                     // limit : 10,
@@ -598,33 +599,62 @@ module.exports = {
                     attributes : [
                         "id",
                         "judul",
-                        "nominal",
-                        "durasi",
-                        "description",
+                        // "nominal",
+                        // // "durasi",
+                        // "description",
+                        "biayaSekolah",
                         "studentId",
+                        "currentValue",
                         // "shareDescription",
                         // "scholarshipStart",
                         // "paymentSource",
-                        "scholarshipEnded",
-                        [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],
+                        // "scholarshipEnded",
+                        // [sequelize.fn('datediff', sequelize.col('scholarshipEnded') ,  sequelize.col('scholarshipStart')), 'SisaHari'],
                         // [sequelize.fn('SUM', sequelize.col('Subscriptions.nominalSubscription')), 'currentSubs'],
-                        [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totaldonation'],
-                        [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'jumlahdonation'],
-          
-              
+
+                        // [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totaldonation'],
+                        // [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'jumlahdonation'],
                     ],
-                 
-                    
                     include : [{
                         model : Student,
                         attributes : [
+                            ["id", "idSiswa"],
                             ["name", "namaSiswa"],
                             "studentImage",
                             "tanggalLahir",
-                            "pendidikanTerakhir",
                             "provinsi",
-                            "story"
-                        ]
+                            "story",
+                            "kelas",
+                            "pendidikanTerakhir",
+                            'nisn',
+                            'kegiatanSosial',
+                            'dataStatus'
+                            // "biayaSekolah"
+                        ],
+                        include: [
+                            {
+                                model : school,
+                                attributes : [
+                                    ['nama', 'namaSekolah'],
+                                    ['alamat', 'alamatSekolah'],
+                                    'cabangBank',
+                                    'bank',
+                                    'email',
+                                    ['telepon', 'teleponSekolah'],
+                                    'namaPemilikRekening',
+                                    'nomorRekening'
+
+                                ]
+                            }
+                        ],
+                        where: {
+                            pendidikanTerakhir: {
+                                [Op.in] : pendidikanTerakhir
+                            }, 
+                            provinsi: {
+                                [Op.in] : provinsiMurid
+                            },
+                        }
                     },
                     // {
                     //     model : School,
@@ -647,45 +677,21 @@ module.exports = {
                     }
                     ],
                     where : {
-                        // judul : {
-                        //     // [Op.like] : `%${name}%`
-                        // },
-
+                        judul : {
+                            [Op.like] : `%${name}%`,
+                        },
                         // isDeleted : 0,
                     },
-                    order: [['id', `${date}`], ['createdAt', `${date}`]],
+                    // order: [['id', `${date}`], ['createdAt', `${date}`]],
+                    order: [['id', 'DESC']],
                     group : ['id']
                      
                 })
 
                 .then((results) => {
-                    // console.log(result[0].dataValues.Subscriptions.length)
-                    // console.log(result[0].dataValues.Subscriptions[0].dataValues)
-                    // return res.status(200).send(result)
-                    // console.log(results)
-                    // Kurang Counting
-                    
-                    // return res.status(200).send(result)
-
-                    scholarship.count({
-                        where : {
-                            judul : {
-                                [Op.like] : `%${name}%`
-                            }
-                        }
-                    })
-                    .then((resultTotalScholarship) => {
-                        var total = resultTotalScholarship;
-
-                        return res.status(200).send({message: 'Success Get All Scholarship', results, total})
-                        // return res.status(200).send(result)
-                    })
-                    .catch((err) => {
-                        console.log(err)
-                        return res.status(500).send({message: err})
-                    })
+                    console.log(results)
+                    return res.status(200).send({results})
                 }).catch((err)=>{
-                    console.log(err)
                     return res.status(500).send({message: err})
                 })
     },
@@ -722,6 +728,7 @@ module.exports = {
                     include : [{
                         model : Student,
                         attributes : [
+                            ["id", "idSiswa"],
                             ["name", "namaSiswa"],
                             "studentImage",
                             "tanggalLahir",
