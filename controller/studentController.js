@@ -250,8 +250,8 @@ module.exports={
                                 currentValue : 0,
                                 totalPayout : 0,
                                 // isVerified : 0,
-                                // isOngoing : 0
-                                isOngoing : 1
+                                isOngoing : 0
+                                // isOngoing : 1
                             }).then((results)=>{
                                 // return res.status(200).send(results)
                             }).catch((err)=>{

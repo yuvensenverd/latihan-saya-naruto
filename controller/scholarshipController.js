@@ -66,7 +66,12 @@ module.exports = {
     getScholarshipPerUser : ( req, res) =>{
         console.log('------------------------> masuk per user')
         // console.log(req.query)
-        var { offset, limit, name, date, pendidikanTerakhir, provinsiMurid} = req.body;
+        var { offset, limit, name, date, pendidikanTerakhir, provinsiMurid, isVerified} = req.body;
+
+        if(!isVerified) {
+            isVerified = 'Verified'
+        }
+
         console.log(req.body)
         const { userId } = req.user
         console.log(req.user)
@@ -128,7 +133,7 @@ module.exports = {
                             },
                         ],
                         where: {
-                            dataStatus: 'Verified',
+                            dataStatus: isVerified,
                             pendidikanTerakhir: {
                                 [Op.in] : pendidikanTerakhir
                             }, 
