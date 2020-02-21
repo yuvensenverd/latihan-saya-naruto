@@ -72,7 +72,9 @@ module.exports={
                     kelas,
                     provinsi,
                     nisn, 
-                    kegiatanSosial
+                    kegiatanSosial,
+                    raportKeterangan,
+                    ijazahKeterangan
                 } = data
 
                 console.log(name)
@@ -93,7 +95,7 @@ module.exports={
                         kelas,
                         story,
                         nisn,
-                        kegiatanSosial,
+                        kegiatanSosial: kegiatanSosial ? kegiatanSosial : null,
 
                         studentImage: listGambar[0],
                         // kartuSiswa: listGambar[1],
@@ -102,8 +104,8 @@ module.exports={
                         // dataPenghasilan: listGambar[4],
 
                         isDeleted: 0,
-                        // dataStatus : 'Unverified',
-                        dataStatus : 'Verified',
+                        dataStatus : 'Unverified',
+                        // dataStatus : 'Verified',
                         statusNote: ''
                     },{transaction:t})
                     .then((result)=>{
@@ -112,6 +114,7 @@ module.exports={
                         let listImage = [];
                         let studentId = result.dataValues.id
                         let dokumenPath = ''
+                        let deskripsi = ''
 
                         for(let i = 1; i < listGambar.length; i++) {
                             // if(i === 1) {
@@ -136,10 +139,12 @@ module.exports={
                             if(i === 1) {
                                 dokumenPath = listGambar[i]
                                 keterangan = `kartu-keluarga`
+                                deskripsi = 'Kartu Keluarga'
                                 listImage.push({
                                     studentId,
                                     dokumenPath,
-                                    keterangan
+                                    keterangan, 
+                                    deskripsi
                                 })
                             }
                         }
@@ -148,10 +153,12 @@ module.exports={
                             for(let i = 0; i < raport.length; i++) {
                                 dokumenPath = path + '/' + raport[i].filename
                                 keterangan = `raport`
+                                deskripsi = raportKeterangan[i]
                                 listImage.push({
                                     studentId,
                                     dokumenPath,
-                                    keterangan
+                                    keterangan,
+                                    deskripsi
                                 })
                             }
                         }
@@ -167,10 +174,12 @@ module.exports={
                             for(let i = 0; i < ijazah.length; i++) {
                                     dokumenPath = path + '/' + ijazah[i].filename
                                     keterangan = `ijazah`
+                                    deskripsi =  ijazahKeterangan[i]
                                     listImage.push({
                                         studentId,
                                         dokumenPath,
-                                        keterangan
+                                        keterangan,
+                                        deskripsi
                                     })
                                 
                             }
@@ -183,19 +192,23 @@ module.exports={
                             let keterangan = ''
                             if(i === 0) {
                                 keterangan = 'rekom-kepala-sekolah'
+                                deskripsi = 'Surat Rekomendasi Kepala Sekolah'
                                 listImage.push({
                                     studentId,
                                     dokumenPath,
-                                    keterangan
+                                    keterangan,
+                                    deskripsi
                                 })
                             }
                             
                             if(i === 1) {
                                 keterangan = 'rekom-wali-guru'
+                                deskripsi = 'Surat Rekomendasi Wali Guru'
                                 listImage.push({
                                     studentId,
                                     dokumenPath,
-                                    keterangan
+                                    keterangan,
+                                    deskripsi
                                 })
                             }
 
@@ -231,11 +244,13 @@ module.exports={
 
                         for(let i=0; i < image3.length; i++){
                             dokumenPath = path + '/' + image3[i].filename
-                            let keterangan = 'sertifikat'
+                            keterangan = 'sertifikat'
+                            deskripsi = 'Sertifikat'
                             listImage.push({
                                 studentId,
                                 dokumenPath,
-                                keterangan
+                                keterangan,
+                                deskripsi
                             })
                         }
 
@@ -250,8 +265,8 @@ module.exports={
                                 currentValue : 0,
                                 totalPayout : 0,
                                 // isVerified : 0,
-                                // isOngoing : 0
-                                isOngoing : 1
+                                isOngoing : 0
+                                // isOngoing : 1
                             }).then((results)=>{
                                 // return res.status(200).send(results)
                             }).catch((err)=>{
