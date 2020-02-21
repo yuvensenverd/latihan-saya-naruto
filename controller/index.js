@@ -11,6 +11,7 @@ const subscriptionController = require('./subscriptionController')
 const schoolController = require('./schoolControl')
 const payoutController = require('./payoutController');
 const dokumen_siswaController = require('./dokumen_siswaController');
+const testimonialController = require('./testimonialController');
 
 
 module.exports = {
@@ -27,5 +28,6 @@ module.exports = {
     subscriptionController,
     schoolController,
     payoutController,
-    dokumen_siswaController
+    dokumen_siswaController,
+    testimonialController
 }

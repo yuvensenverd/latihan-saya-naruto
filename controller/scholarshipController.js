@@ -3,6 +3,7 @@ const Op = Sequelize.Op
 const moment = require('moment')
 const {uploader} = require('../helpers/uploader')
 const fs = require('fs')
+const { transporter } = require('../helpers/mailer')
 
 module.exports = {
     postScholarship : ( req, res) => { // need changes
@@ -711,6 +712,7 @@ module.exports = {
                 attributes : [
                     ["id", "idSiswa"],
                     ['name', 'namaSiswa'],
+                    'userId',
                     'status',
                     'alamat',
                     'gender',
@@ -874,6 +876,8 @@ module.exports = {
     },
 
     verifikasiScholarship: (req, res) => {
+        const { idSiswa, idUser } = req.body
+        console.log(idSiswa)
         scholarship.update(
             {
                 isOngoing : 1
@@ -881,13 +885,72 @@ module.exports = {
             {
                 where : 
                     {
-                        id : scholarshipId
+                     studentId : idSiswa
                     }
             }
         )
-        .then((res)=>{
-             console.log('success')
-             console.log(res)
+        .then((results)=>{
+            Student.update(
+                {
+                    dataStatus : 'Verified'
+                },
+                {
+                    where : 
+                        {
+                         id : idSiswa
+                        }
+                }
+            )
+            .then((results2)=>{
+                
+
+                User.findOne({
+                    where: {
+                        id: idUser
+                    }
+                })
+                .then(dataUser => {
+        
+                    // Ketika sudah daftar kirim link verification dan create jwtToken
+                    // const tokenJwt = createJWTToken({ userId: dataUser.dataValues.id, email: dataUser.dataValues.email })
+
+                    // console.log(tokenJwt)
+
+                        let mailOptions = {
+                        from: 'KasihNusantara Admin <operational@kasihnusantara.com>',
+                        to: dataUser.dataValues.email,
+                        subject: 'Beasiswa berhasil di approve',
+                        html: `
+                                <div>
+                                    <hr />
+                                    <h4>Beasiswa anda berhasil di approve oleh tim kami.</h4>
+                                    <p>Terima Kasih</p>
+                                    <hr />
+                                </div>`
+                    }
+
+                    transporter.sendMail(mailOptions, (err1, res1) => {
+                        if (err1) {
+                            return res.status(500).send({ status: 'error', err: err1 })
+                        }
+
+                        return res.status(200).send(dataUser)
+
+                    })
+
+                  
+                })
+                .catch((err) => {
+                    return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
+                })
+
+
+                
+                
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
         })
         .catch((err)=>{
             console.log(err)
