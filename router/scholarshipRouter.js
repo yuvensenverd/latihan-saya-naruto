@@ -17,12 +17,19 @@ router.put('/putVerification', auth, scholarshipController.putVerification)
 
 router.post('/GenerateURL',scholarshipController.generateImgUrlquill)
 // router.post('/getAllScholarship', scholarshipController.getAllScholarship)
-router.post('/getScholarshipAllUserByAdmin', auth, scholarshipController.getScholarshipAllUserByAdmin)
+
 router.post('/scholarshipdonations', scholarshipController.getScholarshipDonations)
 
 router.post('/getAllProvinceStudent', scholarshipController.showAvailableProvince)
 
+// admin
+router.post('/getScholarshipAllUserByAdmin', auth, scholarshipController.getScholarshipAllUserByAdmin)
+router.post('/getScholarshipDetailByAdmin', auth, scholarshipController.getScholarshipDetailByAdmin)
+router.post('/verifikasiScholarship', auth, scholarshipController.verifikasiScholarship);
+
 // User 
 router.post('/getAvailableScholarship', auth, scholarshipController.getAvailableScholarship)
+
+// getScholarshipDetailByAdmin
 
 module.exports = router;

@@ -580,8 +580,6 @@ module.exports = {
         })  
     },
 
-
-
     // GetScholarshipAllUserByAdmin
     getScholarshipAllUserByAdmin: (req, res)  => {
         
@@ -696,6 +694,75 @@ module.exports = {
                 })
     },
 
+    getScholarshipDetailByAdmin: (req, res) => {
+        const { idSiswa } = req.body
+        scholarship.findAll({
+            subQuery: false,
+            attributes : [
+                "id",
+                "judul",
+                "studentId",
+                'currentValue',
+            ],
+            
+            include : [
+                {
+                model : Student,
+                attributes : [
+                    ["id", "idSiswa"],
+                    ['name', 'namaSiswa'],
+                    'status',
+                    'alamat',
+                    'gender',
+                    'tanggalLahir',
+                    'pendidikanTerakhir',
+                    'studentImage',
+                    'provinsi',
+                    'story',
+                    'biayaSekolah',
+                    'kelas',
+                    'shareDescription',
+                    'nisn',
+                    'kegiatanSosial',
+                    ['createdAt', 'studentCreated']
+
+                ],
+                include: [
+                    {
+                        model : school,
+                        attributes : [
+                            ['nama', 'namaSekolah'],
+                            ['alamat', 'alamatSekolah'],
+                            'cabangBank',
+                            'bank',
+                            'email',
+                            ['telepon', 'teleponSekolah'],
+                            'namaPemilikRekening',
+                            'nomorRekening'
+
+                        ],
+                    }
+                ]
+            },
+            
+            ],
+            where : {
+                studentId: idSiswa,
+                
+            },
+            group: ['id']
+             
+        })
+
+        .then((result) => {
+            console.log(result)
+            // console.log(result)
+            return res.status(200).send(result)
+        }).catch((err)=>{
+            return res.status(500).send({message: err})
+        })
+    },
+
     // User
     getAvailableScholarship: (req, res) => {
         console.log('------------------------> masuk per user')
@@ -804,5 +871,27 @@ module.exports = {
                 }).catch((err)=>{
                     return res.status(500).send({message: err})
                 })
+    },
+
+    verifikasiScholarship: (req, res) => {
+        scholarship.update(
+            {
+                isOngoing : 1
+            },
+            {
+                where : 
+                    {
+                        id : scholarshipId
+                    }
+            }
+        )
+        .then((res)=>{
+             console.log('success')
+             console.log(res)
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
     }
+
 } 

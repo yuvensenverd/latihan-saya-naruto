@@ -95,7 +95,7 @@ module.exports={
                         kelas,
                         story,
                         nisn,
-                        kegiatanSosial,
+                        kegiatanSosial: kegiatanSosial ? kegiatanSosial : null,
 
                         studentImage: listGambar[0],
                         // kartuSiswa: listGambar[1],
