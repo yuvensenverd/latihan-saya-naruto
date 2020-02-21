@@ -8,7 +8,8 @@ module.exports = {
         dokumen_siswa.findAll({
             attributes : [
                 'dokumenPath',
-                'keterangan'
+                'keterangan',
+                'deskripsi'
             ],
             where: {
                 studentId,
@@ -32,7 +33,8 @@ module.exports = {
         dokumen_siswa.findAll({
             attributes : [
                 'dokumenPath',
-                'keterangan'
+                'keterangan',
+                'deskripsi'
             ],
             where: {
                 studentId: idSiswa
