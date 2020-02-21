@@ -3,7 +3,7 @@ var router = express.Router()
 
 const { paymentController } = require('../controller')
 const { auth } = require('../helpers/auth')
-
+ 
 
 // router.get('/getPayment', paymentController.getPayment )
 router.post('/getSnapMd', auth, paymentController.getSnapMd)

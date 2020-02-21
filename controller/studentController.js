@@ -21,6 +21,7 @@ module.exports={
     //     })
     // },
     postStudentdata(req,res){
+        console.log('=====================================================masuk post sini dah =================================s')
         try {
 
             const path = '/student/images'; //file save path
