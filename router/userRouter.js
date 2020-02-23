@@ -14,7 +14,7 @@ router.post('/loginFacebook', userController.loginWithFacebook);
 router.post('/registerGmail', userController.registerWithGoogle);
 router.post('/registerFacebook', userController.registerWithFacebook);
 router.get('/getschool', userController.getSchool);
-router.get('/getUser/:id', auth, userController.getDataUser);
+router.get('/getUser', auth, userController.getDataUser);
 router.post('/editProfilePic', auth, userController.updateProfilePic);
 router.post('/editPhoneNumber', auth, userController.editPhoneNumber);
 
