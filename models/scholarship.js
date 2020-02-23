@@ -20,4 +20,4 @@ module.exports = (sequelize, DataTypes) => {
     scholarship.hasMany(models.Payout, {foreignKey : 'scholarshipId'})
   };
   return scholarship;
-};
+}; 

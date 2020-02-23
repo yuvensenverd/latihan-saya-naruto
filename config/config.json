@@ -1,7 +1,7 @@
 {
   "development": {
-    "username": "reza_db",
-    "password": "reza_db10071997",
+    "username": "hisbu",
+    "password": "P@ssw0rd",
     "database": "kasihnusantara",
     "host": "localhost",
     "dialect": "mysql",
@@ -22,7 +22,6 @@
     "host": "127.0.0.1",
     "dialect": "mysql",
     "timezone": "+07:00"
-    
   }
 }
 
