@@ -587,7 +587,20 @@ module.exports = {
                             created_by: name
                         })
                         .then((resPayoutDb) => {
-                            return res.status(200).send(resPayoutDb.data) 
+                            scholarship.update({
+                                totalPayout: sequelize.literal(`totalPayout+${amount}`)
+                            },{
+                                where: {
+                                    id
+                                }
+                            })
+                            .then((resputsch)=>{
+                                console.log('---')
+                            })
+                            .catch((err)=>{
+                                console.log(err)
+                            })
+                            return res.status(200).send(resPayout.data) 
                         })
                         .catch((err=> {
                             console.log(err, '--------------------------> err 1')
@@ -606,6 +619,31 @@ module.exports = {
             })
 
     },
+    payoutnotif: (req, res)=>{
+        console.log('-----------------------------------> masuk payout notif')
+        console.log(req.body)
+    },
+    payouthistory: (req, res)=>{
+        console.log('------------------------------------> payout history')
+        console.log(req.body)
+        const {id, limit, offset} = req.body
+        Payout.findAndCountAll({
+            limit: parseInt(limit),
+            offset,
+            where: {
+                scholarshipId : req.body.id
+            },
+            order: [['createdAt', 'DESC']],
+        })
+        .then((result) => {
+            console.log(result)
+            res.status(200).send({message: 'success', results: result.rows, count: result.count})
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+    },
+
     createBeneficiaries:  (req,res)=>{
         console.log('--------------------------> masuk Beneficiaries')
         console.log(req.body)
