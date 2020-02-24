@@ -608,7 +608,7 @@ module.exports = {
     },
     payoutnotif: (req, res)=>{
         console.log('-----------------------------------> masuk payout notif')
-
+        console.log(req.body)
     },
 
     createBeneficiaries:  (req,res)=>{
