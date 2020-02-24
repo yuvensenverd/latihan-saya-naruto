@@ -15,13 +15,13 @@ module.exports = (sequelize, DataTypes) => {
     story: DataTypes.STRING,
     shareDescription : DataTypes.STRING,
     schoolId: DataTypes.INTEGER,
-    kartuSiswa : DataTypes.STRING,
-    raportTerakhir : DataTypes.STRING,
-    kartuKeluarga : DataTypes.STRING,
+    // kartuSiswa : DataTypes.STRING,
+    // raportTerakhir : DataTypes.STRING,
+    // kartuKeluarga : DataTypes.STRING,
     jumlahSaudara : DataTypes.INTEGER,
     biayaSekolah : DataTypes.INTEGER,
     kelas : DataTypes.INTEGER,
-    dataPenghasilan : DataTypes.STRING,
+    // dataPenghasilan : DataTypes.STRING,
     dataStatus: DataTypes.STRING,
     statusNote: DataTypes.STRING,
     
@@ -36,6 +36,7 @@ module.exports = (sequelize, DataTypes) => {
     Student.hasOne(models.scholarship, {foreignKey : 'studentId'})
     Student.hasMany(models.StudentRevision, {foreignKey : 'studentId'})
     Student.hasMany(models.dokumen_siswa, { foreignKey: 'studentId'})
+    Student.hasMany(models.testimoni, { foreignKey: 'studentId'})
     Student.belongsTo(models.school, { foreignKey: 'schoolId'})
     // Student.hasMany(models.StudentDetailRevision, {foreignKey : 'studentId'})
   };
