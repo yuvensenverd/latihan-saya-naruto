@@ -608,8 +608,8 @@ module.exports = {
     },
     payoutnotif: (req, res)=>{
         console.log('-----------------------------------> masuk payout notif')
-        
-    }
+
+    },
 
     createBeneficiaries:  (req,res)=>{
         console.log('--------------------------> masuk Beneficiaries')
