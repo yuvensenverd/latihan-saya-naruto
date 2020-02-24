@@ -22,5 +22,6 @@ router.post('/beneficiaries', paymentController.createBeneficiaries)
 router.get('/beneficiary_banks', paymentController.getListBank)
 router.post('/validateBankAccount', paymentController.validateBankAccount)
 router.post('/getpayoutnotif', paymentController.payoutnotif)
+router.post('/payouthistory', paymentController.payouthistory)
 
 module.exports = router;

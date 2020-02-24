@@ -782,7 +782,7 @@ module.exports = {
                     attributes : [
                         "id",
                         "judul",
-                       
+                        "totalPayout",
                         "biayaSekolah",
                         "studentId",
                         "currentValue",
