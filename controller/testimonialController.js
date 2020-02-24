@@ -60,6 +60,7 @@ module.exports = {
             include: [
                 {
                     model: Student,
+                    
                     include: [
                         {
                             model: school,
