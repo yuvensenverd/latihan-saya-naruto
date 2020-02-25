@@ -231,7 +231,7 @@ module.exports={
                             //     })
                             // }
 
-                            if(pendidikanTerakhir === 'SMA' || pendidikanTerakhir === 'SMK' || pendidikanTerakhir === 'KULIAH') {
+                            if(pendidikanTerakhir === 'SMA' || pendidikanTerakhir === 'SMK' || pendidikanTerakhir === 'UNIVERSITAS') {
                                 // if(i === 4) {
                                 //     keterangan = 'kegiatan-sosial-siswa'
                                 //     listImage.push({
