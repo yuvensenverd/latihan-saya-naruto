@@ -623,6 +623,41 @@ module.exports = {
         console.log('-----------------------------------> masuk payout notif')
         console.log(req.body)
     },
+    getstatusiris: (req, res)=>{
+        console.log(req.body)
+        const {no} = req.body
+        Axios({
+            headers: {
+              'Content-Type': 'application/json',
+              "Accept":"application/json",
+            },
+            method: 'get',
+            url: `https://app.sandbox.midtrans.com/iris/api/v1/payouts/${no}`,
+            auth: {
+              username: 'IRIS-83f135ed-3513-47bf-81bb-a071822ee68f'
+            },
+            data: req.body
+            })
+            .then((results)=>{
+                console.log(results)
+                const {status, reference_no} = results.data
+                Payout.update({
+                    status: status
+                },{
+                    where:{
+                        reference_no
+                    }
+                })
+                .then((resupdate) => {
+
+                })
+                .catch((err)=>{
+                    console.log(err)
+                })
+
+                return res.status(200).send(results.data)
+            })
+    },
     payouthistory: (req, res)=>{
         console.log('------------------------------------> payout history')
         console.log(req.body)
@@ -630,6 +665,20 @@ module.exports = {
         Payout.findAndCountAll({
             limit: parseInt(limit),
             offset,
+            include: [
+                {
+                    model : scholarship,
+                    // required : false,
+                    attributes : ['id'],
+                    include : [
+                        {
+                            model : Student,
+                            attributes : ['studentImage'],
+                            required : true
+                        }
+                    ]
+                }
+            ],
             where: {
                 scholarshipId : req.body.id
             },
