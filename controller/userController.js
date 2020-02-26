@@ -429,7 +429,7 @@ module.exports = {
                 })
 
             } else {
-                return res.status(500).json({ message: "Email belum terdaftar." });
+                return res.status(500).json({ message: "Email atau Password Salah." });
             }
         })
         .catch((err) => {
