@@ -630,6 +630,23 @@ module.exports = {
         
         const {no} = req.body
         const statusBody = req.body.status
+        const reference_no = req.body.reference_no
+        if(statusbody){
+            console.log(statusBody)
+            Payout.update({
+                status: statusBody
+            },{
+                where:{
+                    reference_no
+                }
+            })
+            .then((resupdate) => {
+                return res.status(200).send(resupdate)
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
+        }
         Axios({
             headers: {
               'Content-Type': 'application/json',
