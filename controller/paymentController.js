@@ -143,8 +143,6 @@ module.exports = {
         if(req.body.order_id){
             console.log(req.body)
             //######## INSERT DATABASE
-             
-            
         }
 
         snap.transaction.status(order_id)

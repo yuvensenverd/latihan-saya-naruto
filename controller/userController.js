@@ -1453,6 +1453,60 @@ module.exports = {
         .catch((err) => {
             console.log(err)
         })
+    },
+
+    getDonationUser: (req, res) => {
+        Payment.findAndCountAll({
+            //   limit:parseInt(limit),
+            //   // limit : 10,
+            //   offset:offset,
+              // subQuery: false,
+                attributes : [
+                  'nominal',
+                  [sequelize.col('scholarship.judul'), 'judulScholarship'],
+                  [sequelize.col('scholarship.id'), 'scholarshipId'],
+                //   [sequelize.col('scholarship->student.name'), 'namaMurid'],
+                //   [sequelize.col('scholarship->student.studentImage'), 'fotoMurid'],
+                  [sequelize.col('user.nama'), 'donators'],
+                //   'order_id',
+                  'komentar',
+                  'createdAt',
+                  'id'
+                ],
+                where : {
+                    isRefund : 0,
+                    isDeleted : 0,
+                    // scholarshipId : req.body.id
+                    // statusPayment : 'settlement'
+                },
+                include : [
+                  {
+                      model : User,
+                      required : false,
+                      attributes : [],
+                      where: {
+                          id: req.user. req.user.userId
+                      }
+                  },
+                  {
+                    model : scholarship,
+                    required : true,
+                    attributes : [] 
+                },
+                ],
+                order: [
+                    ['createdAt', 'DESC']
+                ]
+            }).then((result)=>{
+              console.log('erresult')
+              console.log(result)
+              console.log(result.count)
+              
+            //   return res.status(200).send({result : result.rows, count : result.count})
+            }).catch((err)=>{
+                console.log(err)
+              return res.status(500).send({message : err})
+            })
     }
     
 }
