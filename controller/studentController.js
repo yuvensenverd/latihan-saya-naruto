@@ -151,97 +151,154 @@ module.exports={
                         }
 
                         if(raport) {
-                            for(let i = 0; i < raport.length; i++) {
-                                dokumenPath = path + '/' + raport[i].filename
-                                keterangan = `raport`
-                                deskripsi = raportKeterangan[i]
-                                listImage.push({
-                                    studentId,
-                                    dokumenPath,
-                                    keterangan,
-                                    deskripsi
-                                })
-                            }
-                        }
+                            if(pendidikanTerakhir !== 'UNIVERSITAS') {
 
-                        let jenjang_pendidikan = [
-                            'SD',
-                            'SMP',
-                            'SMA',
-                            'SMK',
-                        ]
-
-                        if(ijazah) {
-                            for(let i = 0; i < ijazah.length; i++) {
-                                    dokumenPath = path + '/' + ijazah[i].filename
-                                    keterangan = `ijazah`
-                                    deskripsi =  ijazahKeterangan[i]
+                                for(let i = 0; i < raport.length; i++) {
+                                    dokumenPath = path + '/' + raport[i].filename
+                                    keterangan = `raport`
+                                    deskripsi = raportKeterangan[i]
                                     listImage.push({
                                         studentId,
                                         dokumenPath,
                                         keterangan,
                                         deskripsi
                                     })
-                                
+                                }
+
+                            } else {
+
+                                for(let i = 0; i < raport.length; i++) {
+                                    dokumenPath = path + '/' + raport[i].filename
+                                    keterangan = `dokumen-ipk`
+                                    deskripsi = raportKeterangan[i]
+                                    listImage.push({
+                                        studentId,
+                                        dokumenPath,
+                                        keterangan,
+                                        deskripsi
+                                    })
+                                }
+
+                            }
+                        }
+
+                        let jenjang_pendidikan = [
+                            'SD',
+                            'SMP',
+                            'SMA / SMK',
+                        ]
+
+                        let sma_smk = [
+                            
+                        ]
+
+                        if(ijazah) {
+                            for(let i = 0; i < ijazah.length; i++) {
+                                dokumenPath = path + '/' + ijazah[i].filename
+                                keterangan = `ijazah`
+                                deskripsi =  ijazahKeterangan[i]
+                                listImage.push({
+                                    studentId,
+                                    dokumenPath,
+                                    keterangan,
+                                    deskripsi
+                                })
                             }
                         }
 
                         
 
-                        for(let i=0; i < image2.length; i++){
-                            dokumenPath = path + '/' + image2[i].filename
-                            let keterangan = ''
-                            if(i === 0) {
-                                keterangan = 'rekom-kepala-sekolah'
-                                deskripsi = 'Surat Rekomendasi Kepala Sekolah'
-                                listImage.push({
-                                    studentId,
-                                    dokumenPath,
-                                    keterangan,
-                                    deskripsi
-                                })
-                            }
-                            
-                            if(i === 1) {
-                                keterangan = 'rekom-wali-guru'
-                                deskripsi = 'Surat Rekomendasi Wali Guru'
-                                listImage.push({
-                                    studentId,
-                                    dokumenPath,
-                                    keterangan,
-                                    deskripsi
-                                })
-                            }
-
-                            // if(i === 2) {
-                            //     keterangan = 'rekom-guru1-sekolah'
-                            //     listImage.push({
-                            //         studentId,
-                            //         dokumenPath,
-                            //         keterangan
-                            //     })
-                            // }
-
-                            // if(i === 3) {
-                            //     keterangan = 'rekom-guru2-sekolah'
-                            //     listImage.push({
-                            //         studentId,
-                            //         dokumenPath,
-                            //         keterangan
-                            //     })
-                            // }
-
-                            if(pendidikanTerakhir === 'SMA' || pendidikanTerakhir === 'SMK' || pendidikanTerakhir === 'UNIVERSITAS') {
-                                // if(i === 4) {
-                                //     keterangan = 'kegiatan-sosial-siswa'
+                        if(pendidikanTerakhir !== 'UNIVERSITAS') {
+                            for(let i=0; i < image2.length; i++) {
+                                dokumenPath = path + '/' + image2[i].filename
+                                let keterangan = ''
+                                if(i === 0) {
+                                    keterangan = 'rekom-kepala-sekolah'
+                                    deskripsi = 'Surat Rekomendasi Kepala Sekolah'
+                                    listImage.push({
+                                        studentId,
+                                        dokumenPath,
+                                        keterangan,
+                                        deskripsi
+                                    })
+                                }
+                                
+                                if(i === 1) {
+                                    keterangan = 'rekom-wali-guru'
+                                    deskripsi = 'Surat Rekomendasi Wali Guru'
+                                    listImage.push({
+                                        studentId,
+                                        dokumenPath,
+                                        keterangan,
+                                        deskripsi
+                                    })
+                                }
+    
+                                // if(i === 2) {
+                                //     keterangan = 'rekom-guru1-sekolah'
                                 //     listImage.push({
                                 //         studentId,
                                 //         dokumenPath,
                                 //         keterangan
                                 //     })
                                 // }
+    
+                                // if(i === 3) {
+                                //     keterangan = 'rekom-guru2-sekolah'
+                                //     listImage.push({
+                                //         studentId,
+                                //         dokumenPath,
+                                //         keterangan
+                                //     })
+                                // }
+    
+                                if(pendidikanTerakhir === 'SMA' || pendidikanTerakhir === 'SMK' || pendidikanTerakhir === 'UNIVERSITAS') {
+                                    // if(i === 4) {
+                                    //     keterangan = 'kegiatan-sosial-siswa'
+                                    //     listImage.push({
+                                    //         studentId,
+                                    //         dokumenPath,
+                                    //         keterangan
+                                    //     })
+                                    // }
+                                }
+                            }
+
+                        } else {
+                            
+                            // Untuk UNIVERSITAS
+
+                            for(let i=0; i < image2.length; i++) {
+                                dokumenPath = path + '/' + image2[i].filename
+                                let keterangan = ''
+                                if(i === 0) {
+                                    keterangan = 'rekom-kepala-fakultas'
+                                    deskripsi = 'Surat Rekomendasi Kepala Fakultas'
+                                    listImage.push({
+                                        studentId,
+                                        dokumenPath,
+                                        keterangan,
+                                        deskripsi
+                                    })
+                                }
+                                
+                                if(i === 1) {
+                                    keterangan = 'rekom-kepala-jurusan'
+                                    deskripsi = 'Surat Rekomendasi Kepala Jurusan'
+                                    listImage.push({
+                                        studentId,
+                                        dokumenPath,
+                                        keterangan,
+                                        deskripsi
+                                    })
+                                }
+    
+                                if(pendidikanTerakhir === 'SMA' || pendidikanTerakhir === 'SMK' || pendidikanTerakhir === 'UNIVERSITAS') {
+                                  
+                                }
                             }
                         }
+
 
                         for(let i=0; i < image3.length; i++){
                             dokumenPath = path + '/' + image3[i].filename
