@@ -24,5 +24,6 @@ router.post('/newPasswordUser', resetToken, userController.userResetPassword);
 router.post('/userChangePassword', auth, userController.userChangePassword);
 
 router.get('/getSubscription/:id', auth, userController.getSubscription);
+router.get('/getDonationUser', auth, userController.getDonationUser)
 
 module.exports = router
