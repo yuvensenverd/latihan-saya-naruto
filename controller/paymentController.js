@@ -630,14 +630,14 @@ module.exports = {
         
         const {no} = req.body
         const statusBody = req.body.status
-        const reference_no = req.body.reference_no
+        const reference_noBody = req.body.reference_no
         if(statusBody){
             console.log(statusBody)
             Payout.update({
                 status: statusBody
             },{
                 where:{
-                    reference_no
+                    reference_no: reference_noBody
                 }
             })
             .then((resupdate) => {
@@ -660,10 +660,10 @@ module.exports = {
             data: req.body
             })
             .then((results)=>{
-                console.log('didalam result---------------------')
-                console.log(results)
-                console.log('didalam result---------------------')
-                req.body.status ? console.log('-------> ', statusbody) : console.log('ga dapet')
+                // console.log('didalam result---------------------')
+                // console.log(results)
+                // console.log('didalam result---------------------')
+                // req.body.status ? console.log('-------> ', statusbody) : console.log('ga dapet')
                 const {status, reference_no} = results.data
                 Payout.update({
                     status: status
