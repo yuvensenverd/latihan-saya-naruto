@@ -631,7 +631,7 @@ module.exports = {
         const {no} = req.body
         const statusBody = req.body.status
         const reference_no = req.body.reference_no
-        if(statusbody){
+        if(statusBody){
             console.log(statusBody)
             Payout.update({
                 status: statusBody
