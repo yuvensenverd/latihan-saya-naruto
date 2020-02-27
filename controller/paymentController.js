@@ -624,9 +624,9 @@ module.exports = {
         console.log(req.body)
     },
     getstatusiris: (req, res)=>{
-        coneole.log('didalam body---------------------')
+        console.log('didalam body---------------------')
         console.log(req.body)
-        coneole.log('didalam body---------------------')
+        console.log('didalam body---------------------')
         
         const {no} = req.body
         const statusBody = req.body.status
@@ -643,9 +643,9 @@ module.exports = {
             data: req.body
             })
             .then((results)=>{
-                coneole.log('didalam result---------------------')
+                console.log('didalam result---------------------')
                 console.log(results)
-                coneole.log('didalam result---------------------')
+                console.log('didalam result---------------------')
                 req.body.status ? console.log('-------> ', statusbody) : console.log('ga dapet')
                 const {status, reference_no} = results.data
                 Payout.update({
