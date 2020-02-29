@@ -622,8 +622,29 @@ module.exports = {
         console.log(req.body)
     },
     getstatusiris: (req, res)=>{
+        console.log('didalam body---------------------')
         console.log(req.body)
+        console.log('didalam body---------------------')
+        
         const {no} = req.body
+        const statusBody = req.body.status
+        const reference_noBody = req.body.reference_no
+        if(statusBody){
+            console.log(statusBody)
+            Payout.update({
+                status: statusBody
+            },{
+                where:{
+                    reference_no: reference_noBody
+                }
+            })
+            .then((resupdate) => {
+                return res.status(200).send(resupdate)
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
+        }
         Axios({
             headers: {
               'Content-Type': 'application/json',
@@ -637,7 +658,10 @@ module.exports = {
             data: req.body
             })
             .then((results)=>{
-                console.log(results)
+                // console.log('didalam result---------------------')
+                // console.log(results)
+                // console.log('didalam result---------------------')
+                // req.body.status ? console.log('-------> ', statusbody) : console.log('ga dapet')
                 const {status, reference_no} = results.data
                 Payout.update({
                     status: status
