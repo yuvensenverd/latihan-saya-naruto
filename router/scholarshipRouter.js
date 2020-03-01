@@ -5,7 +5,9 @@ var { auth } = require('../helpers/auth')
 const { scholarshipController } = require('../controller')
 
 router.get('/getScholarshipDetail', scholarshipController.getScholarshipDetail)
-router.post('/getscholarship', scholarshipController.getAllScholarshipList)
+
+
+router.post('/getscholarship', scholarshipController.getAllScholarshipList) // Yang dipake di UI untuk fiter scholarship
 
 router.post('/addScholarship', auth, scholarshipController.postScholarship)
 router.post('/getScholarshipPerUser', auth, scholarshipController.getScholarshipPerUser)

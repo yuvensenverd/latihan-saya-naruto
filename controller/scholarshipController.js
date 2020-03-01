@@ -347,7 +347,7 @@ module.exports = {
     },
     // DI PAGE HOME UI
     getAllScholarshipList : (req,res) =>{
-        var { offset, limit, name, date, pendidikanTerakhir, provinsiMurid} = req.body;
+        var { offset, limit, name, date, pendidikanTerakhir, provinsiMurid, sekolahFilter} = req.body;
         
         // console.log(req.body)
         // console.log(offset)
@@ -398,7 +398,12 @@ module.exports = {
                                 model : school,
                                 attributes : [
                                     ["nama", "namaSekolah"]
-                                ]
+                                ],
+                                where : {
+                                    id: {
+                                        [Op.in] : sekolahFilter
+                                    }
+                                }
                             },
                         ],
                         
