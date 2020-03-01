@@ -1,5 +1,5 @@
 
-const { User, Sequelize, sequelize, School, Project, Payment, Subscription, scholarship, Student } = require('../models');
+const { User, Sequelize, sequelize, school, Project, Payment, Subscription, scholarship, Student, } = require('../models');
 const Op = Sequelize.Op
 const Crypto = require('crypto');
 
@@ -1507,6 +1507,104 @@ module.exports = {
                 console.log(err)
               return res.status(500).send({message : err})
             })
+    },
+
+    getScholarshipByUserId : (req, res) => {
+        console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
+        scholarship.findAll({
+            subQuery: false,
+            attributes : [
+                "id",
+                "judul",
+                "studentId",
+                'currentValue',
+                // [sequelize.col('Student.id'), 'siswaId'],
+                // [sequelize.col('Student.name'), 'namaSiswa'],
+                // [sequelize.col('Student.status'), 'status'],
+                // [sequelize.col('Student.alamat'), 'alamat'],
+                // [sequelize.col('Student.gender'), 'gender'],
+                // [sequelize.col('Student.tanggalLahir'), 'tanggalLahir'],
+                // [sequelize.col('Student.pendidikanTerakhir'), 'pendidikanTerakhir'],
+                // [sequelize.col('Student.studentImage'), 'studentImage'],
+                // [sequelize.col('Student.provinsi'), 'provinsi'],
+                // [sequelize.col('Student.story'), 'story'],
+                // [sequelize.col('Student.alamatSekolah'), 'alamatSekolah'],
+                // [sequelize.col('Student.biayaSekolah'), 'biayaSekolah'],
+                // [sequelize.col('Student.namaSekolah'), 'namaSekolah'],
+                // [sequelize.col('Student.teleponSekolah'), 'teleponSekolah'],
+                // [sequelize.col('Student.kelas'), 'kelas'],
+
+                
+
+                // [sequelize.col('Student.shareDescription'), 'shareDescription'],
+                // [sequelize.col('Student.kartuSiswa'), 'kartuSiswa'],
+                // [sequelize.col('Student.raportTerakhir'), 'raportTerakhir'],
+                // [sequelize.col('Student.kartuKeluarga'), 'kartuKeluarga'],
+                // [sequelize.col('Student.createdAt'), 'studentCreated'],
+
+                // [sequelize.col('Student->school.nama'), 'namaSekolah'],
+
+                // [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totaldonation'],
+                [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'jumlahdonation'],
+            ],
+            
+            include : [
+                {
+                model : Student,
+                attributes : [
+                    ["id", "idSiswa"],
+                    ['name', 'namaSiswa'],
+                    'status',
+                    'alamat',
+                    'gender',
+                    'tanggalLahir',
+                    'pendidikanTerakhir',
+                    'studentImage',
+                    'provinsi',
+                    'story',
+                    'biayaSekolah',
+                    'kelas',
+                    'shareDescription',
+                    'nisn',
+                    'kegiatanSosial',
+                    ['createdAt', 'studentCreated']
+
+                ],
+                include: [
+                    {
+                        model : school,
+                        attributes : [
+                            ['nama', 'namaSekolah'],
+                            ['alamat', 'alamatSekolah'],
+                            'cabangBank',
+                            'bank',
+                            'email',
+                            ['telepon', 'teleponSekolah'],
+                            'namaPemilikRekening',
+                            'nomorRekening'
+
+                        ],
+                    }
+                ]
+            },
+            
+            {
+                model : Payment,
+                attributes : []
+            }],
+            where : {
+                userId: req.user.userId,
+                isOngoing: 1,
+            },
+            group: ['id']
+             
+        })
+        .then((results) => {
+            return res.status(200).send(results)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
     }
     
 }

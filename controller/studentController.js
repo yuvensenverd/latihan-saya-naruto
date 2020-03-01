@@ -625,5 +625,85 @@ module.exports={
             .catch((err) => {
                 console.log(err);
             })
+    },
+
+    editDataStudentAndScholarship: (req, res) => {
+        console.log(req.body.data)
+
+        const {
+            name,
+            // pendidikanTerakhir:  pendidikan,
+            gender,
+            status,
+            alamat,
+            tanggalLahir,
+            story,
+            scholarshipTitle,
+            provinsi,
+            shareDescription,
+            // schoolId,
+            // jumlahSaudara : saudara,
+            biayaSekolah,
+            // kelas :  kelas,
+            nisn,
+        } = req.body.data
+
+        Student.update({
+            name:name,
+            gender:gender,
+            status,
+            provinsi,
+            alamat,
+            tanggalLahir:Moment(tanggalLahir),
+            shareDescription,
+            biayaSekolah,
+            story,
+            nisn,
+            // pendidikanTerakhir:pendidikanTerakhir,
+            // userId: req.user.userId,
+            // schoolId,
+            // jumlahSaudara,
+            // kelas,
+            // kegiatanSosial: kegiatanSosial ? kegiatanSosial : null,
+
+            // studentImage: listGambar[0],
+            // kartuSiswa: listGambar[1],
+            // raportTerakhir: listGambar[2],
+            // kartuKeluarga: listGambar[2],
+            // dataPenghasilan: listGambar[4],
+
+            isDeleted: 0,
+            dataStatus : 'Unverified',
+            // dataStatus : 'Verified',
+            statusNote: ''
+        }, {
+            where: {
+                userId: req.user.userId
+            }
+        })
+        .then((resultEditStudent) => {
+            scholarship.update({
+
+                judul : scholarshipTitle,
+                biayaSekolah : biayaSekolah * 12,
+                isOngoing : 0
+                // studentId : result.dataValues.id,
+                // userId,
+                // currentValue : 0,
+                // totalPayout : 0,
+                // isVerified : 0,
+            },{
+                where : {
+                    userId: req.user.userId  
+                }
+            })
+            .then((editScholarship) => {
+                return res.status(200).send(editScholarship)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+        })
+
     }
 }
