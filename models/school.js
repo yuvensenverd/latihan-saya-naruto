@@ -11,7 +11,10 @@ module.exports = (sequelize, DataTypes) => {
     isDeleted: DataTypes.INTEGER,
     isVerified: DataTypes.INTEGER,
     provinsi: DataTypes.STRING,
-    contact_person: DataTypes.STRING
+    contact_person: DataTypes.STRING,
+    npsn: DataTypes.STRING,
+    website: DataTypes.STRING,
+    cabangBank: DataTypes.STRING
   }, {});
   school.associate = function(models) {
     // associations can be defined here

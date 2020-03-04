@@ -15,6 +15,10 @@ router.post('/details/:id', schoolController.getSchoolDetails)
 
 /* User */
 router.post('/getSchool', auth, schoolController.getSchool)
+router.post('/searchNPSN', schoolController.searchNPSN)
+router.post('/searchSchoolName', schoolController.searchSchoolName)
+router.post('/addSchoolByUser', auth, schoolController.addSchoolUser)
+router.post('/getSchoolById', auth, schoolController.getSchoolById)
 
 /* Admin */
 router.post('/getAdminSchool', auth, schoolController.getAllSchoolByAdmin)

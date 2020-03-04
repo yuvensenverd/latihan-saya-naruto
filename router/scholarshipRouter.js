@@ -31,6 +31,7 @@ router.post('/verifikasiScholarship', auth, scholarshipController.verifikasiScho
 
 // User 
 router.post('/getAvailableScholarship', auth, scholarshipController.getAvailableScholarship)
+router.post('/getScholarshipTemporaryUser', auth, scholarshipController.getScholarshipTemporaryUser)
 
 // getScholarshipDetailByAdmin
 

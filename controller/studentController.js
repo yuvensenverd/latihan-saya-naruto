@@ -373,6 +373,803 @@ module.exports={
             return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
         }
     },
+
+    postTemporaryStudentData: (req, res) => {
+        console.log('=====================================================masuk post sini dah =================================s')
+        try {
+
+            const path = '/student/images'; //file save path
+            const upload = uploader(path, 'STD').fields([{ name: 'image'}, {name: 'image2'}, {name: 'image3'}, {name: 'raport'}, {name: 'ijazah'}]);
+
+            upload(req,res,(err)=>{
+                if(err){
+                    return res.status(500).json({ message: 'Upload picture failed !', error: err.message });
+                }
+                const {image, image2, image3, raport, ijazah }=req.files;
+                console.log('---------------- >>>>>> image <<<<< ------------------')
+                // console.log(image)
+
+                console.log(image)
+                console.log(image2)
+                console.log(image3)
+                console.log(raport)
+                console.log(ijazah)
+                
+                let listGambar = [];
+
+                if(image) {
+                    for(let i = 0; i < image.length; i = i + 1) {
+                        const imagePath = image[i] ? path + '/' + image[i].filename : 'http://localhost:2019/defaultPhoto/defaultCategory.png';
+                        listGambar.push(imagePath)
+                    }
+                }
+
+                console.log('====== gambar')
+                console.log(listGambar)
+
+
+                const data = JSON.parse(req.body.data);
+                console.log('Data siswa ================')
+                console.log(data)
+
+                const {
+                    userId,
+                    name,
+                    pendidikanTerakhir,
+                    gender,
+                    status,
+                    alamat,
+                    tanggalLahir,
+                    story,
+                    shareDescription,
+                    scholarshipTitle,
+                    schoolId,
+                    jumlahSaudara,
+                    biayaSekolah,
+                    kelas,
+                    provinsi,
+                    nisn, 
+                    kegiatanSosial,
+                    raportKeterangan,
+                    ijazahKeterangan
+                } = data
+
+                console.log(name)
+                
+                    Student.create({
+                        name: name,
+                        pendidikanTerakhir: pendidikanTerakhir !== '' ? pendidikanTerakhir : null,
+                        gender: gender !== '' ? gender : null,
+                        status,
+                        provinsi: provinsi !== 'Pilih Provinsi' ? provinsi : null,
+                        alamat: alamat !== '' ? alamat : null,
+                        tanggalLahir: tanggalLahir ? Moment(tanggalLahir) : null,
+                        userId: req.user.userId,
+                        shareDescription: shareDescription !== '' ? shareDescription : null,
+                        schoolId,
+                        jumlahSaudara: jumlahSaudara !== '' ? jumlahSaudara : null,
+                        biayaSekolah: biayaSekolah !== '' ? biayaSekolah : null,
+                        kelas: kelas !== 'Pilih Kelas' ? kelas : null,
+                        story: story !== '' ? story : null,
+                        nisn: nisn !== '' ? nisn : null,
+                        kegiatanSosial: kegiatanSosial ? kegiatanSosial : null,
+
+                        studentImage: listGambar[0],
+                        // kartuSiswa: listGambar[1],
+                        // raportTerakhir: listGambar[2],
+                        // kartuKeluarga: listGambar[2],
+                        // dataPenghasilan: listGambar[4],
+
+                        isDeleted: 0,
+                        dataStatus : 'Unverified',
+                        // dataStatus : 'Verified',
+                        statusNote: ''
+                    })
+                    .then( async (result)=>{
+                        console.log('ini id student ========================================')
+                        console.log(result.dataValues.id)
+                        let listImage = [];
+                        let studentId = result.dataValues.id
+                        let dokumenPath = ''
+                        let deskripsi = ''
+
+                        if(listGambar) {
+                            for(let i = 1; i < listGambar.length; i++) {
+                                // if(i === 1) {
+                                //     dokumenPath = listGambar[i]
+                                //     keterangan = `kartu-siswa`
+                                //     listImage.push({
+                                //         studentId,
+                                //         dokumenPath,
+                                //         keterangan
+                                //     })
+                                // }
+    
+                                // if(i === 2) {
+                                //     dokumenPath = listGambar[i]
+                                //     keterangan = `kartu-keluarga`
+                                //     listImage.push({
+                                //         studentId,
+                                //         dokumenPath,
+                                //         keterangan
+                                //     })
+                                // }
+                                if(i === 1) {
+                                    dokumenPath = listGambar[i]
+                                    keterangan = `kartu-keluarga`
+                                    deskripsi = 'Kartu Keluarga'
+                                    listImage.push({
+                                        studentId,
+                                        dokumenPath,
+                                        keterangan, 
+                                        deskripsi
+                                    })
+                                }
+                            }
+                        }
+
+                        if(raport) {
+                            if(pendidikanTerakhir !== 'UNIVERSITAS') {
+
+                                for(let i = 0; i < raport.length; i++) {
+                                    dokumenPath = path + '/' + raport[i].filename
+                                    keterangan = `raport`
+                                    deskripsi = raportKeterangan[i]
+                                    listImage.push({
+                                        studentId,
+                                        dokumenPath,
+                                        keterangan,
+                                        deskripsi
+                                    })
+                                }
+
+                            } else {
+
+                                for(let i = 0; i < raport.length; i++) {
+                                    dokumenPath = path + '/' + raport[i].filename
+                                    keterangan = `dokumen-ipk`
+                                    deskripsi = raportKeterangan[i]
+                                    listImage.push({
+                                        studentId,
+                                        dokumenPath,
+                                        keterangan,
+                                        deskripsi
+                                    })
+                                }
+
+                            }
+                        }
+
+                        let jenjang_pendidikan = [
+                            'SD',
+                            'SMP',
+                            'SMA / SMK',
+                        ]
+
+                        let sma_smk = [
+                            
+                        ]
+
+                        if(ijazah) {
+                            for(let i = 0; i < ijazah.length; i++) {
+                                dokumenPath = path + '/' + ijazah[i].filename
+                                keterangan = `ijazah`
+                                deskripsi =  ijazahKeterangan[i]
+                                listImage.push({
+                                    studentId,
+                                    dokumenPath,
+                                    keterangan,
+                                    deskripsi
+                                })
+                            }
+                        }
+
+                        
+
+                        if(image2) {
+                            if(pendidikanTerakhir !== 'UNIVERSITAS') {
+                                for(let i=0; i < image2.length; i++) {
+                                    dokumenPath = path + '/' + image2[i].filename
+                                    let keterangan = ''
+                                    if(i === 0) {
+                                        keterangan = 'rekom-kepala-sekolah'
+                                        deskripsi = 'Surat Rekomendasi Kepala Sekolah'
+                                        listImage.push({
+                                            studentId,
+                                            dokumenPath,
+                                            keterangan,
+                                            deskripsi
+                                        })
+                                    }
+                                    
+                                    if(i === 1) {
+                                        keterangan = 'rekom-wali-guru'
+                                        deskripsi = 'Surat Rekomendasi Wali Guru'
+                                        listImage.push({
+                                            studentId,
+                                            dokumenPath,
+                                            keterangan,
+                                            deskripsi
+                                        })
+                                    }
+        
+                                    // if(i === 2) {
+                                    //     keterangan = 'rekom-guru1-sekolah'
+                                    //     listImage.push({
+                                    //         studentId,
+                                    //         dokumenPath,
+                                    //         keterangan
+                                    //     })
+                                    // }
+        
+                                    // if(i === 3) {
+                                    //     keterangan = 'rekom-guru2-sekolah'
+                                    //     listImage.push({
+                                    //         studentId,
+                                    //         dokumenPath,
+                                    //         keterangan
+                                    //     })
+                                    // }
+        
+                                    if(pendidikanTerakhir === 'SMA' || pendidikanTerakhir === 'SMK' || pendidikanTerakhir === 'UNIVERSITAS') {
+                                        // if(i === 4) {
+                                        //     keterangan = 'kegiatan-sosial-siswa'
+                                        //     listImage.push({
+                                        //         studentId,
+                                        //         dokumenPath,
+                                        //         keterangan
+                                        //     })
+                                        // }
+                                    }
+                                }
+    
+                            } else {
+                                
+                                // Untuk UNIVERSITAS
+    
+                                for(let i=0; i < image2.length; i++) {
+                                    dokumenPath = path + '/' + image2[i].filename
+                                    let keterangan = ''
+                                    if(i === 0) {
+                                        keterangan = 'rekom-kepala-fakultas'
+                                        deskripsi = 'Surat Rekomendasi Kepala Fakultas'
+                                        listImage.push({
+                                            studentId,
+                                            dokumenPath,
+                                            keterangan,
+                                            deskripsi
+                                        })
+                                    }
+                                    
+                                    if(i === 1) {
+                                        keterangan = 'rekom-kepala-jurusan'
+                                        deskripsi = 'Surat Rekomendasi Kepala Jurusan'
+                                        listImage.push({
+                                            studentId,
+                                            dokumenPath,
+                                            keterangan,
+                                            deskripsi
+                                        })
+                                    }
+        
+                                    if(pendidikanTerakhir === 'SMA' || pendidikanTerakhir === 'SMK' || pendidikanTerakhir === 'UNIVERSITAS') {
+                                      
+                                    }
+                                }
+                            }
+                        }
+
+
+                        if(image3) {
+                            for(let i=0; i < image3.length; i++){
+                                dokumenPath = path + '/' + image3[i].filename
+                                keterangan = 'sertifikat'
+                                deskripsi = 'Sertifikat'
+                                listImage.push({
+                                    studentId,
+                                    dokumenPath,
+                                    keterangan,
+                                    deskripsi
+                                })
+                            }
+                        }
+
+                        if(image || image2 || image3 || raport || ijazah || listGambar) {
+                            dokumen_siswa.bulkCreate(listImage)
+                            .then((hasilBulkCreate) => {
+
+                                scholarship.create({
+                                    judul : scholarshipTitle !== '' ? scholarshipTitle : '',
+                                    studentId : result.dataValues.id,
+                                    userId: req.user.userId,
+                                    biayaSekolah : biayaSekolah !== '' ? biayaSekolah * 12 : 0,
+                                    currentValue : 0,
+                                    totalPayout : 0,
+                                    // isVerified : 3,
+                                    isOngoing : 3
+                                    // isOngoing : 1
+                                }).then((results)=>{
+                                    // return res.status(200).send(results)
+                                }).catch((err)=>{
+                                    console.log(err)
+                                    throw new Error()
+                                })
+
+                            })
+                            .catch((err) => {
+                                console.log(err)
+                                if(listGambar) {
+                                    for(let i = 0; i < listGambar.length; i = i + 1) {
+                            
+                                        fs.unlinkSync('./public' + listGambar[i]);
+                                    }
+                                }
+                                throw new Error()
+                            })
+
+                        } else {
+                            scholarship.create({
+                                judul : scholarshipTitle,
+                                studentId : result.dataValues.id,
+                                userId: req.user.userId,
+                                biayaSekolah : biayaSekolah * 12,
+                                currentValue : 0,
+                                totalPayout : 0,
+                                // isVerified : 3,
+                                isOngoing : 3
+                                // isOngoing : 1
+                            }).then((results)=>{
+                                // return res.status(200).send(results)
+                            }).catch((err)=>{
+                                console.log(err)
+                                throw new Error()
+                            })
+                        }
+
+                        
+
+                        let resultsDataSiswa_temp = await Student.findAll({
+                            where: {
+                                id: studentId
+                            }
+                        })
+                        
+
+                        // console.log('=-----------------------------------------------------------asd-asdasdas')
+
+                        // console.log(resultsDataSiswa_temp)
+
+                        return res.status(200).send(resultsDataSiswa_temp)
+                        
+                        
+                    }).catch((err)=>{
+                        console.log(err.message)
+                        for(let i = 0; i < listGambar.length; i = i + 1) {
+                            
+                            fs.unlinkSync('./public' + listGambar[i]);
+                        }
+                        return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message })
+                    })
+                })
+
+            // console.log(req.body)
+            
+            
+        } catch (error) {
+            console.log(error.message)
+         
+            // fs.unlinkSync('./public' + imagePath);
+            return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: error.message });
+        }
+    },
+    
+    updateTemporaryStudentData: (req, res) => {
+        console.log('=====================================================masuk post sini dah =================================s')
+        try {
+
+            const path = '/student/images'; //file save path
+            const upload = uploader(path, 'STD').fields([{ name: 'image'}, {name: 'image2'}, {name: 'image3'}, {name: 'raport'}, {name: 'ijazah'}]);
+
+            upload(req,res,(err)=>{
+                if(err){
+                    return res.status(500).json({ message: 'Upload picture failed !', error: err.message });
+                }
+                const {image, image2, image3, raport, ijazah }=req.files;
+                console.log('---------------- >>>>>> image <<<<< ------------------')
+                // console.log(image)
+
+                console.log(image)
+                console.log(image2)
+                console.log(image3)
+                console.log(raport)
+                console.log(ijazah)
+                
+                let listGambar = [];
+
+                if(image) {
+                    for(let i = 0; i < image.length; i = i + 1) {
+                        const imagePath = image[i] ? path + '/' + image[i].filename : 'http://localhost:2019/defaultPhoto/defaultCategory.png';
+                        listGambar.push(imagePath)
+                    }
+                }
+
+                console.log('====== gambar')
+                console.log(listGambar)
+
+
+                const data = JSON.parse(req.body.data);
+                console.log('Data siswa ================')
+                console.log(data)
+
+                const {
+                    userId,
+                    idSiswa, 
+                    idScholarship,
+                    name,
+                    pendidikanTerakhir,
+                    gender,
+                    status,
+                    alamat,
+                    tanggalLahir,
+                    story,
+                    shareDescription,
+                    scholarshipTitle,
+                    schoolId,
+                    jumlahSaudara,
+                    biayaSekolah,
+                    kelas,
+                    provinsi,
+                    nisn, 
+                    kegiatanSosial,
+                    raportKeterangan,
+                    ijazahKeterangan
+                } = data
+
+                console.log(data)
+
+                console.log(name)
+
+                console.log(schoolId)
+                
+                    Student.update({
+                        name: name,
+                        pendidikanTerakhir: pendidikanTerakhir !== '' ? pendidikanTerakhir : null,
+                        gender: gender !== '' ? gender : null,
+                        status,
+                        provinsi: provinsi !== 'Pilih Provinsi' ? provinsi : null,
+                        alamat: alamat !== '' ? alamat : null,
+                        tanggalLahir: tanggalLahir ? Moment(tanggalLahir) : null,
+                        userId: req.user.userId,
+                        shareDescription: shareDescription !== '' ? shareDescription : null,
+                        schoolId,
+                        jumlahSaudara: jumlahSaudara !== '' ? jumlahSaudara : null,
+                        biayaSekolah: biayaSekolah !== '' ? biayaSekolah : null,
+                        kelas: kelas !== 'Pilih Kelas' ? kelas : null,
+                        story: story !== '' ? story : null,
+                        nisn: nisn !== '' ? nisn : null,
+                        kegiatanSosial: kegiatanSosial ? kegiatanSosial : null,
+
+                        studentImage: listGambar[0],
+                        // kartuSiswa: listGambar[1],
+                        // raportTerakhir: listGambar[2],
+                        // kartuKeluarga: listGambar[2],
+                        // dataPenghasilan: listGambar[4],
+
+                        // isDeleted: 0,
+                        // dataStatus : 'Unverified',
+                        // dataStatus : 'Verified',
+                        statusNote: ''
+                    },{
+                        where: {
+                            id: idSiswa
+                        }
+                    })
+                    .then( async (result)=>{
+                        console.log('ini id student ========================================')
+                        // console.log(result.dataValues.id)
+                        let listImage = [];
+                        let studentId = idSiswa
+                        let dokumenPath = ''
+                        let deskripsi = ''
+
+                        if(listGambar) {
+                            for(let i = 1; i < listGambar.length; i++) {
+                                // if(i === 1) {
+                                //     dokumenPath = listGambar[i]
+                                //     keterangan = `kartu-siswa`
+                                //     listImage.push({
+                                //         studentId,
+                                //         dokumenPath,
+                                //         keterangan
+                                //     })
+                                // }
+    
+                                // if(i === 2) {
+                                //     dokumenPath = listGambar[i]
+                                //     keterangan = `kartu-keluarga`
+                                //     listImage.push({
+                                //         studentId,
+                                //         dokumenPath,
+                                //         keterangan
+                                //     })
+                                // }
+                                if(i === 1) {
+                                    dokumenPath = listGambar[i]
+                                    keterangan = `kartu-keluarga`
+                                    deskripsi = 'Kartu Keluarga'
+                                    listImage.push({
+                                        studentId,
+                                        dokumenPath,
+                                        keterangan, 
+                                        deskripsi
+                                    })
+                                }
+                            }
+                        }
+
+                        if(raport) {
+                            if(pendidikanTerakhir !== 'UNIVERSITAS') {
+
+                                for(let i = 0; i < raport.length; i++) {
+                                    dokumenPath = path + '/' + raport[i].filename
+                                    keterangan = `raport`
+                                    deskripsi = raportKeterangan[i]
+                                    listImage.push({
+                                        studentId,
+                                        dokumenPath,
+                                        keterangan,
+                                        deskripsi
+                                    })
+                                }
+
+                            } else {
+
+                                for(let i = 0; i < raport.length; i++) {
+                                    dokumenPath = path + '/' + raport[i].filename
+                                    keterangan = `dokumen-ipk`
+                                    deskripsi = raportKeterangan[i]
+                                    listImage.push({
+                                        studentId,
+                                        dokumenPath,
+                                        keterangan,
+                                        deskripsi
+                                    })
+                                }
+
+                            }
+                        }
+
+                        let jenjang_pendidikan = [
+                            'SD',
+                            'SMP',
+                            'SMA / SMK',
+                        ]
+
+                        let sma_smk = [
+                            
+                        ]
+
+                        if(ijazah) {
+                            for(let i = 0; i < ijazah.length; i++) {
+                                dokumenPath = path + '/' + ijazah[i].filename
+                                keterangan = `ijazah`
+                                deskripsi =  ijazahKeterangan[i]
+                                listImage.push({
+                                    studentId,
+                                    dokumenPath,
+                                    keterangan,
+                                    deskripsi
+                                })
+                            }
+                        }
+
+                        
+
+                        if(image2) {
+                            if(pendidikanTerakhir !== 'UNIVERSITAS') {
+                                for(let i=0; i < image2.length; i++) {
+                                    dokumenPath = path + '/' + image2[i].filename
+                                    let keterangan = ''
+                                    if(i === 0) {
+                                        keterangan = 'rekom-kepala-sekolah'
+                                        deskripsi = 'Surat Rekomendasi Kepala Sekolah'
+                                        listImage.push({
+                                            studentId,
+                                            dokumenPath,
+                                            keterangan,
+                                            deskripsi
+                                        })
+                                    }
+                                    
+                                    if(i === 1) {
+                                        keterangan = 'rekom-wali-guru'
+                                        deskripsi = 'Surat Rekomendasi Wali Guru'
+                                        listImage.push({
+                                            studentId,
+                                            dokumenPath,
+                                            keterangan,
+                                            deskripsi
+                                        })
+                                    }
+        
+                                    // if(i === 2) {
+                                    //     keterangan = 'rekom-guru1-sekolah'
+                                    //     listImage.push({
+                                    //         studentId,
+                                    //         dokumenPath,
+                                    //         keterangan
+                                    //     })
+                                    // }
+        
+                                    // if(i === 3) {
+                                    //     keterangan = 'rekom-guru2-sekolah'
+                                    //     listImage.push({
+                                    //         studentId,
+                                    //         dokumenPath,
+                                    //         keterangan
+                                    //     })
+                                    // }
+        
+                                    if(pendidikanTerakhir === 'SMA' || pendidikanTerakhir === 'SMK' || pendidikanTerakhir === 'UNIVERSITAS') {
+                                        // if(i === 4) {
+                                        //     keterangan = 'kegiatan-sosial-siswa'
+                                        //     listImage.push({
+                                        //         studentId,
+                                        //         dokumenPath,
+                                        //         keterangan
+                                        //     })
+                                        // }
+                                    }
+                                }
+    
+                            } else {
+                                
+                                // Untuk UNIVERSITAS
+    
+                                for(let i=0; i < image2.length; i++) {
+                                    dokumenPath = path + '/' + image2[i].filename
+                                    let keterangan = ''
+                                    if(i === 0) {
+                                        keterangan = 'rekom-kepala-fakultas'
+                                        deskripsi = 'Surat Rekomendasi Kepala Fakultas'
+                                        listImage.push({
+                                            studentId,
+                                            dokumenPath,
+                                            keterangan,
+                                            deskripsi
+                                        })
+                                    }
+                                    
+                                    if(i === 1) {
+                                        keterangan = 'rekom-kepala-jurusan'
+                                        deskripsi = 'Surat Rekomendasi Kepala Jurusan'
+                                        listImage.push({
+                                            studentId,
+                                            dokumenPath,
+                                            keterangan,
+                                            deskripsi
+                                        })
+                                    }
+        
+                                    if(pendidikanTerakhir === 'SMA' || pendidikanTerakhir === 'SMK' || pendidikanTerakhir === 'UNIVERSITAS') {
+                                      
+                                    }
+                                }
+                            }
+                        }
+
+
+                        if(image3) {
+                            for(let i=0; i < image3.length; i++){
+                                dokumenPath = path + '/' + image3[i].filename
+                                keterangan = 'sertifikat'
+                                deskripsi = 'Sertifikat'
+                                listImage.push({
+                                    studentId,
+                                    dokumenPath,
+                                    keterangan,
+                                    deskripsi
+                                })
+                            }
+                        }
+
+                        if(image || image2 || image3 || raport || ijazah || listGambar) {
+                            dokumen_siswa.bulkCreate(listImage)
+                            .then((hasilBulkCreate) => {
+
+                                scholarship.update({
+                                    judul : scholarshipTitle !== '' ? scholarshipTitle : '',
+                                    studentId : studentId,
+                                    userId: req.user.userId,
+                                    biayaSekolah : biayaSekolah !== '' ? biayaSekolah * 12 : 0,
+                                    // currentValue : 0,
+                                    // totalPayout : 0,
+                                    // isVerified : 3,
+                                    // isOngoing : 3
+                                    // isOngoing : 1
+                                }, {
+                                    where: {
+                                        id: idScholarship
+                                    }
+                                }).then((results)=>{
+                                    // return res.status(200).send(results)
+                                }).catch((err)=>{
+                                    console.log(err)
+                                    throw new Error()
+                                })
+
+                            })
+                            .catch((err) => {
+                                console.log(err)
+                                if(listGambar) {
+                                    for(let i = 0; i < listGambar.length; i = i + 1) {
+                            
+                                        fs.unlinkSync('./public' + listGambar[i]);
+                                    }
+                                }
+                                throw new Error()
+                            })
+
+                        } else {
+                            scholarship.update({
+                                judul : scholarshipTitle,
+                                studentId : idSiswa,
+                                userId: req.user.userId,
+                                biayaSekolah : biayaSekolah * 12,
+                                // currentValue : 0,
+                                // totalPayout : 0,
+                                // isVerified : 3,
+                                // isOngoing : 3
+                                // isOngoing : 1
+                            },  {
+                                where: {
+                                    id: idScholarship
+                                }
+                            }).then((results)=>{
+                                // return res.status(200).send(results)
+                            }).catch((err)=>{
+                                console.log(err)
+                                throw new Error()
+                            })
+                        }
+
+                        
+
+                        let resultsDataSiswa_temp = await Student.findAll({
+                            where: {
+                                id: idSiswa
+                            }
+                        })
+                        
+
+                        // console.log('=-----------------------------------------------------------asd-asdasdas')
+
+                        // console.log(resultsDataSiswa_temp)
+
+                        return res.status(200).send(resultsDataSiswa_temp)
+                        
+                        
+                    }).catch((err)=>{
+                        console.log(err.message)
+                        for(let i = 0; i < listGambar.length; i = i + 1) {
+                            
+                            fs.unlinkSync('./public' + listGambar[i]);
+                        }
+                        return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message })
+                    })
+                })
+
+            // console.log(req.body)
+            
+            
+        } catch (error) {
+            console.log(error.message)
+         
+            // fs.unlinkSync('./public' + imagePath);
+            return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: error.message });
+        }
+    },
+
     putStudentdata(req,res){
         console.log('Ubahhhh')
         console.log(req.params.id)
@@ -519,11 +1316,14 @@ module.exports={
         // const {userId} = req.body
         // console.log(req.query)
         Student.findAll({
-            attributes: [
-                'id',
-                'name',
-                'pendidikanTerakhir',
-            ],
+            // attributes: [
+            //     'id',
+            //     'name',
+            //     'pendidikanTerakhir',
+            // ],
+            attributes:{
+                exclude:['createdAt','updatedAt']
+            },
             where : {
                 userId: req.query.id,
                 isDeleted: 0,
@@ -705,5 +1505,33 @@ module.exports={
             })
         })
 
-    }
+    },
+
+    getStudentDataTempPerUser : (req, res) => {
+        console.log('masuk sini')
+        // const {userId} = req.body
+        // console.log(req.query)
+        Student.findAll({
+            // attributes: [
+            //     'id',
+            //     'name',
+            //     'pendidikanTerakhir',
+            // ],
+            attributes:{
+                exclude:['createdAt','updatedAt']
+            },
+            where : {
+                userId: req.user.userId,
+                // isDeleted: 0,
+                // dataStatus: 'Approved'
+            }
+        })
+        .then((result) => {
+            console.log(result)
+            return res.status(200).send(result)
+        }).catch((err)=>{
+            console.log(err)
+            return res.status(500).send({err})
+        })
+    },
 }
