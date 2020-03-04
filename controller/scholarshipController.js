@@ -206,7 +206,8 @@ module.exports = {
             //   'order_id',
               'komentar',
               'createdAt',
-              'id'
+              'id',
+              'isAnonim'
             ],
             where : {
                 isRefund : 0,
@@ -807,7 +808,8 @@ module.exports = {
                             "pendidikanTerakhir",
                             'nisn',
                             'kegiatanSosial',
-                            'dataStatus'
+                            'dataStatus',
+                            'statusNote'
                         ],
                         include: [
                             {
