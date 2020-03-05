@@ -535,6 +535,8 @@ module.exports={
                 } = data
 
                 console.log(name)
+
+                console.log(data)
                 
                     Student.create({
                         name: name,
@@ -546,7 +548,7 @@ module.exports={
                         tanggalLahir: tanggalLahir ? Moment(tanggalLahir) : null,
                         userId: req.user.userId,
                         shareDescription: shareDescription !== '' ? shareDescription : null,
-                        schoolId,
+                        schoolId: schoolId ? schoolId : null,
                         jumlahSaudara: jumlahSaudara !== '' ? jumlahSaudara : null,
                         biayaSekolah: biayaSekolah !== '' ? biayaSekolah : null,
                         kelas: kelas !== 'Pilih Kelas' ? kelas : null,
@@ -926,7 +928,7 @@ module.exports={
     },
     
     updateTemporaryStudentData: (req, res) => {
-        console.log('=====================================================masuk post sini dah =================================s')
+        console.log('=====================================================masuk updateTemporaryStudentData sini dah =================================s')
         try {
 
             const path = '/student/images'; //file save path
