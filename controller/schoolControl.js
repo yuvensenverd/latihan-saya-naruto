@@ -10,7 +10,6 @@ module.exports = {
             },
                 where : {
                     isDeleted : 0,
-                    isVerified: 1
                 }
         })
         .then((results)=>{
@@ -181,6 +180,93 @@ module.exports = {
         // const {nama, alamat, telepon, namaPemilikRekening, nomorRekening, bank, email} = req.body
     },
 
+    addSchoolUser: (req, res) => {
+        const {
+            nama,
+            alamat, 
+            telepon,
+            namaPemilikRekening,
+            nomorRekening,
+            bank, 
+            email,
+            cabangBank,
+            provinsi,
+            npsn
+        } = req.body.data
+
+        console.log(req.body.data)
+
+            school.create({
+                nama,
+                alamat,
+                telepon,
+                namaPemilikRekening,
+                nomorRekening,
+                bank,
+                email,
+                cabangBank,
+                provinsi,
+                npsn,
+                isDeleted: 0,
+                isVerified: 0
+            })
+            .then((result) => {
+                let schoolId = result.dataValues.id
+
+                school.findAll(
+                    {
+                        // attributes:{
+                        //     exclude : ['createdAt', 'updatedAt']
+                        // },
+                        where: {
+                            id: schoolId
+                        }, 
+                    }
+                ).then((resultsSchoolId) => {
+                    console.log('=========================asdasdasdasd===========================2313')
+                    console.log(resultsSchoolId)
+                    return res.status(200).send(resultsSchoolId)
+                })
+                .catch((err) => {
+                    return res.status(500).send(err)
+                })
+
+                // let listImage = [];
+                // for(let i=0; i < image.length; i++){
+                //     const imagePath = path + '/' + image[i].filename
+                //     listImage.push({
+                //         schoolId,
+                //         imagePath
+                //     })
+                // }
+                // return school_pictures.bulkCreate(listImage, {transaction: t})
+                // .then((result2) => {
+                //     return res.status(200).send(result2)
+                // })
+                // .catch((err) => {
+                //     throw new Error()
+                // })
+            })
+            .catch((err) => {
+                return res.status(500).send(err)
+            })
+
+
+        // school.create({
+        //     nama,
+        //     alamat,
+        //     telepon,
+        //     namaPemilikRekening,
+        //     nomorRekening,
+        //     bank,
+        //     email
+        // }).then((result) => {
+        //     return res.status(200).send(result)
+        // }).catch((err) => {
+        //     return res.status(200).send(err.message)
+        // })
+    },
+
     putSchool : (req,res) => {
         const {id} = req.query
         const {nama, alamat, telepon, namaPemilikRekening, nomorRekening, bank, email} = req.body
@@ -306,5 +392,81 @@ module.exports = {
         }).catch((err)=>{
             return res.status(500).send({message: 'error', error: err})
         })
-    }
+    },
+
+    searchNPSN: (req, res) => {
+        console.log(req.body.npsn)
+        school.findAll({
+            attributes:{
+                exclude : ['createdAt', 'updatedAt']
+            },
+                where : {
+                    isDeleted : 0,
+                    isVerified: 1,
+                    // npsn : {
+                    //     [Op.like] : `${req.body.npsn}`
+                    // }
+                    npsn: `${req.body.npsn}`
+                }
+        })
+        .then((results)=>{
+            // console.log(result)
+            return res.status(200).send({results})
+        }).catch((err)=>{
+            return res.status(500).send({message: 'error', error: err})
+        })
+    },
+
+    searchSchoolName: (req, res) => {
+        // console.log('===========================&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& NAMA NAMA NAMA')
+        console.log(req.body.nama)
+        school.findAll({
+            attributes:{
+                exclude : ['createdAt', 'updatedAt']
+            },
+                where : {
+                    isDeleted : 0,
+                    isVerified: 1,
+                    nama : {
+                        [Op.like] : `${req.body.nama}%`
+                    }
+                }
+        })
+        .then((results)=>{
+            // console.log(result)
+            return res.status(200).send({results})
+        }).catch((err)=>{
+            return res.status(500).send({message: 'error', error: err})
+        })
+    },
+
+    getSchoolById : (req,res) => {
+        // console.log('School Details ---- > with id  ', req.params.id)
+
+        const { idSekolah } = req.body
+        console.log('School Details ---- > with id  ')
+        console.log(idSekolah)
+        school.findOne({
+            attributes : {
+                exclude : ['createdAt', 'updatedAt']
+            },
+            where : {
+                id : idSekolah,
+                isDeleted : 0,
+                // isVerified: 1
+            },
+        //     include : [{
+        //         model : school_pictures,
+        //         attributes : ['imagePath']
+        //     }
+        // ]
+        }).then(result => {
+            // console.log(res)
+            return res.status(200).send({result : result})
+        }).catch(err => {
+            console.log(err)
+            return res.status(500).send({message: 'error', error: err})
+        })
+    },
+    
 }

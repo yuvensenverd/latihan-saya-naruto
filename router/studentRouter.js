@@ -14,5 +14,11 @@ router.delete('/deletestudentdata/:id', auth, stundentController.deleteStudentda
 router.get('/getstudentdatapaging', auth, stundentController.getStudentPerUser)
 
 
+router.post('/getStudentDataTempPerUser', auth, stundentController.getStudentDataTempPerUser)
+router.post('/postTemporaryStudentData', auth, stundentController.postTemporaryStudentData)
+router.post('/updateTemporaryStudentData', auth, stundentController.updateTemporaryStudentData)
+router.post('/editDataStudent', auth, stundentController.editDataStudentAndScholarship)
+
+
 
 module.exports=router

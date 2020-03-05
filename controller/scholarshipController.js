@@ -348,7 +348,7 @@ module.exports = {
     },
     // DI PAGE HOME UI
     getAllScholarshipList : (req,res) =>{
-        var { offset, limit, name, date, pendidikanTerakhir, provinsiMurid} = req.body;
+        var { offset, limit, name, date, pendidikanTerakhir, provinsiMurid, sekolahFilter} = req.body;
         
         // console.log(req.body)
         // console.log(offset)
@@ -399,7 +399,12 @@ module.exports = {
                                 model : school,
                                 attributes : [
                                     ["nama", "namaSekolah"]
-                                ]
+                                ],
+                                where : {
+                                    id: {
+                                        [Op.in] : sekolahFilter
+                                    }
+                                }
                             },
                         ],
                         
@@ -866,6 +871,113 @@ module.exports = {
                     // order: [['id', `${date}`], ['createdAt', `${date}`]],
                     order: [['currentValue', 'DESC']],
                     group : ['id']
+                     
+                })
+
+                .then((results) => {
+                    console.log(results)
+                    return res.status(200).send({results})
+                }).catch((err)=>{
+                    return res.status(500).send({message: err})
+                })
+    },
+
+    getScholarshipTemporaryUser: (req, res) => {
+        console.log('------------------------> masuk per user')
+        var { offset, limit, name, date, pendidikanTerakhir, provinsiMurid} = req.body;
+
+
+        console.log(req.body)
+        const { userId } = req.user
+        console.log(req.user)
+                scholarship.findAll({
+                    limit:parseInt(limit),
+                    // limit : 10,
+                    offset:offset,
+                    subQuery: false,
+                    attributes : [
+                        "id",
+                        "judul",
+                        "totalPayout",
+                        "biayaSekolah",
+                        "studentId",
+                        "currentValue",
+                        "isOngoing",
+                       
+                        [sequelize.fn('SUM', sequelize.col('Payments.nominal')), 'totaldonation'],
+                        [sequelize.fn('COUNT', sequelize.col('Payments.id')), 'jumlahdonation'],
+                        
+              
+                    ],
+                    include : [{
+                        model : Student,
+                        attributes : [
+                            ["id", "idSiswa"],
+                            ["name", "namaSiswa"],
+                            
+                            'status',
+                            'alamat',
+                            'gender',
+                            'tanggalLahir',
+                            'pendidikanTerakhir',
+                            'studentImage',
+                            'provinsi',
+                            'story',
+                            ["biayaSekolah", "biayaSekolahPerbulan" ],
+                            'kelas',
+                            'shareDescription',
+                            'nisn',
+                            'kegiatanSosial',
+                            'jumlahSaudara',
+                            'schoolId'
+                        ],
+                        include: [
+                            {
+                                model : school,
+                                attributes : [
+                                   
+                                    ['nama', 'namaSekolah'],
+                                    ['alamat', 'alamatSekolah'],
+                                    'cabangBank',
+                                    'bank',
+                                    'email',
+                                    ['telepon', 'teleponSekolah'],
+                                    'namaPemilikRekening',
+                                    'nomorRekening'
+                                ]
+                            },
+                        ]
+                    },
+                    // {
+                    //     model : School,
+                    //     attributes : [
+                    //         ["nama", "namaSekolah"]
+                    //     ]
+                    // },
+                    // {
+                    //     model : Subscription,
+                    //     attributes :   [
+                    //         'nominalSubscription',
+                    //         [sequelize.fn('SUM', sequelize.col('nominalSubscription')), 'currentSubs']
+                    //     ], 
+                    //     group : ['scholarshipId'],    
+                    //     separate : true
+                    // },
+                    {
+                        model : Payment,
+                        attributes : []
+                    }
+                    ],
+                    where : {
+                        // judul : {
+                        //     [Op.like] : `%${name}%`,
+                        // },
+                        userId,
+                        // isDeleted : 0,
+                    },
+                    // order: [['id', `${date}`], ['createdAt', `${date}`]],
+                    // order: [['currentValue', 'DESC']],
+                    // group : ['id']
                      
                 })
 
