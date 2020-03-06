@@ -4,7 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     studentId: DataTypes.INTEGER,
     dokumenPath: DataTypes.STRING,
     keterangan: DataTypes.STRING,
-    deskripsi: DataTypes.STRING
+    deskripsi: DataTypes.STRING,
+    orders: DataTypes.INTEGER
   }, {});
   dokumen_siswa.associate = function(models) {
     // associations can be defined here

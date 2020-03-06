@@ -57,9 +57,11 @@ module.exports = {
 
         dokumen_siswa.findAll({
             attributes : [
+                'id',
                 'dokumenPath',
                 'keterangan',
-                'deskripsi'
+                'deskripsi',
+                'orders'
             ],
             where: {
                 studentId: idSiswa

@@ -782,7 +782,10 @@ module.exports = {
         console.log('------------------------> masuk per user')
         var { offset, limit, name, date, pendidikanTerakhir, provinsiMurid} = req.body;
 
-
+        console.log(offset)
+        // if(offset) {
+        //     offset = 0
+        // }
         console.log(req.body)
         const { userId } = req.user
         console.log(req.user)
@@ -872,6 +875,7 @@ module.exports = {
                             [Op.like] : `%${name}%`,
                         },
                         userId,
+                        isOngoing: '4'
                         // isDeleted : 0,
                     },
                     // order: [['id', `${date}`], ['createdAt', `${date}`]],
@@ -1075,6 +1079,8 @@ module.exports = {
         .catch((err)=>{
             console.log(err)
         })
-    }
+    }, 
+
+    
 
 } 
