@@ -731,8 +731,10 @@ module.exports = {
                     'kelas',
                     'shareDescription',
                     'nisn',
+                    'dataStatus',
                     'kegiatanSosial',
-                    ['createdAt', 'studentCreated']
+                    'jumlahSaudara',
+                    ['createdAt', 'studentCreated'],
 
                 ],
                 include: [
@@ -746,7 +748,11 @@ module.exports = {
                             'email',
                             ['telepon', 'teleponSekolah'],
                             'namaPemilikRekening',
-                            'nomorRekening'
+                            'nomorRekening',
+                            ['provinsi', 'provinsiSekolah'],
+                            'npsn',
+                            'website',
+                            'contact_person'
 
                         ],
                     }
