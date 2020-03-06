@@ -24,5 +24,6 @@ router.post('/validateBankAccount', paymentController.validateBankAccount)
 router.post('/getpayoutnotif', paymentController.payoutnotif)
 router.post('/payouthistory', paymentController.payouthistory)
 router.post('/statusiris', paymentController.getstatusiris)
+router.post('/cekpayout', paymentController.checkpayout)
 
 module.exports = router;

@@ -343,6 +343,7 @@ module.exports = {
             [sequelize.col('scholarship->student.studentImage'), 'fotoMurid'],
             'order_id',
             'komentar',
+            'noPembayaran',
             'createdAt',
             'updatedAt',
             'id'
@@ -707,11 +708,35 @@ module.exports = {
             order: [['createdAt', 'DESC']],
         })
         .then((result) => {
+            // console.log('====success=====================')
             console.log(result)
             res.status(200).send({message: 'success', results: result.rows, count: result.count})
         })
         .catch((err)=>{
             console.log(err)
+        })
+    },
+    checkpayout: (req,res)=>{
+        console.log('=============================> cek payout')
+        console.log(req.body)
+        const {id, bln} = req.body
+        Payout.findAll({
+            where:{
+                scholarshipId: id
+            }
+        })
+        .then((result1)=>{
+            let checked = false
+            result1.map((val,i) =>{
+                let check = val.dataValues.notes.split(" ").slice(2,4).join(" ") == bln
+                // let bulan = val.dataValues.notes.slpit(' ')
+                console.log(check)
+                if(check){
+                    checked = true
+                }
+            })
+            
+            return res.status(200).send(checked)
         })
     },
 

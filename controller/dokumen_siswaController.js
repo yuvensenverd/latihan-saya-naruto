@@ -34,7 +34,8 @@ module.exports = {
             attributes : [
                 'dokumenPath',
                 'keterangan',
-                'deskripsi'
+                'deskripsi',
+                'orders'
             ],
             where: {
                 studentId: idSiswa
