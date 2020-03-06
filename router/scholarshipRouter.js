@@ -16,7 +16,7 @@ router.put('/putScholarship', auth, scholarshipController.putScholarship)
 router.put('/cancelScholarship', auth, scholarshipController.cancelScholarship)
 router.get('/getExistStudent', auth, scholarshipController.getExistStudent)
 router.put('/putVerification', auth, scholarshipController.putVerification)
-
+router.post('/putReject', auth, scholarshipController.rejectScholarship)
 router.post('/GenerateURL',scholarshipController.generateImgUrlquill)
 // router.post('/getAllScholarship', scholarshipController.getAllScholarship)
 
@@ -28,6 +28,7 @@ router.post('/getAllProvinceStudent', scholarshipController.showAvailableProvinc
 router.post('/getScholarshipAllUserByAdmin', auth, scholarshipController.getScholarshipAllUserByAdmin)
 router.post('/getScholarshipDetailByAdmin', auth, scholarshipController.getScholarshipDetailByAdmin)
 router.post('/verifikasiScholarship', auth, scholarshipController.verifikasiScholarship);
+router.post('/getscholarshipByadmin', auth, scholarshipController.getScholarshipByAdmin)
 
 // User 
 router.post('/getAvailableScholarship', auth, scholarshipController.getAvailableScholarship)

@@ -64,6 +64,7 @@ module.exports = {
             return res.status(500).send(err)
         })
     },
+    
     getScholarshipPerUser : ( req, res) => {
         console.log('------------------------> masuk per user')
         var { offset, limit, name, date, pendidikanTerakhir, provinsiMurid, isVerified} = req.body;
@@ -1001,7 +1002,9 @@ module.exports = {
 
     verifikasiScholarship: (req, res) => {
         const { idSiswa, idUser } = req.body
-        console.log(idSiswa)
+        console.log('====================================verifikasi scholarship ======================================')
+        console.log(req.body)
+        console.log(req.user)
         scholarship.update(
             {
                 isOngoing : 1
@@ -1080,6 +1083,109 @@ module.exports = {
             console.log(err)
         })
     }, 
+    rejectScholarship: (req, res) => {
+        const { idSiswa, idUser, note } = req.body
+        console.log('====================================reject scholarship ======================================')
+        console.log(req.body)
+        console.log(req.user)
+        scholarship.update(
+            {
+                isOngoing : 4
+            },
+            {
+                where : 
+                    {
+                     studentId : idSiswa
+                    }
+            }
+        )
+        .then((results)=>{
+            Student.update(
+                {
+                    dataStatus : 'Rejected',
+                    statusNote: note
+                },
+                {
+                    where : 
+                        {
+                         id : idSiswa
+                        }
+                }
+            )
+            .then((results2)=>{
+                
+
+                User.findOne({
+                    where: {
+                        id: idUser
+                    }
+                })
+                .then(dataUser => {
+        
+                    // Ketika sudah daftar kirim link verification dan create jwtToken
+                    // const tokenJwt = createJWTToken({ userId: dataUser.dataValues.id, email: dataUser.dataValues.email })
+
+                    // console.log(tokenJwt)
+
+                        let mailOptions = {
+                        from: 'KasihNusantara Admin <operational@kasihnusantara.com>',
+                        to: dataUser.dataValues.email,
+                        subject: 'Beasiswa berhasil di approve',
+                        html: `
+                                <div>
+                                    <hr />
+                                    <h4>Mohon maaf data anda masih harus direvisi</h4>
+                                    <p>Terima Kasih</p>
+                                    <hr />
+                                </div>`
+                    }
+
+                    transporter.sendMail(mailOptions, (err1, res1) => {
+                        if (err1) {
+                            return res.status(500).send({ status: 'error', err: err1 })
+                        }
+
+                        return res.status(200).send(dataUser)
+
+                    })
+
+                  
+                })
+                .catch((err) => {
+                    return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
+                })
+
+
+                
+                
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+    }, 
+    getScholarshipByAdmin : (req, res) => {
+        console.log('--------------------masuk get admin')
+        console.log(req.body)
+        scholarship.findOne({
+            attributes:{
+                exclude: ['createdAt', 'updatedAt']
+            },
+            where:{
+                studentId: req.body.id
+            }
+            
+        })
+        .then((result)=>{
+            return res.status(200).send(result)
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+    },
 
     
 

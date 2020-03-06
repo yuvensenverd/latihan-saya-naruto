@@ -19,7 +19,7 @@ router.post('/postTemporaryStudentData', auth, stundentController.postTemporaryS
 router.post('/updateTemporaryStudentData', auth, stundentController.updateTemporaryStudentData)
 router.post('/editDataStudent', auth, stundentController.editDataStudentAndScholarship)
 router.post('/updateDataStudentOngoing', auth, stundentController.updateDataStudentOngoing)
-
+router.post('/verifikasi', auth, stundentController.verifikasi)
 
 
 module.exports=router

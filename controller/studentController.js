@@ -1839,5 +1839,14 @@ module.exports={
         .catch((err) => {
             return res.status(500).send({err})
         })
+    },
+    verifikasi: (req, res) => {
+        console.log('=============================== masuk verifikasi =================')
+        console.log(req.body)
+        // Student.update({
+        //     dataStatus: 'Verified'
+        // }, where: {
+        //     id
+        // })
     }
 }
