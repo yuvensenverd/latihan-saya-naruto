@@ -563,7 +563,7 @@ module.exports={
                         // dataPenghasilan: raport[4],
 
                         isDeleted: 0,
-                        dataStatus : 'Unverified',
+                        dataStatus : 'Not Completed',
                         // dataStatus : 'Verified',
                         statusNote: ''
                     })
@@ -1430,7 +1430,7 @@ module.exports={
                         })
                         
 
-                        // console.log('=-----------------------------------------------------------asd-asdasdas')
+                        console.log('=-----------------------------------------------------------asd-asdasdas')
 
                         // console.log(resultsDataSiswa_temp)
 
@@ -1834,7 +1834,16 @@ module.exports={
             }
         })
         .then((results) => {
-            return res.status(200).send(results)
+           Student.update({
+               dataStatus: 'Unverified'
+           }, {
+               where : {
+                   id: idSiswa
+               }
+           })
+           .then((results2) => {
+               return res.status(200).send(results2)
+           })
         })
         .catch((err) => {
             return res.status(500).send({err})

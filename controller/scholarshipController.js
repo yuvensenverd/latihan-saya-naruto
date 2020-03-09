@@ -878,7 +878,10 @@ module.exports = {
                             [Op.like] : `%${name}%`,
                         },
                         userId,
-                        isOngoing: '4'
+                        isOngoing: {
+                            [Op.or] : ['0', '1', '4']
+                        }
+                        // isOngoing: '4'
                         // isDeleted : 0,
                     },
                     // order: [['id', `${date}`], ['createdAt', `${date}`]],
