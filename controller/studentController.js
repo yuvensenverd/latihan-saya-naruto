@@ -852,7 +852,15 @@ module.exports={
                                     // isVerified : 3,
                                     isOngoing : 3
                                     // isOngoing : 1
-                                }).then((results)=>{
+                                }).then( async (results)=>{
+                                    let resultsDataSiswa_temp = await Student.findAll({
+                                        where: {
+                                            id: studentId
+                                        }
+                                    })
+                                    
+                                    return res.status(200).send(resultsDataSiswa_temp)
+
                                     // return res.status(200).send(results)
                                 }).catch((err)=>{
                                     console.log(err)
@@ -882,7 +890,16 @@ module.exports={
                                 // isVerified : 3,
                                 isOngoing : 3
                                 // isOngoing : 1
-                            }).then((results)=>{
+                            }).then(async (results)=>{
+
+                                let resultsDataSiswa_temp = await Student.findAll({
+                                    where: {
+                                        id: studentId
+                                    }
+                                })
+                                
+                                return res.status(200).send(resultsDataSiswa_temp)
+
                                 // return res.status(200).send(results)
                             }).catch((err)=>{
                                 console.log(err)
@@ -892,18 +909,13 @@ module.exports={
 
                         
 
-                        let resultsDataSiswa_temp = await Student.findAll({
-                            where: {
-                                id: studentId
-                            }
-                        })
-                        
+                       
 
                         // console.log('=-----------------------------------------------------------asd-asdasdas')
 
                         // console.log(resultsDataSiswa_temp)
 
-                        return res.status(200).send(resultsDataSiswa_temp)
+                       
                         
                         
                     }).catch((err)=>{
@@ -1379,7 +1391,17 @@ module.exports={
                                     where: {
                                         id: idScholarship
                                     }
-                                }).then((results)=>{
+                                }).then( async (results)=>{
+                                    let resultsDataSiswa_temp = await Student.findAll({
+                                        where: {
+                                            id: idSiswa
+                                        }
+                                    })
+            
+                        //            
+                        return res.status(200).send(resultsDataSiswa_temp)
+                        
+
                                     // return res.status(200).send(results)
                                 }).catch((err)=>{
                                     console.log(err)
@@ -1413,29 +1435,23 @@ module.exports={
                                 where: {
                                     id: idScholarship
                                 }
-                            }).then((results)=>{
+                            }).then(async (results)=>{
+                                let resultsDataSiswa_temp = await Student.findAll({
+                                    where: {
+                                        id: idSiswa
+                                    }
+                                })
+        
+                               
+
+                    return res.status(200).send(resultsDataSiswa_temp)
+
                                 // return res.status(200).send(results)
                             }).catch((err)=>{
                                 console.log(err)
                                 throw new Error()
                             })
                         }
-
-                        
-
-                        let resultsDataSiswa_temp = await Student.findAll({
-                            where: {
-                                id: idSiswa
-                            }
-                        })
-                        
-
-                        console.log('=-----------------------------------------------------------asd-asdasdas')
-
-                        // console.log(resultsDataSiswa_temp)
-
-                        return res.status(200).send(resultsDataSiswa_temp)
-                        
                         
                     }).catch((err)=>{
                         console.log(err.message)
