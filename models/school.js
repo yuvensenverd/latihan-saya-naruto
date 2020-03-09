@@ -14,7 +14,8 @@ module.exports = (sequelize, DataTypes) => {
     contact_person: DataTypes.STRING,
     npsn: DataTypes.STRING,
     website: DataTypes.STRING,
-    cabangBank: DataTypes.STRING
+    cabangBank: DataTypes.STRING,
+    statusNote: DataTypes.STRING,
   }, {});
   school.associate = function(models) {
     // associations can be defined here
