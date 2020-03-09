@@ -344,7 +344,7 @@ module.exports = {
     },
 
     getAllSchoolByAdmin: (req, res) => {
-        const { id } = req.user;
+        const { id } = req.body;
 
         User.findOne({
             where: {

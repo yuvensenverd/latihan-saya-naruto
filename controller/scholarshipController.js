@@ -753,7 +753,9 @@ module.exports = {
                             ['provinsi', 'provinsiSekolah'],
                             'npsn',
                             'website',
-                            'contact_person'
+                            'contact_person',
+                            'isVerified',
+                            'id'
 
                         ],
                     }
