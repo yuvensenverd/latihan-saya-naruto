@@ -161,10 +161,7 @@ module.exports = {
                     // },
                     {
                         model : Payment,
-                        attributes : [],
-                        where: {
-                            statusPayment: 'settlement'
-                        }
+                        attributes : []
                     }
                     ],
                     where : {
@@ -330,10 +327,7 @@ module.exports = {
                     
                     {
                         model : Payment,
-                        attributes : [],
-                        where: {
-                            statusPayment: 'settlement'
-                        }
+                        attributes : []
                     }],
                     where : {
                         id,
@@ -442,10 +436,7 @@ module.exports = {
                     // },
                     {
                         model : Payment,
-                        attributes : [],
-                        where: {
-                            statusPayment: 'settlement'
-                        }
+                        attributes : []
                     }
                     ],
                     where : {
@@ -879,10 +870,7 @@ module.exports = {
                     // },
                     {
                         model : Payment,
-                        attributes : [],
-                        where: {
-                            statusPayment: 'settlement'
-                        }
+                        attributes : []
                     }
                     ],
                     where : {
@@ -993,10 +981,7 @@ module.exports = {
                     // },
                     {
                         model : Payment,
-                        attributes : [],
-                        where: {
-                            statusPayment: 'settlement'
-                        }
+                        attributes : []
                     }
                     ],
                     where : {
