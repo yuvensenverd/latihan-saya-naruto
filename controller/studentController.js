@@ -547,7 +547,7 @@ module.exports={
                         status: status !== '' ? status : null,
                         provinsi: provinsi !== 'Pilih Provinsi' ? provinsi : null,
                         alamat: alamat !== '' ? alamat : null,
-                        tanggalLahir: tanggalLahir ? Moment(tanggalLahir) : null,
+                        tanggalLahir: tanggalLahir !== '' ? Moment(tanggalLahir) : null,
                         userId: req.user.userId,
                         shareDescription: shareDescription !== '' ? shareDescription : null,
                         schoolId: schoolId ? schoolId : null,
