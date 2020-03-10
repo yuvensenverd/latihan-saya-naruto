@@ -538,7 +538,7 @@ module.exports={
 
                 console.log(name)
 
-                console.log(data)
+                // console.log(data)
                 
                     Student.create({
                         name: name,

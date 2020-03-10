@@ -879,7 +879,7 @@ module.exports = {
                         },
                         userId,
                         isOngoing: {
-                            [Op.or] : ['0', '1','3', '4']
+                            [Op.or] : ['0', '1', '4']
                         }
                         // isOngoing: '4'
                         // isDeleted : 0,
