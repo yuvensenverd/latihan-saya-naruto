@@ -501,6 +501,8 @@ module.exports={
 
                 if(student_image) {
                    var student_imageDB = student_image[0] ? path + '/' + student_image[0].filename : 'http://localhost:2019/defaultPhoto/defaultCategory.png';
+                } else {
+                    var student_imageDB = null
                 }
 
 
@@ -542,7 +544,7 @@ module.exports={
                         name: name,
                         pendidikanTerakhir: pendidikanTerakhir !== '' ? pendidikanTerakhir : null,
                         gender: gender !== '' ? gender : null,
-                        status,
+                        status: status !== '' ? status : null,
                         provinsi: provinsi !== 'Pilih Provinsi' ? provinsi : null,
                         alamat: alamat !== '' ? alamat : null,
                         tanggalLahir: tanggalLahir ? Moment(tanggalLahir) : null,
