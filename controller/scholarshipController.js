@@ -753,7 +753,9 @@ module.exports = {
                             ['provinsi', 'provinsiSekolah'],
                             'npsn',
                             'website',
-                            'contact_person'
+                            'contact_person',
+                            'isVerified',
+                            ['id', 'idSekolah']
 
                         ],
                     }
@@ -877,7 +879,7 @@ module.exports = {
                         },
                         userId,
                         isOngoing: {
-                            [Op.or] : ['0', '1', '4']
+                            [Op.or] : ['0', '1','3', '4']
                         }
                         // isOngoing: '4'
                         // isDeleted : 0,
@@ -1004,13 +1006,13 @@ module.exports = {
     },
 
     verifikasiScholarship: (req, res) => {
-        const { idSiswa, idUser } = req.body
+        const { idSiswa, idUser, status } = req.body
         console.log('====================================verifikasi scholarship ======================================')
         console.log(req.body)
         console.log(req.user)
         scholarship.update(
             {
-                isOngoing : 1
+                isOngoing : status ? status : 1
             },
             {
                 where : 
@@ -1022,7 +1024,7 @@ module.exports = {
         .then((results)=>{
             Student.update(
                 {
-                    dataStatus : 'Verified'
+                    dataStatus : status ? 'On Process' : 'Verified'
                 },
                 {
                     where : 
@@ -1049,8 +1051,14 @@ module.exports = {
                         let mailOptions = {
                         from: 'KasihNusantara Admin <operational@kasihnusantara.com>',
                         to: dataUser.dataValues.email,
-                        subject: 'Beasiswa berhasil di approve',
-                        html: `
+                        subject: status ? 'Proses verifikasi' : 'Beasiswa berhasil di approve',
+                        html: status ? `
+                        <div>
+                            <hr />
+                            <h4>Beasiswa anda sedang di verifikasi oleh tim kami.</h4>
+                            <p>Terima Kasih</p>
+                            <hr />
+                        </div>` : `
                                 <div>
                                     <hr />
                                     <h4>Beasiswa anda berhasil di approve oleh tim kami.</h4>

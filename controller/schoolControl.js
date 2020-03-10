@@ -269,8 +269,9 @@ module.exports = {
 
     putSchool : (req,res) => {
         const {id} = req.query
-        const {nama, alamat, telepon, namaPemilikRekening, nomorRekening, bank, email} = req.body
+        const {nama, alamat, telepon, namaPemilikRekening, nomorRekening, bank, email, npsn, cabang, provinsi, website, cp} = req.body
         school.update({
+            npsn,
             nama,
             alamat,
             telepon,
@@ -278,6 +279,10 @@ module.exports = {
             nomorRekening,
             bank,
             email,
+            cabang,
+            provinsi,
+            website,
+            contact_person: cp,
             isVerified: 0
         },{
             where : {
@@ -292,9 +297,12 @@ module.exports = {
     },
     verifiedSchool : (req, res) => {
         const {id} = req.query
+        const {status, statusNote} = req.body
         console.log(id)
+        console.log(req.body)
         school.update({
-            isVerified: 1
+            isVerified: status,
+            statusNote
         },{
             where: {
                 id
@@ -344,7 +352,7 @@ module.exports = {
     },
 
     getAllSchoolByAdmin: (req, res) => {
-        const { id } = req.user;
+        const { id } = req.body;
 
         User.findOne({
             where: {
