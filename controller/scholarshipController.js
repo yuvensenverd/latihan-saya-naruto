@@ -993,7 +993,7 @@ module.exports = {
                     },
                     // order: [['id', `${date}`], ['createdAt', `${date}`]],
                     // order: [['currentValue', 'DESC']],
-                    // group : ['id']
+                    group : ['id']
                      
                 })
 
