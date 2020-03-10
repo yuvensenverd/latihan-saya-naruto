@@ -161,6 +161,7 @@ module.exports = {
                     // },
                     {
                         model : Payment,
+                        required: false,
                         attributes : []
                     }
                     ],
@@ -327,7 +328,9 @@ module.exports = {
                     
                     {
                         model : Payment,
-                        attributes : []
+                        required: false,
+                        attributes : [],
+                    
                     }],
                     where : {
                         id,
@@ -436,6 +439,7 @@ module.exports = {
                     // },
                     {
                         model : Payment,
+                        required: false,
                         attributes : []
                     }
                     ],
@@ -870,6 +874,7 @@ module.exports = {
                     // },
                     {
                         model : Payment,
+                        required: false,
                         attributes : []
                     }
                     ],
@@ -981,6 +986,7 @@ module.exports = {
                     // },
                     {
                         model : Payment,
+                        required: false,
                         attributes : []
                     }
                     ],

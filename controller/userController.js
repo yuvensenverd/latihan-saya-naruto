@@ -1248,6 +1248,7 @@ module.exports = {
             // },
             {
                 model : Payment,
+                required: false,
                 attributes : []
             }
             ],
@@ -1590,6 +1591,7 @@ module.exports = {
             
             {
                 model : Payment,
+                required: false,
                 attributes : []
             }],
             where : {
