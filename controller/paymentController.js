@@ -4,18 +4,18 @@ const moment                                            = require('moment')
 const Axios = require('axios')
 
 // Development
-const snap = new midtransClient.Snap({
-    isProduction    : false,
-    serverKey       : 'SB-Mid-server-gX4FwJuHKjMqZaQvd2pwT2GX',
-    clientKey       : 'SB-Mid-client-lM5IFUJ3Ozq3_ABW'
-})
+// const snap = new midtransClient.Snap({
+//     isProduction    : false,
+//     serverKey       : 'SB-Mid-server-gX4FwJuHKjMqZaQvd2pwT2GX',
+//     clientKey       : 'SB-Mid-client-lM5IFUJ3Ozq3_ABW'
+// })
 
 // Production
-// const snap = new midtransClient.Snap({
-//     isProduction    : true,
-//     serverKey       : 'Mid-server-6xImsUTrxyWWRCZXeolqSrFI',
-//     clientKey       : 'Mid-client-o2dbxrIvWMsvu5sG'
-// })
+const snap = new midtransClient.Snap({
+    isProduction    : true,
+    serverKey       : 'Mid-server-6xImsUTrxyWWRCZXeolqSrFI',
+    clientKey       : 'Mid-client-o2dbxrIvWMsvu5sG'
+})
 
 
 const core = new midtransClient.CoreApi({
