@@ -63,6 +63,18 @@ module.exports = {
         })       
     },
 
+    getlastid : (req, res)=>{
+        Payment.findOne({
+            attributes: ['id']
+        },{
+            order: [['id','DESC']]
+        })
+        .then((result)=>{
+            console.log(result.dataValues)
+            return res.status(200).send(result)
+        })
+    },
+
     addPayment : (req, res) => {
         //######## INSERT DATABASE 
         console.log('------------------------------> Masuk Add payment')
@@ -203,6 +215,8 @@ module.exports = {
                     }
                 })
             })
+
+            
 
             // mockNotificationJson = Response     
             // snap.transaction.notification(Response)

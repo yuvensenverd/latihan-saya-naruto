@@ -34,7 +34,7 @@ module.exports = {
       scholarshipId: {
         type: Sequelize.INTEGER,
         references : {
-          model : 'Scholarships',
+          model : 'scholarships',
           key : 'id'
         }
       },
