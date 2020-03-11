@@ -161,7 +161,11 @@ module.exports = {
                     // },
                     {
                         model : Payment,
-                        attributes : []
+                        required: false,
+                        attributes : [],
+                        where: {
+                            statusPayment : 'settlement'
+                        }
                     }
                     ],
                     where : {
@@ -327,7 +331,12 @@ module.exports = {
                     
                     {
                         model : Payment,
-                        attributes : []
+                        required: false,
+                        attributes : [],
+                        where: {
+                            statusPayment : 'settlement'
+                        }
+                    
                     }],
                     where : {
                         id,
@@ -436,7 +445,11 @@ module.exports = {
                     // },
                     {
                         model : Payment,
-                        attributes : []
+                        required: false,
+                        attributes : [],
+                        where: {
+                            statusPayment : 'settlement'
+                        }
                     }
                     ],
                     where : {
@@ -870,7 +883,11 @@ module.exports = {
                     // },
                     {
                         model : Payment,
-                        attributes : []
+                        required: false,
+                        attributes : [],
+                        where: {
+                            statusPayment : 'settlement'
+                        }
                     }
                     ],
                     where : {
@@ -879,7 +896,7 @@ module.exports = {
                         },
                         userId,
                         isOngoing: {
-                            [Op.or] : ['0', '1','3', '4']
+                            [Op.or] : ['0', '1', '2', '4']
                         }
                         // isOngoing: '4'
                         // isDeleted : 0,
@@ -981,7 +998,11 @@ module.exports = {
                     // },
                     {
                         model : Payment,
-                        attributes : []
+                        required: false,
+                        attributes : [],
+                        where: {
+                            statusPayment : 'settlement'
+                        }
                     }
                     ],
                     where : {
@@ -993,7 +1014,7 @@ module.exports = {
                     },
                     // order: [['id', `${date}`], ['createdAt', `${date}`]],
                     // order: [['currentValue', 'DESC']],
-                    // group : ['id']
+                    group : ['id']
                      
                 })
 

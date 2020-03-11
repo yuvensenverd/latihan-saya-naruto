@@ -107,7 +107,7 @@ module.exports={
                         tanggalLahir:Moment(tanggalLahir),
                         userId: req.user.userId,
                         shareDescription,
-                        schoolId,
+                        schoolId: schoolId !== 0 ? schoolId : null,
                         jumlahSaudara,
                         biayaSekolah,
                         kelas,
@@ -501,6 +501,8 @@ module.exports={
 
                 if(student_image) {
                    var student_imageDB = student_image[0] ? path + '/' + student_image[0].filename : 'http://localhost:2019/defaultPhoto/defaultCategory.png';
+                } else {
+                    var student_imageDB = null
                 }
 
 
@@ -536,19 +538,19 @@ module.exports={
 
                 console.log(name)
 
-                console.log(data)
+                // console.log(data)
                 
                     Student.create({
                         name: name,
                         pendidikanTerakhir: pendidikanTerakhir !== '' ? pendidikanTerakhir : null,
                         gender: gender !== '' ? gender : null,
-                        status,
+                        status: status !== '' ? status : null,
                         provinsi: provinsi !== 'Pilih Provinsi' ? provinsi : null,
                         alamat: alamat !== '' ? alamat : null,
-                        tanggalLahir: tanggalLahir ? Moment(tanggalLahir) : null,
+                        tanggalLahir: tanggalLahir !== '' ? Moment(tanggalLahir) : null,
                         userId: req.user.userId,
                         shareDescription: shareDescription !== '' ? shareDescription : null,
-                        schoolId: schoolId ? schoolId : null,
+                        schoolId: schoolId !== 0 ? schoolId : null,
                         jumlahSaudara: jumlahSaudara !== '' ? jumlahSaudara : null,
                         biayaSekolah: biayaSekolah !== '' ? biayaSekolah : null,
                         kelas: kelas !== 'Pilih Kelas' ? kelas : null,
@@ -852,7 +854,15 @@ module.exports={
                                     // isVerified : 3,
                                     isOngoing : 3
                                     // isOngoing : 1
-                                }).then((results)=>{
+                                }).then( async (results)=>{
+                                    let resultsDataSiswa_temp = await Student.findAll({
+                                        where: {
+                                            id: studentId
+                                        }
+                                    })
+                                    
+                                    return res.status(200).send(resultsDataSiswa_temp)
+
                                     // return res.status(200).send(results)
                                 }).catch((err)=>{
                                     console.log(err)
@@ -882,7 +892,16 @@ module.exports={
                                 // isVerified : 3,
                                 isOngoing : 3
                                 // isOngoing : 1
-                            }).then((results)=>{
+                            }).then(async (results)=>{
+
+                                let resultsDataSiswa_temp = await Student.findAll({
+                                    where: {
+                                        id: studentId
+                                    }
+                                })
+                                
+                                return res.status(200).send(resultsDataSiswa_temp)
+
                                 // return res.status(200).send(results)
                             }).catch((err)=>{
                                 console.log(err)
@@ -892,18 +911,13 @@ module.exports={
 
                         
 
-                        let resultsDataSiswa_temp = await Student.findAll({
-                            where: {
-                                id: studentId
-                            }
-                        })
-                        
+                       
 
                         // console.log('=-----------------------------------------------------------asd-asdasdas')
 
                         // console.log(resultsDataSiswa_temp)
 
-                        return res.status(200).send(resultsDataSiswa_temp)
+                       
                         
                         
                     }).catch((err)=>{
@@ -972,6 +986,8 @@ module.exports={
 
                 if(student_image) {
                     var student_imageDB = student_image[0] ? path + '/' + student_image[0].filename : 'http://localhost:2019/defaultPhoto/defaultCategory.png';
+                 } else {
+                    var student_imageDB = null
                  }
 
 
@@ -1013,13 +1029,13 @@ module.exports={
                         name: name,
                         pendidikanTerakhir: pendidikanTerakhir !== '' ? pendidikanTerakhir : null,
                         gender: gender !== '' ? gender : null,
-                        status,
+                        status: status !== '' ? status : null,
                         provinsi: provinsi !== 'Pilih Provinsi' ? provinsi : null,
                         alamat: alamat !== '' ? alamat : null,
-                        tanggalLahir: tanggalLahir ? Moment(tanggalLahir) : null,
+                        tanggalLahir: tanggalLahir !== '' ? Moment(tanggalLahir) : null,
                         userId: req.user.userId,
                         shareDescription: shareDescription !== '' ? shareDescription : null,
-                        schoolId,
+                        schoolId : schoolId !== 0 ? schoolId : null,
                         jumlahSaudara: jumlahSaudara !== '' ? jumlahSaudara : null,
                         biayaSekolah: biayaSekolah !== '' ? biayaSekolah : null,
                         kelas: kelas !== 'Pilih Kelas' ? kelas : null,
@@ -1379,7 +1395,17 @@ module.exports={
                                     where: {
                                         id: idScholarship
                                     }
-                                }).then((results)=>{
+                                }).then( async (results)=>{
+                                    let resultsDataSiswa_temp = await Student.findAll({
+                                        where: {
+                                            id: idSiswa
+                                        }
+                                    })
+            
+                        //            
+                        return res.status(200).send(resultsDataSiswa_temp)
+                        
+
                                     // return res.status(200).send(results)
                                 }).catch((err)=>{
                                     console.log(err)
@@ -1413,29 +1439,23 @@ module.exports={
                                 where: {
                                     id: idScholarship
                                 }
-                            }).then((results)=>{
+                            }).then(async (results)=>{
+                                let resultsDataSiswa_temp = await Student.findAll({
+                                    where: {
+                                        id: idSiswa
+                                    }
+                                })
+        
+                               
+
+                    return res.status(200).send(resultsDataSiswa_temp)
+
                                 // return res.status(200).send(results)
                             }).catch((err)=>{
                                 console.log(err)
                                 throw new Error()
                             })
                         }
-
-                        
-
-                        let resultsDataSiswa_temp = await Student.findAll({
-                            where: {
-                                id: idSiswa
-                            }
-                        })
-                        
-
-                        console.log('=-----------------------------------------------------------asd-asdasdas')
-
-                        // console.log(resultsDataSiswa_temp)
-
-                        return res.status(200).send(resultsDataSiswa_temp)
-                        
                         
                     }).catch((err)=>{
                         console.log(err.message)

@@ -1248,7 +1248,11 @@ module.exports = {
             // },
             {
                 model : Payment,
-                attributes : []
+                required: false,
+                attributes : [],
+                where: {
+                    statusPayment : 'settlement'
+                }
             }
             ],
             where : {
@@ -1590,7 +1594,11 @@ module.exports = {
             
             {
                 model : Payment,
-                attributes : []
+                required: false,
+                attributes : [],
+                where: {
+                    statusPayment : 'settlement'
+                }
             }],
             where : {
                 userId: req.user.userId,
