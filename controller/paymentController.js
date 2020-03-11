@@ -4,18 +4,18 @@ const moment                                            = require('moment')
 const Axios = require('axios')
 
 // Development
-// const snap = new midtransClient.Snap({
-//     isProduction    : false,
-//     serverKey       : 'SB-Mid-server-gX4FwJuHKjMqZaQvd2pwT2GX',
-//     clientKey       : 'SB-Mid-client-lM5IFUJ3Ozq3_ABW'
-// })
+const snap = new midtransClient.Snap({
+    isProduction    : false,
+    serverKey       : 'SB-Mid-server-gX4FwJuHKjMqZaQvd2pwT2GX',
+    clientKey       : 'SB-Mid-client-lM5IFUJ3Ozq3_ABW'
+})
 
 // Production
-const snap = new midtransClient.Snap({
-    isProduction    : true,
-    serverKey       : 'Mid-server-6xImsUTrxyWWRCZXeolqSrFI',
-    clientKey       : 'Mid-client-o2dbxrIvWMsvu5sG'
-})
+// const snap = new midtransClient.Snap({
+//     isProduction    : true,
+//     serverKey       : 'Mid-server-6xImsUTrxyWWRCZXeolqSrFI',
+//     clientKey       : 'Mid-client-o2dbxrIvWMsvu5sG'
+// })
 
 
 const core = new midtransClient.CoreApi({
@@ -74,12 +74,11 @@ module.exports = {
 
     getlastid : (req, res)=>{
         Payment.findOne({
-            attributes: ['id']
-        },{
+            attributes: ['id'],
             order: [['id','DESC']]
         })
         .then((result)=>{
-            console.log(result.dataValues)
+            console.log(result)
             return res.status(200).send(result)
         })
     },
@@ -98,7 +97,7 @@ module.exports = {
                     order_id
                 }
             }, {transaction : t}).then((result) => {
-                console.log(result)
+                // console.log(result)
                 if(!result){
                     console.log('insert--------')
                     Payment.create({
@@ -122,24 +121,24 @@ module.exports = {
                         //     return res.status(200).send({message: 'create Payment Success ', result})
                         // })
     
-                        scholarship.update(
-                            {
-                                currentValue : sequelize.literal(`currentValue + ${gross_amount}`)
-                            },
-                            {
-                                where : 
-                                    {
-                                        id : scholarshipId
-                                    }
-                            }
-                        )
-                        .then((res)=>{
-                             console.log('success')
-                             console.log(res)
-                        })
-                        .catch((err)=>{
-                            console.log(err)
-                        })
+                        // scholarship.update(
+                        //     {
+                        //         currentValue : sequelize.literal(`currentValue + ${gross_amount}`)
+                        //     },
+                        //     {
+                        //         where : 
+                        //             {
+                        //                 id : scholarshipId
+                        //             }
+                        //     }
+                        // )
+                        // .then((res)=>{
+                        //      console.log('success')
+                        //      console.log(res)
+                        // })
+                        // .catch((err)=>{
+                        //     console.log(err)
+                        // })
                     }).catch((err)=>{
                         console.log(err)
                     })
@@ -201,7 +200,8 @@ module.exports = {
                 transaction_status : Response.transaction_status,
                 payment_type : Response.payment_type,
                 bank,
-                noPembayaran
+                noPembayaran,
+                gross_amount : Response.gross_amount
             }
             console.log(status)
 
@@ -210,11 +210,34 @@ module.exports = {
             req.app.io.emit(`status_transaction`+ order_id, status)
             
             // update payment status on database
-            Payment.findAll({
+            Payment.findOne({
+                attributes: ['scholarshipId'],
                 where:{
                     order_id : Response.order_id
                 }
             }).then((result)=>{
+                
+                if(Response.transaction_status === 'settlement'){
+                    scholarship.update(
+                        {
+                            currentValue : sequelize.literal(`currentValue + ${Response.gross_amount}`)
+                        },
+                        {
+                            where : 
+                                {
+                                    id : result.dataValues.scholarshipId
+                                }
+                        }
+                    )
+                    .then((result1)=>{
+                         console.log('------------------------------------------------success--------------------------------------------')
+                        //  console.log(result1.dataValues)
+                    })
+                    .catch((err)=>{
+                        console.log(err)
+                    })
+
+                }
                 Payment.update({
                     statusPayment : Response.transaction_status
                 },
@@ -318,7 +341,8 @@ module.exports = {
     updatePayment : (req, res) => {
         console.log('masuk update payment ===> ')
         console.log(req.body)
-        let { payment_type, transaction_status, transaction_time, order_id} = req.body
+        console.log('masuk update payment ===> ')
+        let { payment_type, transaction_status, transaction_time, order_id, gross_amount, scholarshipId} = req.body
         Payment.update({
             paymentType : payment_type,
             statusPayment : transaction_status,
@@ -331,6 +355,26 @@ module.exports = {
         })
 
         .then(() => {
+            // if(transaction_status === 'settlement'){
+            //     scholarship.update(
+            //         {
+            //             currentValue : sequelize.literal(`currentValue + ${gross_amount}`)
+            //         },
+            //         {
+            //             where : 
+            //                 {
+            //                     id : scholarshipId
+            //                 }
+            //         }
+            //     )
+            //     .then((res)=>{
+            //          console.log('success')
+            //          console.log(res)
+            //     })
+            //     .catch((err)=>{
+            //         console.log(err)
+            //     })
+            // }
             Payment.findAll({ where : { order_id}})
             .then((result) => {
                 console.log(result)
@@ -398,7 +442,7 @@ module.exports = {
               ['createdAt', 'DESC']
           ]
       }).then((result)=>{
-        console.log('erresult')
+        // console.log('erresult')
         // console.log(result)
         console.log(result.count)
         
@@ -472,7 +516,7 @@ module.exports = {
         }).then((result)=>{
           console.log('erresult')
           // console.log(result)
-          console.log(result.count)
+        //   console.log(result.count)
           
           return res.status(200).send({result : result.rows, count : result.count})
         }).catch((err)=>{
@@ -718,8 +762,6 @@ module.exports = {
                     attributes : ['id'],
                     include : [
                         {
-                            model : Student,
-                            attributes : ['studentImage'],
                             required : true
                         }
                     ]
@@ -826,13 +868,30 @@ module.exports = {
             }
         })
         .then((ress)=>{
-            // console.log(ress.data)
+            // currentValueconsole.log(ress.data)
             return res.status(200).send(ress.data)
         }).catch((err)=>{
             console.log(err)
             return res.status(400).send({message: err.response.data})
     })
+    },
+    
+    paymentcheck : (req, res)=>{
+        console.log('=============================checkpayment')
+        Payment.findOne({
+            attributes: ['order_id'],
+            where:{
+                order_id: req.body.order_id
+            
+        }
+        }
+            )
+        .then((result)=>{
+            return res.status(200).send(result)
+        })
     }
+
+
 
 
 
