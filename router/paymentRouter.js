@@ -25,5 +25,6 @@ router.post('/getpayoutnotif', paymentController.payoutnotif)
 router.post('/payouthistory', paymentController.payouthistory)
 router.post('/statusiris', paymentController.getstatusiris)
 router.post('/cekpayout', paymentController.checkpayout)
-
+router.get('/getlastid', paymentController.getlastid)
+router.post('/paymentcheck', paymentController.paymentcheck)
 module.exports = router;
