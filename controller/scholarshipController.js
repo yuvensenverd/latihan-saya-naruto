@@ -215,8 +215,8 @@ module.exports = {
             where : {
                 isRefund : 0,
                 isDeleted : 0,
-                scholarshipId : req.body.id
-                // statusPayment : 'settlement'
+                scholarshipId : req.body.id,
+                statusPayment : 'settlement'
             },
             include : [
               {
