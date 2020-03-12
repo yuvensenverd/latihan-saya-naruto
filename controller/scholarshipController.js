@@ -163,9 +163,7 @@ module.exports = {
                         model : Payment,
                         required: false,
                         attributes : [],
-                        where: {
-                            statusPayment : 'settlement'
-                        }
+                        
                     }
                     ],
                     where : {
@@ -333,9 +331,7 @@ module.exports = {
                         model : Payment,
                         required: false,
                         attributes : [],
-                        where: {
-                            statusPayment : 'settlement'
-                        }
+                        
                     
                     }],
                     where : {
@@ -447,9 +443,7 @@ module.exports = {
                         model : Payment,
                         required: false,
                         attributes : [],
-                        where: {
-                            statusPayment : 'settlement'
-                        }
+                        
                     }
                     ],
                     where : {
@@ -885,9 +879,7 @@ module.exports = {
                         model : Payment,
                         required: false,
                         attributes : [],
-                        where: {
-                            statusPayment : 'settlement'
-                        }
+                       
                     }
                     ],
                     where : {
@@ -1000,9 +992,7 @@ module.exports = {
                         model : Payment,
                         required: false,
                         attributes : [],
-                        where: {
-                            statusPayment : 'settlement'
-                        }
+                        
                     }
                     ],
                     where : {
