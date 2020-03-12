@@ -190,7 +190,7 @@ module.exports = {
                 noPembayaran = ''
                 console.log('4')
             }else if(Response.payment_type === 'gopay'){
-                noPembayaran = `https://api.sandbox.veritrans.co.id/v2/gopay/${Response.transaction_id}/qr-code`
+                noPembayaran = `https://api.veritrans.co.id/v2/gopay/${Response.transaction_id}/qr-code`
 
             }else{
                 bank = ''
