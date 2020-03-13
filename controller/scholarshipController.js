@@ -506,7 +506,17 @@ module.exports = {
         })
         .then((results) => {
             console.log('Provinsi Murid')
-            let data = results.map(results => results.provinsi)
+            let data = results.map((results) => {
+                if(results.provinsi === {}) {
+                    console.log(results.provinsi)
+                } else {
+                    return results.provinsi
+                }
+            } )
+
+            data = data.filter((val) => {
+                return val !== null
+            })
             
             return res.status(200).send(data)
         })
