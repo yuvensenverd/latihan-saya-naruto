@@ -40,10 +40,11 @@ module.exports = {
 
     guestGetTestimonialStudent: (req, res) => {
         testimoni.findAll({
-            
+            limit: 1,
             where: {
                 studentId: req.body.idSiswa
-            }
+            },
+            order: [['id', 'DESC']]
         
     })
     .then((result) => {
@@ -56,11 +57,9 @@ module.exports = {
 
     getAllTestimonialGuest: (req, res) => {
         testimoni.findAll({
-           
             include: [
                 {
                     model: Student,
-                    
                     include: [
                         {
                             model: school,
@@ -71,10 +70,19 @@ module.exports = {
                         }
                     ]
                 },
-               
-            ]
+            ],
+            order: [['id', 'DESC']]
         })
         .then((result) => {
+            console.log('Hasil dari testimonial all')
+            console.log(result)
+            result = result.filter(( value, index, self ) => {
+                if(index <= 7) {
+                    return self.map(val => val.studentId).indexOf(value.studentId) === index
+                }
+            })
+            // console.log('Hasil dari testimonial all =============================================================')
+            // console.log(result)
             return res.status(200).send(result)
         })
         .catch((err) => {
