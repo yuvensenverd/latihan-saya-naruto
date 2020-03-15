@@ -559,11 +559,11 @@ module.exports = {
                     return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
                 })
             } else {
-                return res.status(500).json({ message: "Password Lama Anda Salah", error: err.message });
+                return res.status(500).json({ message: "Password Lama Salah", error: err.message });
             }
         })
         .catch((err) => {
-            return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
+            return res.status(500).json({ message: "Password Lama Salah", error: err.message });
         })
     },
 

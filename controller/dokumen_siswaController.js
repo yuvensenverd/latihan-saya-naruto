@@ -127,6 +127,22 @@ module.exports = {
         } catch (error) {
             return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: error.message });
         }
+    },
+
+    deleteDokumenById: (req, res) => {
+        const { idDokumen } = req.body
+
+        dokumen_siswa.destroy({
+            where : {
+                id: idDokumen
+            }
+        })
+        .then((result) => {
+            return res.status(200).send({ result: 'success'})
+        })
+        .catch((err) => {
+            return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
+        })
     }
 }
 

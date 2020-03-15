@@ -984,8 +984,14 @@ module.exports={
                 // console.log('====== gambar')
                 // console.log(raport)
 
-                if(student_image) {
-                    var student_imageDB = student_image[0] ? path + '/' + student_image[0].filename : 'http://localhost:2019/defaultPhoto/defaultCategory.png';
+                console.log(student_image)
+
+                if(student_image !== null) {
+                    if(student_image !== undefined) {
+                        var student_imageDB = student_image[0] ? path + '/' + student_image[0].filename : 'http://localhost:2019/defaultPhoto/defaultCategory.png';
+                    } else {
+                        var student_imageDB = student_image
+                    }
                  } else {
                     var student_imageDB = null
                  }

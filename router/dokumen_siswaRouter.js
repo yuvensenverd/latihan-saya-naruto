@@ -9,5 +9,6 @@ router.post('/getDokumenByAdmin', auth, dokumen_siswaController.getDokumenByAdmi
 
 router.post('/getDokumenByUser', auth, dokumen_siswaController.getDokumenByUser)
 router.post('/updateDokumentById', auth, dokumen_siswaController.updateDokumentById)
+router.post('/deleteDokumenById', auth, dokumen_siswaController.deleteDokumenById)
 
 module.exports = router;
