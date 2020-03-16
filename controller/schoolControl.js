@@ -167,7 +167,7 @@ module.exports = {
                 //     namaPemilikRekening,
                 //     nomorRekening,
                 //     bank,
-                //     email
+                //     emailerr
                 // }).then((result) => {
                 //     return res.status(200).send(result)
                 // }).catch((err) => {
