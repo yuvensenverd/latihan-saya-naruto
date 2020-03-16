@@ -30,7 +30,19 @@ module.exports = {
             note
         })
         .then((result) =>{
-            return res.status(200).send(result)
+            scholarship.update({
+                totalPayout: nominal
+            }, {
+                where: {
+                    id: scholarshipId
+                }
+            })
+            .then((resultUpdate) => {
+                return res.status(200).send(result)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
         }).catch((err)=>{
             console.log(err)
         })
