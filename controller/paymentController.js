@@ -1,4 +1,4 @@
-const { Sequelize, sequelize, Payment, User, Project, scholarship, Student, Payout }  = require('../models')
+const { Sequelize, sequelize, Payment, User, Project, scholarship, school, Student, Payout }  = require('../models')
 const midtransClient                                    = require('midtrans-client')
 const moment                                            = require('moment')
 const Axios = require('axios')
@@ -401,13 +401,16 @@ module.exports = {
             'paymentSource',
             'nominal',
             'statusPayment',
-            // [sequelize.col('scholarship.judul'), 'judulScholarship'],
-            // [sequelize.col('project.name'), 'namaProject'],
-            // [sequelize.col('project.id'), 'projectId'],
-            // [sequelize.col('project.projectImage'), 'gambarProject'],
-            // [sequelize.col('scholarship.id'), 'scholarshipId'],
-            // [sequelize.col('scholarship->student.name'), 'namaMurid'],
-            // [sequelize.col('scholarship->student.studentImage'), 'fotoMurid'],
+            [sequelize.col('scholarship.judul'), 'judulScholarship'],
+            // [sequelize.col('Project.name'), 'namaProject'],
+            // [sequelize.col('Project.id'), 'projectId'],
+            // [sequelize.col('Project.projectImage'), 'gambarProject'],
+            [sequelize.col('scholarship.id'), 'scholarshipId'],
+            [sequelize.col('scholarship->Student.name'), 'namaMurid'],
+            [sequelize.col('scholarship->Student.studentImage'), 'fotoMurid'],
+            [sequelize.col('scholarship->Student.provinsi'), 'provinsi'],
+            [sequelize.col('scholarship->Student.kelas'), 'kelas'],
+            [sequelize.col('scholarship->Student->school.nama'), 'namaSekolah'],
             'order_id',
             'komentar',
             'noPembayaran',
@@ -433,7 +436,14 @@ module.exports = {
                     {
                         model : Student,
                         attributes : [],
-                        required : true
+                        required : true,
+                        include: [
+                            {
+                                model: school,
+                                attributes:[],
+                                required: true
+                            }
+                        ]
                     }
                 ]
             }

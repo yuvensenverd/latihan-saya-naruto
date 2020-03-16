@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Payout.associate = function(models) {
     // associations can be defined here
-    Payout.belongsTo(models.Project, { foreignKey: 'projectId'})
+    Payout.belongsTo(models.Project, { foreignKey: 'projectId'}),
     Payout.belongsTo(models.scholarship, { foreignKey: 'scholarshipId'})
   };
   return Payout;

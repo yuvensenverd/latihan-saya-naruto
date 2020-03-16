@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     scholarship.hasMany(models.Subscription, {foreignKey : 'scholarshipId'})
     scholarship.hasMany(models.Payment, {foreignKey : 'scholarshipId'})
     scholarship.hasMany(models.Payout, {foreignKey : 'scholarshipId'})
+    scholarship.hasMany(models.pencairan_dana, {foreignKey : 'scholarshipId'})
   };
   return scholarship;
 }; 
