@@ -111,38 +111,47 @@ module.exports = {
         })
     },
     getPencairan:(req, res)=>{
-        pencairan_dana.findAll({
-            attribute: {
-                exclude : ['createdAt', 'updatedAt'],
-                
-            },
+        console.log('++++++++++++++++ get all pencairn dana ++++++++++++++++')
+        console.log(req.body)
+        const {limit, offset, status} = req.body
+
+        pencairan_dana.findAndCountAll({
+            limit: parseInt(limit),
+            offset: offset,
+            attributes: ['id','kode_transaksi', 'status', 'nominal', 'bukti_transaksi', 'tgl_pengajuan', 'tgl_mutasi', 'scholarshipId', 'norek', 'bank', 'note'],
             // include: [
             //     {
             //         model: scholarship,
-            //         attribute: ['id']
-            //         // include: [
-            //         //     {
-            //         //         model: Student,
-            //         //         attribute: ['nama']
-            //         //     }
-            //         // ]
+            //         attribute: [],
+            //         include: [
+            //             {
+            //                 model: Student,
+            //                 attribute: ['nama']
+            //             }
+            //         ]
             //     }
             // ]
+            where: {
+                status
+            },
+            order: [['createdAt', 'DESC']],
         })
         .then((result)=>{
-            return res.status(200).send(result)
+            return res.status(200).send({result:result.rows, count: result.count})
         })
         .catch((err)=>{
             console.log(err)
         })
     },
     getSelectedPencairan:(req, res)=>{
-        const {scholarshipId} = req.body
+        
         console.log('***************** masuk pencairan dana ********************')
         console.log(req.body)
         console.log('***************** masuk pencairan dana ********************')
-
-        pencairan_dana.findAll({
+        const {scholarshipId, limit, offset} = req.body
+        pencairan_dana.findAndCountAll({
+            limit: parseInt(limit),
+            offset: offset,
             attribute: {
                 exclude: ['createdAt', 'updatedAt'],
             },
@@ -158,7 +167,8 @@ module.exports = {
             order: [['createdAt', 'DESC']],
         })
         .then((result)=>{
-            return res.status(200).send(result)
+            
+            return res.status(200).send({result:result.rows, count: result.count})
         })
         .catch((err)=>{
             console.log(err)
