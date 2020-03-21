@@ -183,7 +183,7 @@ module.exports={
                             if(rekom_kepala_sekolah) {
                                 dokumenPath = path + '/' + rekom_kepala_sekolah[0].filename
                                 keterangan = 'rekom-kepala-sekolah'
-                                deskripsi = 'Surat Rekomendasi Kepala Sekolah'
+                                deskripsi = 'Surat Rekomendasi Kepala Sekolah dan Wali Kelas'
                                 listImage.push({
                                     studentId,
                                     dokumenPath,
@@ -207,7 +207,7 @@ module.exports={
                             if(rekom_kepala_sekolah) {
                                 dokumenPath = path + '/' + rekom_kepala_sekolah[0].filename
                                 keterangan = 'rekom-kepala-fakultas'
-                                deskripsi = 'Surat Rekomendasi Kepala Fakultas'
+                                deskripsi = 'Surat Rekomendasi Kepala Fakultas dan Kepala Jurusan'
                                 listImage.push({
                                     studentId,
                                     dokumenPath,
@@ -628,7 +628,7 @@ module.exports={
                             if(rekom_kepala_sekolah) {
                                 dokumenPath = path + '/' + rekom_kepala_sekolah[0].filename
                                 keterangan = 'rekom-kepala-sekolah'
-                                deskripsi = 'Surat Rekomendasi Kepala Sekolah'
+                                deskripsi = 'Surat Rekomendasi Kepala Sekolah dan Wali Guru'
                                 listImage.push({
                                     studentId,
                                     dokumenPath,
@@ -652,7 +652,7 @@ module.exports={
                             if(rekom_kepala_sekolah) {
                                 dokumenPath = path + '/' + rekom_kepala_sekolah[0].filename
                                 keterangan = 'rekom-kepala-fakultas'
-                                deskripsi = 'Surat Rekomendasi Kepala Fakultas'
+                                deskripsi = 'Surat Rekomendasi Kepala Fakultas dan Kepala Jurusan'
                                 listImage.push({
                                     studentId,
                                     dokumenPath,
@@ -1123,7 +1123,7 @@ module.exports={
                             if(rekom_kepala_sekolah) {
                                 dokumenPath = path + '/' + rekom_kepala_sekolah[0].filename
                                 keterangan = 'rekom-kepala-sekolah'
-                                deskripsi = 'Surat Rekomendasi Kepala Sekolah'
+                                deskripsi = 'Surat Rekomendasi Kepala Sekolah dan Wali Guru'
                                 listImage.push({
                                     studentId,
                                     dokumenPath,
@@ -1147,7 +1147,7 @@ module.exports={
                             if(rekom_kepala_sekolah) {
                                 dokumenPath = path + '/' + rekom_kepala_sekolah[0].filename
                                 keterangan = 'rekom-kepala-fakultas'
-                                deskripsi = 'Surat Rekomendasi Kepala Fakultas'
+                                deskripsi = 'Surat Rekomendasi Kepala Fakultas dan Kepala Jurusan'
                                 listImage.push({
                                     studentId,
                                     dokumenPath,
