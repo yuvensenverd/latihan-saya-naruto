@@ -145,10 +145,10 @@ module.exports = {
                 User.findAll({
                     where: {
                         email: data.email,
-                        [Op.or]: [
-                            { isFacebook: null },
-                            { isGoogle: null }
-                        ]
+                        // [Op.or]: [
+                        //     { isFacebook: null },
+                        //     { isGoogle: null }
+                        // ]
                     }
                 })
                 .then(results => {
@@ -714,7 +714,7 @@ module.exports = {
             if(results !== null) {
                 var encryptFacebookId = Crypto.createHmac('sha256', 'kasihnusantaraFacebookId_api')
                                     .update(req.body.data.facebookId).digest('hex')
-                                    
+
                 // Kalo sudah pernah mendaftar dengan email google, dan user ingin mencoba
                 // login lewat gmail, maka muncul errornya
                 // return res.status(500).send({ status: 'error', message: `Anda sudah pernah mendaftar dengan Email = ${req.body.data.email}`})
