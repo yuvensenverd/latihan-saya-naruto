@@ -574,10 +574,12 @@ module.exports = {
     },
 
     registerWithGoogle: (req, res) => {
+        
+
         User.findOne({
             where: {
                 email: req.body.data.email,
-                isGoogle: null,
+                // isGoogle: encryptGoogleId,
 
             }
         })
@@ -585,13 +587,45 @@ module.exports = {
             console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
             console.log(results)
             if(results !== null) {
+                var encryptGoogleId = Crypto.createHmac('sha256', 'kasihnusantaraGoogleId_api')
+        .update(req.body.data.googleId).digest('hex')
+
                 // Kalo sudah pernah mendaftar dengan email google, dan user ingin mencoba
                 // login lewat gmail, maka muncul errornya
-                return res.status(500).send({ status: 'error', message: `Anda sudah pernah mendaftar dengan Email = ${req.body.data.email}`})
+                // return res.status(500).send({ status: 'error', message: `Anda sudah pernah mendaftar dengan Email = ${req.body.data.email}`})
+                User.update({
+                    isGoogle: encryptGoogleId
+                }, 
+                {
+                    where: {
+                        email: req.body.data.email
+                    }
+                })
+                .then((update) => {
+
+                    User.findOne({
+                       where: {
+                        email: req.body.data.email
+                    }
+                    })
+                    .then((dataUserInsert) => {
+                        // console.log('CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCc')
+                        const tokenJwt = createJWTToken({ userId: dataUserInsert.id, email: dataUserInsert.email })
+
+                        return res.status(200).send({
+                            dataUser: dataUserInsert,
+                            token: tokenJwt
+                        });
+                    })
+                    .catch((err) => {
+                        return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
+                    })
+
+                })
             } else {
                 // console.log('Testing')
             
-                let encryptGoogleId = Crypto.createHmac('sha256', 'kasihnusantaraGoogleId_api')
+                var encryptGoogleId = Crypto.createHmac('sha256', 'kasihnusantaraGoogleId_api')
                                     .update(req.body.data.googleId).digest('hex')
                 
                 User.findOne({
@@ -666,21 +700,55 @@ module.exports = {
     },
 
     registerWithFacebook: (req, res) => {
+        
+
         User.findOne({
             where: {
                 email: req.body.data.email,
-                isFacebook: null,
+                // isFacebook: null,
 
             }
         })
         .then((results) => {
            // console.log(results)
             if(results !== null) {
+                var encryptFacebookId = Crypto.createHmac('sha256', 'kasihnusantaraFacebookId_api')
+                                    .update(req.body.data.facebookId).digest('hex')
+                                    
                 // Kalo sudah pernah mendaftar dengan email google, dan user ingin mencoba
                 // login lewat gmail, maka muncul errornya
-                return res.status(500).send({ status: 'error', message: `Anda sudah pernah mendaftar dengan Email = ${req.body.data.email}`})
+                // return res.status(500).send({ status: 'error', message: `Anda sudah pernah mendaftar dengan Email = ${req.body.data.email}`})
+                User.update({
+                    isFacebook: encryptFacebookId
+                }, 
+                {
+                    where: {
+                        email: req.body.data.email
+                    }
+                })
+                .then((update) => {
+
+                    User.findOne({
+                        where: {
+                            isFacebook: encryptFacebookId
+                        }
+                    })
+                    .then((dataUserInsert) => {
+                        const tokenJwt = createJWTToken({ userId: dataUserInsert.id, email: dataUserInsert.email })
+
+                        return res.status(200).send({
+                            dataUser: dataUserInsert,
+                            token: tokenJwt,
+                        });
+                    })
+                    .catch((err) => {
+                        return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
+                    })
+
+                })
+
             } else {
-                let encryptFacebookId = Crypto.createHmac('sha256', 'kasihnusantaraFacebookId_api')
+                var encryptFacebookId = Crypto.createHmac('sha256', 'kasihnusantaraFacebookId_api')
                                     .update(req.body.data.facebookId).digest('hex')
                 
                 User.findOne({
