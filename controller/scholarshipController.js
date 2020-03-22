@@ -2,6 +2,8 @@ const { Sequelize, sequelize, User, Student , scholarship, Subscription, Payment
 const Op = Sequelize.Op
 const moment = require('moment')
 const {uploader} = require('../helpers/uploader')
+var path = require('path')
+var mime = require('mime')
 const fs = require('fs')
 const { transporter } = require('../helpers/mailer')
 
@@ -1219,6 +1221,33 @@ module.exports = {
         })
     },
 
+    downloadTemplateSuratRekom : (req, res) =>{
+
+        // Article.findOne({
+        //     where: {
+        //         id: req.query.id
+        //     }
+        // })
+        // .then((result) => {
+           
+        // })
+        // .catch((error) => {
+        //     return res.status(500).send({ message : 'theres an error ', error })
+        // })
+
+        let file =  `${__dirname}/../public/defaultDokumen/Template-Surat-Rekomendasi.pdf`;
+
+        let filename = path.basename(file);
+        // console.log(filename)
+        let mimetype = mime.lookup(file);
+        // console.log(mimetype)
     
+        res.setHeader('Content-disposition', 'attachment; filename=' + filename);
+        res.setHeader('Content-type', mimetype);
+    
+        let filestream = fs.createReadStream(file);
+        filestream.pipe(res);
+
+    }
 
 } 

@@ -61,7 +61,11 @@ module.exports={
                 // var student_imageDB = ''
 
                 if(student_image) {
-                   var student_imageDB = student_image[0] ? path + '/' + student_image[0].filename : 'http://localhost:2019/defaultPhoto/defaultCategory.png';
+                   if(student_image[0].size <= 150000) {
+                    var student_imageDB = student_image[0] ? path + '/' + student_image[0].filename : 'http://localhost:2019/defaultPhoto/defaultCategory.png';
+                   } else {
+                    return res.status(500).json({ error: 'Upload Pas Foto Gagal' });
+                   }
                 }
 
 
@@ -500,8 +504,12 @@ module.exports={
                 // var student_imageDB = ''
 
                 if(student_image) {
-                   var student_imageDB = student_image[0] ? path + '/' + student_image[0].filename : 'http://localhost:2019/defaultPhoto/defaultCategory.png';
-                } else {
+                    if(student_image[0].size <= 150000) {
+                     var student_imageDB = student_image[0] ? path + '/' + student_image[0].filename : 'http://localhost:2019/defaultPhoto/defaultCategory.png';
+                    } else {
+                     return res.status(500).json({ error: 'Upload Pas Foto Gagal'});
+                    }
+                 } else {
                     var student_imageDB = null
                 }
 
@@ -988,7 +996,11 @@ module.exports={
 
                 if(student_image !== null) {
                     if(student_image !== undefined) {
-                        var student_imageDB = student_image[0] ? path + '/' + student_image[0].filename : 'http://localhost:2019/defaultPhoto/defaultCategory.png';
+                        if(student_image[0].size <= 150000) {
+                            var student_imageDB = student_image[0] ? path + '/' + student_image[0].filename : 'http://localhost:2019/defaultPhoto/defaultCategory.png';
+                           } else {
+                            return res.status(500).json({ error: 'Upload Pas Foto Gagal' });
+                           }
                     } else {
                         var student_imageDB = student_image
                     }

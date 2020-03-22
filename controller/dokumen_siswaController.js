@@ -95,6 +95,8 @@ module.exports = {
 
                 const { dokumen_image } = req.files;
 
+                console.log(dokumen_image)
+
                 if(dokumen_image) {
                     var dokumen_imageDB = dokumen_image[0] ? path + '/' + dokumen_image[0].filename : '/defaultPhoto/defaultCategory.png';
                 }

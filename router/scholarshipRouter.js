@@ -33,6 +33,7 @@ router.post('/getscholarshipByadmin', auth, scholarshipController.getScholarship
 // User 
 router.post('/getAvailableScholarship', auth, scholarshipController.getAvailableScholarship)
 router.post('/getScholarshipTemporaryUser', auth, scholarshipController.getScholarshipTemporaryUser)
+router.get('/downloadSuratRekom', scholarshipController.downloadTemplateSuratRekom)
 
 // getScholarshipDetailByAdmin
 
