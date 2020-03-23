@@ -1235,7 +1235,7 @@ module.exports = {
         //     return res.status(500).send({ message : 'theres an error ', error })
         // })
 
-        let file =  `${__dirname}/../public/defaultDokumen/Template-Surat-Rekomendasi.pdf`;
+        let file =  `${__dirname}/../public/defaultDokumen/Template-Surat-Rekomendasi-Sekolah.docx`;
 
         let filename = path.basename(file);
         // console.log(filename)
