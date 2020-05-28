@@ -31,7 +31,7 @@ module.exports = {
         });
     
         const imageFilter = (req, file, callback) => {
-            const ext = /\.(jpg|jpeg|png)$/;
+            const ext = /\.(jpg|jpeg|png|mp4)$/;
             if (!file.originalname.toLowerCase().match(ext)) {
                 return callback(new Error('Only selected file type are allowed'), false);
             }
@@ -42,7 +42,7 @@ module.exports = {
             storage: storage,
             fileFilter: imageFilter,
             limits : {
-                fileSize :  90 * 1024 * 1024 // maximum of 90 MB File
+                fileSize :  1024 * 1024 * 1024 // maximum of 90 MB File
             }
         });
     }

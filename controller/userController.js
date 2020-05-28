@@ -1,5 +1,5 @@
 
-const { User, Sequelize, sequelize, school, Project, Payment, Subscription, scholarship, Student, } = require('../models');
+const { User, Sequelize, sequelize, school, Project, Payment, Subscription, scholarship, Student, coursesvideo } = require('../models');
 const Op = Sequelize.Op
 const Crypto = require('crypto');
 
@@ -13,6 +13,7 @@ const  testcontroller  = require('./testpdf')
 // FOR EMAILER
 const path=require('path')
 const fs =require('fs')
+var mime = require('mime')
 const {emailer}=require('../helpers/mailer')
 const {pdfcreate}=require('../helpers/pdfcreate')
 
@@ -1676,6 +1677,116 @@ module.exports = {
         .catch((err) => {
             console.log(err)
         })
-    }
+    },
     
+    uploadVideoByAdmin: (req, res) => {
+        console.log(" Masuk ke dalam upload video ")
+        
+        try {
+
+            const path = '/student/video';
+            const upload = uploader(path, 'courses_video').fields([
+                {name: 'courses_video'}, 
+            ]);
+
+            upload(req, res, (err) => {
+                if(err) {
+                    return res.status(500).json({ message: 'Upload picture failed !', error: err.message });
+                }
+
+                const { courses_video } = req.files;
+               
+                const courses_videoPath = courses_video ? path + '/' + courses_video[0].filename : '/defaultPhoto/defaultUser.png';
+
+                const { title, slug } = JSON.parse(req.body.data);
+
+                // Simpan database
+                coursesvideo.create({
+                    title,
+                    locationPath: courses_videoPath,
+                    slug
+                })
+                .then((results) => {
+                    res.status(200).send({ message: 'Success' })
+                })
+                .catch((err) => {
+                    res.status(500).send({ message: 'Failed' })
+                })
+            })
+            
+        } catch (error) {
+            return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: error.message });
+        }
+    },
+
+    getAllVideo: (req, res) => {
+        coursesvideo.findAll({
+           
+        })
+        .then((results) => {
+            res.status(200).send({ message: 'Success', results })
+        })
+        .catch((err) => {
+            res.status(500).send({ message: 'Failed' })
+        })
+    },
+
+    checkAvailabilityVideo: (req, res) => {
+        coursesvideo.findOne({
+           where: {
+               slug: req.body.slug
+           }
+        })
+        .then((result) => {
+            res.status(200).send({ message: 'Success', result })
+        })
+        .catch((err) => {
+            res.status(500).send({ message: 'Failed' })
+        })
+    },
+
+    getSelectedVideos: (req, res) => {
+        const {
+            locationVideo
+        } = req.body
+
+        let videoFile =  `${__dirname}/../public${locationVideo}`;
+
+        // let filename = path.basename(file);
+        // // console.log(filename)
+        // let mimetype = mime.lookup(file);
+        // // console.log(mimetype)
+    
+        // res.setHeader('Content-disposition', 'attachment; filename=' + filename);
+        // res.setHeader('Content-type', mimetype);
+    
+        // let filestream = fs.createReadStream(file);
+        // filestream.pipe(res);
+
+        var stat = fs.statSync(videoFile);
+        var total = stat.size;
+
+        if (req.headers.range) {   // meaning client (browser) has moved the forward/back slider
+                                                // which has sent this request back to this server logic ... cool
+            var range = req.headers.range;
+            var parts = range.replace(/bytes=/, "").split("-");
+            var partialstart = parts[0];
+            var partialend = parts[1];
+
+            var start = parseInt(partialstart, 10);
+            var end = partialend ? parseInt(partialend, 10) : total-1;
+            var chunksize = (end-start)+1;
+            console.log('RANGE: ' + start + ' - ' + end + ' = ' + chunksize);
+
+            var file = fs.createReadStream(videoFile, {start: start, end: end});
+            res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'video/mp4' });
+            file.pipe(res);
+
+        } else {
+
+            console.log('ALL: ' + total);
+            res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'video/mp4' });
+            fs.createReadStream(videoFile).pipe(res);
+        }
+    }
 }

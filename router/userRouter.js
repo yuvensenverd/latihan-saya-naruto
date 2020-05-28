@@ -25,6 +25,10 @@ router.post('/userChangePassword', auth, userController.userChangePassword);
 
 router.get('/getSubscription/:id', auth, userController.getSubscription);
 router.get('/getDonationUser', auth, userController.getDonationUser);
-router.get('/scholarshipByIdUser', auth, userController.getScholarshipByUserId)
+router.get('/scholarshipByIdUser', auth, userController.getScholarshipByUserId);
 
+router.post('/uploadvideo', auth, userController.uploadVideoByAdmin);
+router.get('/allvideos', userController.getAllVideo);
+router.post('/checkVideos', auth, userController.checkAvailabilityVideo);
+router.post('/getVideos', auth, userController.getSelectedVideos)
 module.exports = router
