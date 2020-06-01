@@ -17,7 +17,8 @@ var mime = require('mime')
 const {emailer}=require('../helpers/mailer')
 const {pdfcreate}=require('../helpers/pdfcreate')
 
-const moment=require('moment');
+const moment = require('moment');
+const request = require('request')
 
 const { URL_API, UI_LINK} = require('../helpers/url_api');
  
@@ -1755,7 +1756,22 @@ module.exports = {
            }
         })
         .then((result) => {
-            res.status(200).send({ message: 'Success', result })
+
+            var options = { method: 'POST',
+              url: `https://dev.vdocipher.com/api/videos/${result.locationPath}/otp`,
+              headers:
+               {
+                 Accept: 'application/json',
+                 'Content-Type': 'application/json',
+                 Authorization: 'Apisecret xTuLQKJnHT7Ztwbf8PfstKpPAXl3s3kOdbYiPiOS4SZirW2Wxyo4ysni2DigJ1NN' },
+              body: { ttl: 300 },
+              json: true };
+            
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+            
+              res.status(200).send({ message: 'Success', result, video: body})
+            });
         })
         .catch((err) => {
             res.status(500).send({ message: 'Failed' })
