@@ -30,5 +30,5 @@ router.get('/scholarshipByIdUser', auth, userController.getScholarshipByUserId);
 router.post('/uploadvideo', auth, userController.uploadVideoByAdmin);
 router.get('/allvideos', userController.getAllVideo);
 router.post('/checkVideos', auth, userController.checkAvailabilityVideo);
-router.post('/getVideos', auth, userController.getSelectedVideos)
+router.get('/getVideos/:title', userController.getSelectedVideos)
 module.exports = router
