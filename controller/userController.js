@@ -1757,21 +1757,23 @@ module.exports = {
         })
         .then((result) => {
 
-            var options = { method: 'POST',
-              url: `https://dev.vdocipher.com/api/videos/${result.locationPath}/otp`,
-              headers:
-               {
-                 Accept: 'application/json',
-                 'Content-Type': 'application/json',
-                 Authorization: 'Apisecret xTuLQKJnHT7Ztwbf8PfstKpPAXl3s3kOdbYiPiOS4SZirW2Wxyo4ysni2DigJ1NN' },
-              body: { ttl: 300 },
-              json: true };
+            // var options = { method: 'POST',
+            //   url: `https://dev.vdocipher.com/api/videos/${result.locationPath}/otp`,
+            //   headers:
+            //    {
+            //      Accept: 'application/json',
+            //      'Content-Type': 'application/json',
+            //      Authorization: 'Apisecret xTuLQKJnHT7Ztwbf8PfstKpPAXl3s3kOdbYiPiOS4SZirW2Wxyo4ysni2DigJ1NN' },
+            //   body: { ttl: 300, whitelisthref: 'vdocipher.com' },
+            //   json: true };
             
-            request(options, function (error, response, body) {
-              if (error) throw new Error(error);
+            // request(options, function (error, response, body) {
+            //   if (error) throw new Error(error);
             
-              res.status(200).send({ message: 'Success', result, video: body})
-            });
+            //   res.status(200).send({ message: 'Success', result, video: body})
+            // });
+
+            res.status(200).send({ message: 'Success', result})
         })
         .catch((err) => {
             res.status(500).send({ message: 'Failed' })
