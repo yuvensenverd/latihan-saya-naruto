@@ -29,6 +29,9 @@ router.get('/scholarshipByIdUser', auth, userController.getScholarshipByUserId);
 
 router.post('/uploadvideo', auth, userController.uploadVideoByAdmin);
 router.get('/allvideos', userController.getAllVideo);
-router.post('/checkVideos', auth, userController.checkAvailabilityVideo);
-router.get('/getVideos/:title', userController.getSelectedVideos)
+router.post('/checkVideos', userController.checkAvailabilityVideo);
+router.get('/getVideos/:title', userController.getSelectedVideos);
+router.post('/checkSubscription', auth, userController.checkSubscriptionVideo);
+router.post('/subcriptionVideo', auth, userController.subcriptionVideo);
+
 module.exports = router

@@ -1,5 +1,5 @@
 
-const { User, Sequelize, sequelize, school, Project, Payment, Subscription, scholarship, Student, coursesvideo } = require('../models');
+const { User, Sequelize, sequelize, school, Project, Payment, Subscription, scholarship, Student, coursesvideo, userVideoSubscription } = require('../models');
 const Op = Sequelize.Op
 const Crypto = require('crypto');
 
@@ -1683,58 +1683,59 @@ module.exports = {
     uploadVideoByAdmin: (req, res) => {
         console.log(" Masuk ke dalam upload video ")
         
-        // try {
+        try {
 
-        //     const path = '/student/video';
-        //     const upload = uploader(path, 'courses_video').fields([
-        //         {name: 'courses_video'}, 
-        //     ]);
+            const path = '/student/video';
+            const upload = uploader(path, 'image_video').fields([
+                {name: 'image_video'}, 
+            ]);
 
-        //     upload(req, res, (err) => {
-        //         if(err) {
-        //             return res.status(500).json({ message: 'Upload picture failed !', error: err.message });
-        //         }
+            upload(req, res, (err) => {
+                if(err) {
+                    return res.status(500).json({ message: 'Upload picture failed !', error: err.message });
+                }
 
-        //         // const { courses_video } = req.files;
+                const { image_video } = req.files;
                
-        //         // const courses_videoPath = courses_video ? path + '/' + courses_video[0].filename : '/defaultPhoto/defaultUser.png';
+                const image_videoPath = image_video ? path + '/' + image_video[0].filename : '/defaultPhoto/defaultUser.png';
 
-        //         const { title, slug, locationPath } = JSON.parse(req.body.data);
+                const { title, slug, locationPath } = JSON.parse(req.body.data);
 
-        //         // Simpan database
-        //         coursesvideo.create({
-        //             title,
-        //             // locationPath: courses_videoPath,
-        //             slug,
-        //             locationPath
-        //         })
-        //         .then((results) => {
-        //             res.status(200).send({ message: 'Success' })
-        //         })
-        //         .catch((err) => {
-        //             res.status(500).send({ message: 'Failed' })
-        //         })
-        //     })
+                // Simpan database
+                coursesvideo.create({
+                    title,
+                    thumbnail_video: image_videoPath,
+                    slug,
+                    locationPath
+                })
+                .then((results) => {
+                    res.status(200).send({ message: 'Success' })
+                })
+                .catch((err) => {
+                    res.status(500).send({ message: 'Failed' })
+                })
+            })
             
-        // } catch (error) {
-        //     return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: error.message });
-        // }
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: error.message });
+        }
 
-        console.log(req.body)
-        const { title, slug, locationPath } = req.body;
-        // Simpan database
-        coursesvideo.create({
-            title,
-            // locationPath: courses_videoPath,
-            slug,
-            locationPath
-        })
-        .then((results) => {
-            res.status(200).send({ message: 'Success' })
-        })
-        .catch((err) => {
-            res.status(500).send({ message: 'Failed' })
-        })
+        // console.log(req.body)
+        // const { title, slug, locationPath } = req.body;
+        // // Simpan database
+        // coursesvideo.create({
+        //     title,
+        //     // locationPath: courses_videoPath,
+        //     slug,
+        //     locationPath
+        // })
+        // .then((results) => {
+        //     res.status(200).send({ message: 'Success' })
+        // })
+        // .catch((err) => {
+        //     res.status(500).send({ message: 'Failed' })
+        // })
     },
 
     getAllVideo: (req, res) => {
@@ -1773,7 +1774,7 @@ module.exports = {
             //   res.status(200).send({ message: 'Success', result, video: body})
             // });
 
-            res.status(200).send({ message: 'Success', result})
+            res.status(200).send({ message: 'Success', result })
         })
         .catch((err) => {
             res.status(500).send({ message: 'Failed' })
@@ -1830,5 +1831,58 @@ module.exports = {
         //     res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'video/mp4' });
         //     fs.createReadStream(videoFile).pipe(res);
         // }
+    },
+
+    checkSubscriptionVideo: (req, res) => {
+        const { videoId } = req.body
+
+        console.log(req.body);
+        console.log(req.user.userId)
+        userVideoSubscription.findAll({
+           where: {
+               videoId,
+               userId: req.user.userId
+           }
+        })
+        .then((checkSubscriptionLength) => {
+            console.log(checkSubscriptionLength)
+            coursesvideo.findOne({
+                where: {
+                    id: videoId
+            }
+            })
+            .then((result) => {
+                if(checkSubscriptionLength.length !== 0) {
+                    res.status(200).send({ message: 'Subscribe', result })
+                } else {
+                    res.status(200).send({ message: 'Not Subscribe', result });
+                }
+                
+            })
+            .catch((err) => {
+                res.status(500).send({ message: 'Failed' })
+            })
+            
+        })
+        .catch((err) => {
+            console.log(err)
+            res.status(500).send({ message: 'Failed' })
+        })
+    },
+
+    subcriptionVideo: (req, res) => {
+        const { videoId } = req.body;
+        console.log(videoId)
+        userVideoSubscription.create({
+            userId: req.user.userId,
+            videoId
+        })
+        .then((result) => {
+            console.log(result)
+            return res.status(200).send({ message: 'Success' });
+        })
+        .catch((result) => {
+            return res.status(500).send({ message: 'Failed' })
+        })
     }
 }
