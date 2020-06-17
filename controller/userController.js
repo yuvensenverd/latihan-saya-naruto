@@ -1707,18 +1707,18 @@ module.exports = {
     //             console.log(req.files)
 
     //             formData.append('title', title)
-    //             formData.append('source_video_url', courses_video[0].buffer);
+    //             formData.append('source_video', fs.createReadStream(courses_video[0].buffer));
 
     //             let options = {
     //                 headers: {
+    //                     "Accept" : '*/*',
     //                     "SproutVideo-Api-Key" : "b68c99f476953bf21b46bc034226b20f",
     //                     "Content-Type" : "multipart/form-data; boundary=" + formData.getBoundary(),
     //                     "Content-Length": formData.getLengthSync(),
-
     //                 }
     //             }
 
-    //             axios.post(`https://api.sproutvideo.com/v1/videos`, formData, options)
+    //             axios.post(`https://api.sproutvideo.com/v1/videos`, formData, options, )
     //             .then((res) => {
     //                 console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
     //                 console.log(res)
@@ -1728,8 +1728,8 @@ module.exports = {
     //             .catch((err) => {
     //                 console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
     //                 console.log(err)
-    //                 console.log(err.response.data);
-    //                 console.log(err.response.headers);
+    //                 // console.log(err.response.data);
+    //                 // console.log(err.response.headers);
     //             })
                 
     //         })
@@ -1743,7 +1743,8 @@ module.exports = {
 
             const path = '/student/video';
             const upload = uploader(path, 'courses_video').fields([
-                {name: 'courses_video'}, 
+                {name: 'courses_video'},
+                {name: 'image_video'}
             ]);
 
             upload(req, res, (err) => {
@@ -1751,11 +1752,12 @@ module.exports = {
                     return res.status(500).json({ message: 'Upload picture failed !', error: err.message });
                 }
 
-                const { courses_video } = req.files;
+                const { courses_video, image_video} = req.files;
                 console.log(req.files)
                 
                
                 const videoPath = courses_video ? path + '/' + courses_video[0].filename : '/defaultPhoto/defaultUser.png';
+                const imagePath = image_video ? path + '/' + image_video[0].filename : '/defaultPhoto/defaultUser.png';
 
                 const { title, slug } = JSON.parse(req.body.data);
 
@@ -1765,7 +1767,7 @@ module.exports = {
                 
                 
                 formData.append('title', title)
-                formData.append('source_video_url', `${URL_API}${videoPath}`);
+                formData.append('source_video', `${URL_API}${videoPath}`);
 
                 let options = {
                     headers: {
@@ -1784,21 +1786,21 @@ module.exports = {
                 // }
 
                 axios.post(`https://api.sproutvideo.com/v1/videos`, formData, options)
-                .then((res) => {
-                    console.log(res)
+                .then((resultVideo) => {
+                    console.log(resultVideo)
                     console.log(videoPath)
                     
-                    console.log(res.data);
-                    let videoLinkDB = `<div style="position:relative;height:0;padding-bottom:56.25%"><iframe class='sproutvideo-player' src='https://videos.sproutvideo.com/embed/${res.data.id}/${res.data.security_token}' style='position:absolute;width:100%;height:100%;left:0;top:0' frameborder='0' allowfullscreen></iframe></div>`
+                    console.log(resultVideo.data);
+                    let videoLinkDB = `<div style="position:relative;height:0;padding-bottom:56.25%"><iframe class='sproutvideo-player' src='https://videos.sproutvideo.com/embed/${resultVideo.data.id}/${resultVideo.data.security_token}' style='position:absolute;width:100%;height:100%;left:0;top:0' frameborder='0' allowfullscreen></iframe></div>`
+                    
                     coursesvideo.create({
                         title,
-                        // locationPath: courses_videoPath,
                         slug,
-                        locationPath: videoLinkDB
+                        locationPath: videoLinkDB,
+                        thumbnail_video: imagePath
                     })
                     .then((results) => {
-                        // fs.unlinkSync('./public' + videoPath);
-                        console.log(results)
+                        // fs.unlinkSync('./public', videoPath);
                         return res.status(200).send({ message: 'Success' })
                     })
                     .catch((err) => {
@@ -1809,57 +1811,61 @@ module.exports = {
                     console.log(err);
                 })
 
-
-                // var config = {
-                //     method: 'post',
-                //     url: 'https://api.sproutvideo.com/v1/videos',
-                //     headers: { 
-                //       'SproutVideo-Api-Key': 'b68c99f476953bf21b46bc034226b20f', 
-                //       ...formData.getHeaders()
-                //     },
-                //     data : formData
-                //   };
-                  
-                //   axios(config)
-                //   .then(function (response) {
-                //     console.log(JSON.stringify(response.data));
-                //   })
-                //   .catch(function (error) {
-                //     console.log(error);
-                //   });
-
-
-
-
-
-                // axios.get(`https://api.sproutvideo.com/v1/videos`, options)
-                // .then((res) => {
-                //     console.log(res.data.videos)
-                // })
-                // .catch((err) => {
-                //     console.log(err)
-                // })
-
-                // coursesvideo.create({
-                //     title,
-                //     thumbnail_video: image_videoPath,
-                //     slug,
-                //     locationPath
-                // })
-                // .then((results) => {
-                //     res.status(200).send({ message: 'Success' })
-                // })
-                // .catch((err) => {
-                //     res.status(500).send({ message: 'Failed' })
-                // })
-
-
+                
             })
-            
+
         } catch (error) {
             console.log(error)
             return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: error.message });
         }
+
+
+        //         // var config = {
+        //         //     method: 'post',
+        //         //     url: 'https://api.sproutvideo.com/v1/videos',
+        //         //     headers: { 
+        //         //       'SproutVideo-Api-Key': 'b68c99f476953bf21b46bc034226b20f', 
+        //         //       ...formData.getHeaders()
+        //         //     },
+        //         //     data : formData
+        //         //   };
+                  
+        //         //   axios(config)
+        //         //   .then(function (response) {
+        //         //     console.log(JSON.stringify(response.data));
+        //         //   })
+        //         //   .catch(function (error) {
+        //         //     console.log(error);
+        //         //   });
+
+
+
+
+
+        //         // axios.get(`https://api.sproutvideo.com/v1/videos`, options)
+        //         // .then((res) => {
+        //         //     console.log(res.data.videos)
+        //         // })
+        //         // .catch((err) => {
+        //         //     console.log(err)
+        //         // })
+
+        //         // coursesvideo.create({
+        //         //     title,
+        //         //     thumbnail_video: image_videoPath,
+        //         //     slug,
+        //         //     locationPath
+        //         // })
+        //         // .then((results) => {
+        //         //     res.status(200).send({ message: 'Success' })
+        //         // })
+        //         // .catch((err) => {
+        //         //     res.status(500).send({ message: 'Failed' })
+        //         // })
+
+
+            
+       
 
         // console.log(req.body)
         // const { title, slug, locationPath } = req.body;
