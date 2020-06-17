@@ -1767,7 +1767,7 @@ module.exports = {
                 
                 
                 formData.append('title', title)
-                formData.append('source_video', `${URL_API}${videoPath}`);
+                formData.append('source_video_url', `${URL_API}${videoPath}`);
 
                 let options = {
                     headers: {
