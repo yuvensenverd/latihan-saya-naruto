@@ -1785,6 +1785,7 @@ module.exports = {
 
                 axios.post(`https://api.sproutvideo.com/v1/videos`, formData, options)
                 .then((res) => {
+                    console.log(res)
                     console.log(videoPath)
                     
                     console.log(res.data);
@@ -1796,7 +1797,7 @@ module.exports = {
                         locationPath: videoLinkDB
                     })
                     .then((results) => {
-                        fs.unlinkSync('./public' + videoPath);
+                        // fs.unlinkSync('./public' + videoPath);
                         console.log(results)
                         return res.status(200).send({ message: 'Success' })
                     })
