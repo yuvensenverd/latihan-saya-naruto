@@ -1785,9 +1785,10 @@ module.exports = {
 
                 axios.post(`https://api.sproutvideo.com/v1/videos`, formData, options)
                 .then((res) => {
+                    console.log(videoPath)
                     fs.unlinkSync('./public' + videoPath);
-                    console.log(res);
-                    let videoLinkDB = `<div style="position:relative;height:0;padding-bottom:56.25%"><iframe class='sproutvideo-player' src='https://videos.sproutvideo.com/embed/${res.id}/${res.security_token}' style='position:absolute;width:100%;height:100%;left:0;top:0' frameborder='0' allowfullscreen></iframe></div>`
+                    console.log(res.data);
+                    let videoLinkDB = `<div style="position:relative;height:0;padding-bottom:56.25%"><iframe class='sproutvideo-player' src='https://videos.sproutvideo.com/embed/${res.data.id}/${res.data.security_token}' style='position:absolute;width:100%;height:100%;left:0;top:0' frameborder='0' allowfullscreen></iframe></div>`
                     coursesvideo.create({
                         title,
                         // locationPath: courses_videoPath,
@@ -1795,10 +1796,11 @@ module.exports = {
                         locationPath: videoLinkDB
                     })
                     .then((results) => {
-                        res.status(200).send({ message: 'Success' })
+                        console.log(results)
+                        return res.status(200).send({ message: 'Success' })
                     })
                     .catch((err) => {
-                        res.status(500).send({ message: 'Failed' })
+                        return res.status(500).send({ message: 'Failed' })
                     })
                 })
                 .catch((err) => {
