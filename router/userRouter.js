@@ -28,9 +28,9 @@ router.get('/getDonationUser', auth, userController.getDonationUser);
 router.get('/scholarshipByIdUser', auth, userController.getScholarshipByUserId);
 
 router.post('/uploadvideo', auth, userController.uploadVideoByAdmin);
-router.get('/allvideos', userController.getAllVideo);
+router.get('/allvideos', auth, userController.getAllVideo);
 router.post('/checkVideos', userController.checkAvailabilityVideo);
-router.get('/getVideos/:title', userController.getSelectedVideos);
+router.post('/getVideos', auth, userController.getSelectedVideos);
 router.post('/checkSubscription', auth, userController.checkSubscriptionVideo);
 router.post('/subcriptionVideo', auth, userController.subcriptionVideo);
 

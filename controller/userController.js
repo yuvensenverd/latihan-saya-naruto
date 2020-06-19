@@ -1886,7 +1886,11 @@ module.exports = {
 
     getAllVideo: (req, res) => {
         coursesvideo.findAll({
-           
+            attributes: [
+                [Sequelize.fn('DISTINCT', Sequelize.col('title')) ,'title'],
+                'thumbnail_video',
+                'slug'
+            ]
         })
         .then((results) => {
             res.status(200).send({ message: 'Success', results })
@@ -1897,28 +1901,12 @@ module.exports = {
     },
 
     checkAvailabilityVideo: (req, res) => {
-        coursesvideo.findOne({
+        coursesvideo.findAll({
            where: {
                slug: req.body.slug
            }
         })
         .then((result) => {
-
-            // var options = { method: 'POST',
-            //   url: `https://dev.vdocipher.com/api/videos/${result.locationPath}/otp`,
-            //   headers:
-            //    {
-            //      Accept: 'application/json',
-            //      'Content-Type': 'application/json',
-            //      Authorization: 'Apisecret xTuLQKJnHT7Ztwbf8PfstKpPAXl3s3kOdbYiPiOS4SZirW2Wxyo4ysni2DigJ1NN' },
-            //   body: { ttl: 300, whitelisthref: 'vdocipher.com' },
-            //   json: true };
-            
-            // request(options, function (error, response, body) {
-            //   if (error) throw new Error(error);
-            
-            //   res.status(200).send({ message: 'Success', result, video: body})
-            // });
 
             res.status(200).send({ message: 'Success', result })
         })
@@ -1929,73 +1917,92 @@ module.exports = {
 
     getSelectedVideos: (req, res) => {
         
-        console.log(req.params)
-        console.log(req.params.title)
-        let videoFile =  `${__dirname}/../public/student/video/${req.params.title}`;
+        // console.log(req.params)
+        // console.log(req.params.title)
+        // let videoFile =  `${__dirname}/../public/student/video/${req.params.title}`;
 
-        // let filename = path.basename(file);
-        // // console.log(filename)
-        // let mimetype = mime.lookup(file);
-        // // console.log(mimetype)
+        // // let filename = path.basename(file);
+        // // // console.log(filename)
+        // // let mimetype = mime.lookup(file);
+        // // // console.log(mimetype)
     
-        // res.setHeader('Content-disposition', 'attachment; filename=' + filename);
-        // res.setHeader('Content-type', mimetype);
+        // // res.setHeader('Content-disposition', 'attachment; filename=' + filename);
+        // // res.setHeader('Content-type', mimetype);
     
-        // let filestream = fs.createReadStream(file);
-        // filestream.pipe(res);
+        // // let filestream = fs.createReadStream(file);
+        // // filestream.pipe(res);
 
-        var stat = fs.statSync(videoFile);
-        var total = stat.size;
+        // var stat = fs.statSync(videoFile);
+        // var total = stat.size;
 
-        console.log('_________________________+++++ASASS')
-        console.log(req.headers.range)
+        // console.log('_________________________+++++ASASS')
+        // console.log(req.headers.range)
 
-        if (req.headers.range) {   
-            // meaning client (browser) has moved the forward/back slider
-            // which has sent this request back to this server logic ... cool
+        // if (req.headers.range) {   
+        //     // meaning client (browser) has moved the forward/back slider
+        //     // which has sent this request back to this server logic ... cool
             
-            console.log('Ada req headers range')
-            var range = req.headers.range;
-            var parts = range.replace(/bytes=/, "").split("-");
-            var partialstart = parts[0];
-            var partialend = parts[1];
-            var maxChunk = 1024 * 1024;
+        //     console.log('Ada req headers range')
+        //     var range = req.headers.range;
+        //     var parts = range.replace(/bytes=/, "").split("-");
+        //     var partialstart = parts[0];
+        //     var partialend = parts[1];
+        //     var maxChunk = 1024 * 1024;
 
-            var start = parseInt(partialstart, 10);
-            var end = partialend ? parseInt(partialend, 10) : total-1;
-            var chunksize = (end-maxChunk)+1;
-            console.log('RANGE: ' + start + ' - ' + end + ' = ' + chunksize);
+        //     var start = parseInt(partialstart, 10);
+        //     var end = partialend ? parseInt(partialend, 10) : total-1;
+        //     var chunksize = (end-maxChunk)+1;
+        //     console.log('RANGE: ' + start + ' - ' + end + ' = ' + chunksize);
 
-            var file = fs.createReadStream(videoFile, {start: start, end: end});
-            res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'video/mp4' });
-            file.pipe(res);
+        //     var file = fs.createReadStream(videoFile, {start: start, end: end});
+        //     res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'video/mp4' });
+        //     file.pipe(res);
 
-        } 
+        // } 
         // else {
         //     console.log('Ga ada req.header')
         //     console.log('ALL: ' + total);
         //     res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'video/mp4' });
         //     fs.createReadStream(videoFile).pipe(res);
         // }
+
+        const { 
+            slug,
+            topic_name
+        }  = req.body
+
+        coursesvideo.findOne({
+            where: {
+                slug,
+                topic_name
+            }
+         })
+         .then((result) => {
+            
+             res.status(200).send({ message: 'Success', result })
+         })
+         .catch((err) => {
+             res.status(500).send({ message: 'Failed' })
+         })
     },
 
     checkSubscriptionVideo: (req, res) => {
-        const { videoId } = req.body
+        const { videoProgram } = req.body
 
         console.log(req.body);
         console.log(req.user.userId)
         userVideoSubscription.findAll({
            where: {
-               videoId,
+               programName: videoProgram,
                userId: req.user.userId
            }
         })
         .then((checkSubscriptionLength) => {
             console.log(checkSubscriptionLength)
-            coursesvideo.findOne({
-                where: {
-                    id: videoId
-            }
+            coursesvideo.findAll({
+               where: {
+                   title: videoProgram
+               }
             })
             .then((result) => {
                 if(checkSubscriptionLength.length !== 0) {
@@ -2031,4 +2038,6 @@ module.exports = {
             return res.status(500).send({ message: 'Failed' })
         })
     },
+
+
 }
