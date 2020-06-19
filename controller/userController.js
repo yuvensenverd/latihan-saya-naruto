@@ -2024,11 +2024,11 @@ module.exports = {
     },
 
     subcriptionVideo: (req, res) => {
-        const { videoId } = req.body;
+        const { videoId, programName } = req.body;
         console.log(videoId)
         userVideoSubscription.create({
             userId: req.user.userId,
-            videoId
+            programName
         })
         .then((result) => {
             console.log(result)
