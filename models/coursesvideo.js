@@ -9,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
     topic_name: DataTypes.STRING,
     thumbnail_video: DataTypes.STRING,
     slug: DataTypes.STRING,
-    video_description: DataTypes.TEXT
+    video_description: DataTypes.TEXT,
+    quizLocation: DataTypes.TEXT
   }, {});
   coursesvideo.associate = function(models) {
     // associations can be defined here
