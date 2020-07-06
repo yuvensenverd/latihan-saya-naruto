@@ -2278,41 +2278,6 @@ module.exports = {
         },
       })
       .then((results) => {
-        // console.log(results.dataValues);
-        // console.log(results);
-        const objQuestion = [];
-        // {
-        //   sentence: 'True or False termasuk ke dalam tipe data?',
-        //   answer: {
-        //     a: 'Number',
-        //     b: 'String',
-        //     c: 'Boolean',
-        //     d: 'Object',
-        //   },
-        //   order: 1,
-        //   correctAnswer: 'c',
-        //   scorePoints: 25,
-        // }
-
-        //         answer: "c"
-        // createdAt: "2020-06-11T05:00:31.000Z"
-        // id: 1
-        // options: "{"a":"Number","b":"String","c":"Boolean","d":"Object"}"
-        // order: "1"
-        // quizId: 1
-        // scorePoints: 25
-        // sentence: "True or False termasuk ke dalam tipe data?"
-        // updatedAt: "2020-06-11T05:00:31.000Z"
-        // results.dataValues.questions.forEach((val) => {
-        //   console.log(val.dataValues);
-        //   const {
-        //     options,
-        //     sentence,
-        //     scorePoints,
-        //     answer,
-        //     order,
-        //   } = val.dataValues;
-        // });
         return res.status(200).send({
           quiz: results.dataValues,
           question: results.dataValues.questions,
