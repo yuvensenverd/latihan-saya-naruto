@@ -10,6 +10,8 @@ const {
   Student,
   coursesvideo,
   userVideoSubscription,
+  quiz,
+  question,
 } = require("../models");
 const Op = Sequelize.Op;
 const Crypto = require("crypto");
@@ -280,41 +282,33 @@ module.exports = {
                     });
                   })
                   .catch((err) => {
-                    return res
-                      .status(500)
-                      .json({
-                        message:
-                          "There's an error on the server. Please contact the administrator.",
-                        error: err.message,
-                      });
+                    return res.status(500).json({
+                      message:
+                        "There's an error on the server. Please contact the administrator.",
+                      error: err.message,
+                    });
                   });
               });
             } else {
-              return res
-                .status(500)
-                .json({
-                  message: "Email has been registered",
-                  error: err.message,
-                });
-            }
-          })
-          .catch((err) => {
-            return res
-              .status(500)
-              .json({
+              return res.status(500).json({
                 message: "Email has been registered",
                 error: err.message,
               });
+            }
+          })
+          .catch((err) => {
+            return res.status(500).json({
+              message: "Email has been registered",
+              error: err.message,
+            });
           });
       });
     } catch (err) {
-      return res
-        .status(500)
-        .json({
-          message:
-            "There's an error on the server. Please contact the administrator.",
-          error: err.message,
-        });
+      return res.status(500).json({
+        message:
+          "There's an error on the server. Please contact the administrator.",
+        error: err.message,
+      });
     }
   },
 
@@ -373,26 +367,22 @@ module.exports = {
             .catch((err) => {
               console.log("err2");
               console.log(err);
-              return res
-                .status(500)
-                .json({
-                  message:
-                    "There's an error on the server. Please contact the administrator.",
-                  error: err.message,
-                });
+              return res.status(500).json({
+                message:
+                  "There's an error on the server. Please contact the administrator.",
+                error: err.message,
+              });
             });
         }
       })
       .catch((err) => {
         console.log("err3");
         console.log(err);
-        return res
-          .status(500)
-          .json({
-            message:
-              "There's an error on the server. Please contact the administrator.",
-            error: err.message,
-          });
+        return res.status(500).json({
+          message:
+            "There's an error on the server. Please contact the administrator.",
+          error: err.message,
+        });
       });
   },
 
@@ -443,13 +433,11 @@ module.exports = {
         }
       })
       .catch((err) => {
-        return res
-          .status(500)
-          .json({
-            message:
-              "There's an error on the server. Please contact the administrator.",
-            error: err.message,
-          });
+        return res.status(500).json({
+          message:
+            "There's an error on the server. Please contact the administrator.",
+          error: err.message,
+        });
       });
   },
 
@@ -477,13 +465,11 @@ module.exports = {
         }
       })
       .catch((err) => {
-        return res
-          .status(500)
-          .json({
-            message:
-              "There's an error on the server. Please contact the administrator.",
-            error: err.message,
-          });
+        return res.status(500).json({
+          message:
+            "There's an error on the server. Please contact the administrator.",
+          error: err.message,
+        });
       });
   },
 
@@ -536,13 +522,11 @@ module.exports = {
                 });
             })
             .catch((err) => {
-              return res
-                .status(500)
-                .json({
-                  message:
-                    "There's an error on the server. Please contact the administrator.",
-                  error: err.message,
-                });
+              return res.status(500).json({
+                message:
+                  "There's an error on the server. Please contact the administrator.",
+                error: err.message,
+              });
             });
         } else {
           return res
@@ -551,13 +535,11 @@ module.exports = {
         }
       })
       .catch((err) => {
-        return res
-          .status(500)
-          .json({
-            message:
-              "There's an error on the server. Please contact the administrator.",
-            error: err.message,
-          });
+        return res.status(500).json({
+          message:
+            "There's an error on the server. Please contact the administrator.",
+          error: err.message,
+        });
       });
   },
 
@@ -570,21 +552,17 @@ module.exports = {
       .then((dataUser) => {
         if (dataUser) {
           if (dataUser.isGoogle && dataUser.password === null) {
-            return res
-              .status(500)
-              .send({
-                status: "gmailTrue",
-                message: `Silahkan Login with Gmail dengan Email = ${req.body.email}`,
-              });
+            return res.status(500).send({
+              status: "gmailTrue",
+              message: `Silahkan Login with Gmail dengan Email = ${req.body.email}`,
+            });
           }
 
           if (dataUser.isFacebook && dataUser.password === null) {
-            return res
-              .status(500)
-              .send({
-                status: "facebookTrue",
-                message: `Silahkan Login with Facebook dengan Email = ${req.body.email}`,
-              });
+            return res.status(500).send({
+              status: "facebookTrue",
+              message: `Silahkan Login with Facebook dengan Email = ${req.body.email}`,
+            });
           }
 
           const tokenPassword = createForgotPasswordToken({
@@ -621,22 +599,18 @@ module.exports = {
             });
           });
         } else {
-          return res
-            .status(500)
-            .send({
-              status: "notFoundEmail",
-              message: "Email belum terdaftar, harap Register terlebih dahulu",
-            });
+          return res.status(500).send({
+            status: "notFoundEmail",
+            message: "Email belum terdaftar, harap Register terlebih dahulu",
+          });
         }
       })
       .catch((err) => {
-        return res
-          .status(500)
-          .json({
-            message:
-              "There's an error on the server. Please contact the administrator.",
-            error: err.message,
-          });
+        return res.status(500).json({
+          message:
+            "There's an error on the server. Please contact the administrator.",
+          error: err.message,
+        });
       });
   },
 
@@ -659,13 +633,11 @@ module.exports = {
         return res.status(200).send(results);
       })
       .catch((err) => {
-        return res
-          .status(500)
-          .json({
-            message:
-              "There's an error on the server. Please contact the administrator.",
-            error: err.message,
-          });
+        return res.status(500).json({
+          message:
+            "There's an error on the server. Please contact the administrator.",
+          error: err.message,
+        });
       });
   },
 
@@ -713,13 +685,11 @@ module.exports = {
               return res.status(200).send(results);
             })
             .catch((err) => {
-              return res
-                .status(500)
-                .json({
-                  message:
-                    "There's an error on the server. Please contact the administrator.",
-                  error: err.message,
-                });
+              return res.status(500).json({
+                message:
+                  "There's an error on the server. Please contact the administrator.",
+                error: err.message,
+              });
             });
         } else {
           return res
@@ -791,13 +761,11 @@ module.exports = {
                 });
               })
               .catch((err) => {
-                return res
-                  .status(500)
-                  .json({
-                    message:
-                      "There's an error on the server. Please contact the administrator.",
-                    error: err.message,
-                  });
+                return res.status(500).json({
+                  message:
+                    "There's an error on the server. Please contact the administrator.",
+                  error: err.message,
+                });
               });
           });
         } else {
@@ -871,45 +839,37 @@ module.exports = {
                         });
                       })
                       .catch((err) => {
-                        return res
-                          .status(500)
-                          .json({
-                            message:
-                              "There's an error on the server. Please contact the administrator.",
-                            error: err.message,
-                          });
+                        return res.status(500).json({
+                          message:
+                            "There's an error on the server. Please contact the administrator.",
+                          error: err.message,
+                        });
                       });
                   })
                   .catch((err) => {
-                    return res
-                      .status(500)
-                      .json({
-                        message:
-                          "There's an error on the server. Please contact the administrator.",
-                        error: err.message,
-                      });
+                    return res.status(500).json({
+                      message:
+                        "There's an error on the server. Please contact the administrator.",
+                      error: err.message,
+                    });
                   });
               }
             })
             .catch((err) => {
-              return res
-                .status(500)
-                .json({
-                  message:
-                    "There's an error on the server. Please contact the administrator.",
-                  error: err.message,
-                });
+              return res.status(500).json({
+                message:
+                  "There's an error on the server. Please contact the administrator.",
+                error: err.message,
+              });
             });
         }
       })
       .catch((err) => {
-        return res
-          .status(500)
-          .json({
-            message:
-              "There's an error on the server. Please contact the administrator.",
-            error: err.message,
-          });
+        return res.status(500).json({
+          message:
+            "There's an error on the server. Please contact the administrator.",
+          error: err.message,
+        });
       });
   },
 
@@ -960,13 +920,11 @@ module.exports = {
                 });
               })
               .catch((err) => {
-                return res
-                  .status(500)
-                  .json({
-                    message:
-                      "There's an error on the server. Please contact the administrator.",
-                    error: err.message,
-                  });
+                return res.status(500).json({
+                  message:
+                    "There's an error on the server. Please contact the administrator.",
+                  error: err.message,
+                });
               });
           });
         } else {
@@ -1027,45 +985,37 @@ module.exports = {
                         });
                       })
                       .catch((err) => {
-                        return res
-                          .status(500)
-                          .json({
-                            message:
-                              "There's an error on the server. Please contact the administrator.",
-                            error: err.message,
-                          });
+                        return res.status(500).json({
+                          message:
+                            "There's an error on the server. Please contact the administrator.",
+                          error: err.message,
+                        });
                       });
                   })
                   .catch((err) => {
-                    return res
-                      .status(500)
-                      .json({
-                        message:
-                          "There's an error on the server. Please contact the administrator.",
-                        error: err.message,
-                      });
+                    return res.status(500).json({
+                      message:
+                        "There's an error on the server. Please contact the administrator.",
+                      error: err.message,
+                    });
                   });
               }
             })
             .catch((err) => {
-              return res
-                .status(500)
-                .json({
-                  message:
-                    "There's an error on the server. Please contact the administrator.",
-                  error: err.message,
-                });
+              return res.status(500).json({
+                message:
+                  "There's an error on the server. Please contact the administrator.",
+                error: err.message,
+              });
             });
         }
       })
       .catch((err) => {
-        return res
-          .status(500)
-          .json({
-            message:
-              "There's an error on the server. Please contact the administrator.",
-            error: err.message,
-          });
+        return res.status(500).json({
+          message:
+            "There's an error on the server. Please contact the administrator.",
+          error: err.message,
+        });
       });
   },
 
@@ -1101,22 +1051,18 @@ module.exports = {
             token: tokenJwt,
           });
         } else {
-          return res
-            .status(500)
-            .send({
-              status: "error",
-              message: `Anda Harus mendaftarkan email ini dengan Sign Up With Gmail= ${req.body.data.email}`,
-            });
+          return res.status(500).send({
+            status: "error",
+            message: `Anda Harus mendaftarkan email ini dengan Sign Up With Gmail= ${req.body.data.email}`,
+          });
         }
       })
       .catch((err) => {
-        return res
-          .status(500)
-          .json({
-            message:
-              "There's an error on the server. Please contact the administrator.",
-            error: err.message,
-          });
+        return res.status(500).json({
+          message:
+            "There's an error on the server. Please contact the administrator.",
+          error: err.message,
+        });
       });
   },
 
@@ -1152,22 +1098,18 @@ module.exports = {
             token: tokenJwt,
           });
         } else {
-          return res
-            .status(500)
-            .send({
-              status: "error",
-              message: `Anda Harus mendaftarkan email ini dengan Sign Up With Facebook  = ${req.body.data.email}`,
-            });
+          return res.status(500).send({
+            status: "error",
+            message: `Anda Harus mendaftarkan email ini dengan Sign Up With Facebook  = ${req.body.data.email}`,
+          });
         }
       })
       .catch((err) => {
-        return res
-          .status(500)
-          .json({
-            message:
-              "There's an error on the server. Please contact the administrator.",
-            error: err.message,
-          });
+        return res.status(500).json({
+          message:
+            "There's an error on the server. Please contact the administrator.",
+          error: err.message,
+        });
       });
   },
 
@@ -2104,13 +2046,11 @@ module.exports = {
       });
     } catch (error) {
       console.log(error);
-      return res
-        .status(500)
-        .json({
-          message:
-            "There's an error on the server. Please contact the administrator.",
-          error: error.message,
-        });
+      return res.status(500).json({
+        message:
+          "There's an error on the server. Please contact the administrator.",
+        error: error.message,
+      });
     }
 
     //         // var config = {
@@ -2319,6 +2259,67 @@ module.exports = {
       })
       .catch((result) => {
         return res.status(500).send({ message: "Failed" });
+      });
+  },
+
+  getQuizWithCode: (req, res) => {
+    const { code } = req.body;
+    quiz
+      .findOne({
+        include: [
+          {
+            model: question,
+            required: false,
+            // attributes: [],
+          },
+        ],
+        where: {
+          code,
+        },
+      })
+      .then((results) => {
+        // console.log(results.dataValues);
+        // console.log(results);
+        const objQuestion = [];
+        // {
+        //   sentence: 'True or False termasuk ke dalam tipe data?',
+        //   answer: {
+        //     a: 'Number',
+        //     b: 'String',
+        //     c: 'Boolean',
+        //     d: 'Object',
+        //   },
+        //   order: 1,
+        //   correctAnswer: 'c',
+        //   scorePoints: 25,
+        // }
+
+        //         answer: "c"
+        // createdAt: "2020-06-11T05:00:31.000Z"
+        // id: 1
+        // options: "{"a":"Number","b":"String","c":"Boolean","d":"Object"}"
+        // order: "1"
+        // quizId: 1
+        // scorePoints: 25
+        // sentence: "True or False termasuk ke dalam tipe data?"
+        // updatedAt: "2020-06-11T05:00:31.000Z"
+        // results.dataValues.questions.forEach((val) => {
+        //   console.log(val.dataValues);
+        //   const {
+        //     options,
+        //     sentence,
+        //     scorePoints,
+        //     answer,
+        //     order,
+        //   } = val.dataValues;
+        // });
+        return res.status(200).send({
+          quiz: results.dataValues,
+          question: results.dataValues.questions,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
       });
   },
 };
