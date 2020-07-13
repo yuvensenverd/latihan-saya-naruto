@@ -2291,9 +2291,10 @@ module.exports = {
 
   webHooksVideo: (req, res) => {
     console.log(req.body);
+    console.log(req.body.title);
 
     console.log(res.body);
-    console.log(res.body.title);
+    // console.log(res.body.title);
     // console.log(req.body.data);
   },
 };
