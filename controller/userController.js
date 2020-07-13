@@ -2294,7 +2294,7 @@ module.exports = {
 
     // data yang didapat dari sproutvideo yang dikirim dari backend dia ke backend kita.
 
-    console.log(req.body.title);
+    const titleVideo = req.body.title;
 
     if (req.body.state === "deployed") {
       console.log("=================== state video", req.body.state);
@@ -2310,13 +2310,11 @@ module.exports = {
           }
         )
         .then((results) => {
-          console.log(req.body.title);
+          // console.log(req.body.title);
           const path = "student/video"; // path video
           // kita gunakan nama video yang di server menjadi title di video pada hostingan.
-          if (fs.existsSync(`./public/${path}/${req.body.title}`)) {
-            console.log("============ File exists");
-          }
-          fs.unlinkSync(`./public/${path}/`, req.body.title);
+
+          fs.unlinkSync(`./public/${path}/`, titleVideo);
           return res
             .status(200)
             .send({ message: "Success Update and Delete Video" });
