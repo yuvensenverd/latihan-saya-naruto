@@ -2301,7 +2301,7 @@ module.exports = {
       coursesvideo
         .update(
           {
-            durationVideo: req.body.state,
+            durationVideo: req.body.duration,
           },
           {
             where: {
@@ -2311,7 +2311,7 @@ module.exports = {
         )
         .then((results) => {
           console.log(req.body.title);
-          const path = "/student/video"; // path video
+          const path = "student/video"; // path video
           // kita gunakan nama video yang di server menjadi title di video pada hostingan.
 
           fs.unlinkSync(`./public/${path}`, req.body.title);
