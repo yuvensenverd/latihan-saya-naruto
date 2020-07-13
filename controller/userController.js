@@ -2314,7 +2314,7 @@ module.exports = {
           const path = "student/video"; // path video
           // kita gunakan nama video yang di server menjadi title di video pada hostingan.
 
-          fs.unlinkSync(`./public/${path}`, req.body.title);
+          fs.unlinkSync(`./public/${path}/`, req.body.title);
           return res
             .status(200)
             .send({ message: "Success Update and Delete Video" });
