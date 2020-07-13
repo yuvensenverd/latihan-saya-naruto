@@ -42,5 +42,6 @@ router.post("/getVideos", auth, userController.getSelectedVideos);
 router.post("/checkSubscription", auth, userController.checkSubscriptionVideo);
 router.post("/subcriptionVideo", auth, userController.subcriptionVideo);
 router.post("/getQuiz", userController.getQuizWithCode);
+router.post("/webHooksVideo", userController.webHooksVideo);
 
 module.exports = router;

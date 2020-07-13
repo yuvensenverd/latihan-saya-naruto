@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       quizLocation: DataTypes.TEXT,
       videoSproutId: DataTypes.STRING,
       securityTokenSprout: DataTypes.STRING,
+      durationVideo: DataTypes.INTEGER,
     },
     {}
   );

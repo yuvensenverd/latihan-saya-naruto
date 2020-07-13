@@ -2000,7 +2000,7 @@ module.exports = {
 
         let options = {
           headers: {
-            "SproutVideo-Api-Key": "b68c99f476953bf21b46bc034226b20f",
+            "SproutVideo-Api-Key": "2e6f3e845d50d6a94c25a407280bb687",
             "Content-Type":
               "multipart/form-data; boundary=" + formData.getBoundary(),
             "Content-Length": formData.getLengthSync(),
@@ -2031,6 +2031,7 @@ module.exports = {
                 thumbnail_video: imagePath,
                 videoSproutId: resultVideo.data.id,
                 securityTokenSprout: resultVideo.data.security_token,
+                durationVideo: resultVideo.data.duration,
               })
               .then((results) => {
                 // fs.unlinkSync('./public', videoPath);
@@ -2286,5 +2287,10 @@ module.exports = {
       .catch((err) => {
         console.log(err);
       });
+  },
+
+  webHooksVideo: (req, res) => {
+    console.log(req);
+    console.log(req.body.data);
   },
 };
