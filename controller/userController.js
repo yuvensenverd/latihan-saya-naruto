@@ -2313,7 +2313,9 @@ module.exports = {
           console.log(req.body.title);
           const path = "student/video"; // path video
           // kita gunakan nama video yang di server menjadi title di video pada hostingan.
-
+          if (fs.existsSync(`./public/${path}/${req.body.title}`)) {
+            console.log("============ File exists");
+          }
           fs.unlinkSync(`./public/${path}/`, req.body.title);
           return res
             .status(200)
