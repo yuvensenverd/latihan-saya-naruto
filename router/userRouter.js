@@ -38,7 +38,7 @@ router.get("/scholarshipByIdUser", auth, userController.getScholarshipByUserId);
 router.post("/uploadvideo", auth, userController.uploadVideoByAdmin);
 router.get("/allvideos", auth, userController.getAllVideo);
 router.post("/checkVideos", userController.checkAvailabilityVideo);
-router.post("/getVideos", auth, userController.getSelectedVideos);
+router.post("/getVideos", userController.getSelectedVideos);
 router.post("/checkSubscription", auth, userController.checkSubscriptionVideo);
 router.post("/subcriptionVideo", auth, userController.subcriptionVideo);
 router.post("/getQuiz", userController.getQuizWithCode);
