@@ -1995,7 +1995,7 @@ module.exports = {
 
         let formData = new FormData();
 
-        formData.append("title", title);
+        formData.append("title", courses_video[0].filename);
         formData.append("source_video_url", `${URL_API}${videoPath}`);
 
         let options = {
@@ -2290,8 +2290,37 @@ module.exports = {
   },
 
   webHooksVideo: (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
+
+    // data yang didapat dari sproutvideo yang dikirim dari backend dia ke backend kita.
+
     console.log(req.body.title);
+
+    if (req.body.state === "deployed") {
+      coursesvideo
+        .update(
+          {
+            durationVideo: req.body.state,
+          },
+          {
+            where: {
+              videoSproutId: req.body.id,
+            },
+          }
+        )
+        .then((results) => {
+          const path = "/student/video"; // path video
+          // kita gunakan nama video yang di server menjadi title di video pada hostingan.
+
+          fs.unlinkSync(`./public/${path}`, req.body.title);
+          return res
+            .status(200)
+            .send({ message: "Success Update and Delete Video" });
+        })
+        .catch((err) => {
+          return res.status(500).send({ message: "Failed" });
+        });
+    }
 
     console.log(res.body);
     // console.log(res.body.title);
