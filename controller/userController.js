@@ -2297,6 +2297,7 @@ module.exports = {
     console.log(req.body.title);
 
     if (req.body.state === "deployed") {
+      console.log("=================== state video", req.body.state);
       coursesvideo
         .update(
           {
@@ -2309,6 +2310,7 @@ module.exports = {
           }
         )
         .then((results) => {
+          console.log(req.body.title);
           const path = "/student/video"; // path video
           // kita gunakan nama video yang di server menjadi title di video pada hostingan.
 
