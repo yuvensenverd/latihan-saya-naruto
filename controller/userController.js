@@ -2290,7 +2290,7 @@ module.exports = {
   },
 
   webHooksVideo: (req, res) => {
-    // console.log(req);
-    console.log(req.body.data);
+    console.log(req);
+    // console.log(req.body.data);
   },
 };
