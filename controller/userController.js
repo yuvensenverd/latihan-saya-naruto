@@ -2143,69 +2143,20 @@ module.exports = {
   },
 
   getSelectedVideos: (req, res) => {
-    // console.log(req.params)
-    // console.log(req.params.title)
-    // let videoFile =  `${__dirname}/../public/student/video/${req.params.title}`;
-
-    // // let filename = path.basename(file);
-    // // // console.log(filename)
-    // // let mimetype = mime.lookup(file);
-    // // // console.log(mimetype)
-
-    // // res.setHeader('Content-disposition', 'attachment; filename=' + filename);
-    // // res.setHeader('Content-type', mimetype);
-
-    // // let filestream = fs.createReadStream(file);
-    // // filestream.pipe(res);
-
-    // var stat = fs.statSync(videoFile);
-    // var total = stat.size;
-
-    // console.log('_________________________+++++ASASS')
-    // console.log(req.headers.range)
-
-    // if (req.headers.range) {
-    //     // meaning client (browser) has moved the forward/back slider
-    //     // which has sent this request back to this server logic ... cool
-
-    //     console.log('Ada req headers range')
-    //     var range = req.headers.range;
-    //     var parts = range.replace(/bytes=/, "").split("-");
-    //     var partialstart = parts[0];
-    //     var partialend = parts[1];
-    //     var maxChunk = 1024 * 1024;
-
-    //     var start = parseInt(partialstart, 10);
-    //     var end = partialend ? parseInt(partialend, 10) : total-1;
-    //     var chunksize = (end-maxChunk)+1;
-    //     console.log('RANGE: ' + start + ' - ' + end + ' = ' + chunksize);
-
-    //     var file = fs.createReadStream(videoFile, {start: start, end: end});
-    //     res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'video/mp4' });
-    //     file.pipe(res);
-
-    // }
-    // else {
-    //     console.log('Ga ada req.header')
-    //     console.log('ALL: ' + total);
-    //     res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'video/mp4' });
-    //     fs.createReadStream(videoFile).pipe(res);
-    // }
-
     const { slug, topic_name } = req.body;
 
     coursesvideo
       .findOne({
         where: {
           slug,
-          topic_name,
+          // topic_name,
         },
       })
       .then((result) => {
-        res.status(200).send({ message: "Success", result });
+        return res.status(200).send({ message: "Success", result });
       })
       .catch((err) => {
-        res.status(500).send({ message: "Failed" });
+        return res.status(500).send({ message: "Failed" });
       });
   },
 
@@ -2316,8 +2267,6 @@ module.exports = {
           // kita gunakan nama video yang di server menjadi title di video pada hostingan.
 
           fs.unlinkSync(`./public/${path}/${titleVideo}`);
-          console.log(`./public/${path}/${titleVideo}`);
-          console.log("Selesai");
 
           return res
             .status(200)
