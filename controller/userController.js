@@ -2311,6 +2311,7 @@ module.exports = {
         )
         .then((results) => {
           // console.log(req.body.title);
+          console.log(titleVideo);
           const path = "student/video"; // path video
           // kita gunakan nama video yang di server menjadi title di video pada hostingan.
 
