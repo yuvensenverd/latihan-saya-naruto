@@ -2311,7 +2311,7 @@ module.exports = {
         )
         .then((results) => {
           // console.log(req.body.title);
-          console.log(titleVideo);
+          console.log("=================== title video", titleVideo);
           const path = "student/video"; // path video
           // kita gunakan nama video yang di server menjadi title di video pada hostingan.
 
@@ -2325,7 +2325,7 @@ module.exports = {
         });
     }
 
-    console.log(res.body);
+    // console.log(res.body);
     // console.log(res.body.title);
     // console.log(req.body.data);
   },
