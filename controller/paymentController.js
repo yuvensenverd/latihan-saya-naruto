@@ -15,18 +15,18 @@ const moment = require("moment");
 const Axios = require("axios");
 
 // Development
-// const snap = new midtransClient.Snap({
-//     isProduction    : false,
-//     serverKey       : 'SB-Mid-server-gX4FwJuHKjMqZaQvd2pwT2GX',
-//     clientKey       : 'SB-Mid-client-lM5IFUJ3Ozq3_ABW'
-// })
+const snap = new midtransClient.Snap({
+  isProduction: false,
+  serverKey: "SB-Mid-server-gX4FwJuHKjMqZaQvd2pwT2GX",
+  clientKey: "SB-Mid-client-lM5IFUJ3Ozq3_ABW",
+});
 
 // Production
-const snap = new midtransClient.Snap({
-  isProduction: true,
-  serverKey: "Mid-server-6xImsUTrxyWWRCZXeolqSrFI",
-  clientKey: "Mid-client-o2dbxrIvWMsvu5sG",
-});
+// const snap = new midtransClient.Snap({
+//   isProduction: true,
+//   serverKey: "Mid-server-6xImsUTrxyWWRCZXeolqSrFI",
+//   clientKey: "Mid-client-o2dbxrIvWMsvu5sG",
+// });
 
 const core = new midtransClient.CoreApi({
   isProduction: false,
@@ -44,11 +44,13 @@ module.exports = {
     console.log(req.body);
     console.log("Masih di snap md");
     console.log(order_id);
+    console.log("Masih di snap md kedua");
     var Date = moment().format("YYMMDD");
     var randInt = Math.floor(Math.random() * (999 - 100 + 1) + 100);
     // Halo jjhjhjhjkhhjhjj
     // kol md 6
     snap.createTransaction(parameter).then((transaction) => {
+      console.log(transaction);
       transactionToken = transaction.token;
       // console.log('transactionToken: ', transactionToken)
 
@@ -345,47 +347,94 @@ module.exports = {
       req.app.io.emit(`status_transaction` + order_id, status);
 
       // update payment status on database
-      Payment.findOne({
-        attributes: ["scholarshipId"],
-        where: {
-          order_id: Response.order_id,
-        },
-      }).then((result) => {
-        if (Response.transaction_status === "settlement") {
-          scholarship
-            .update(
-              {
-                currentValue: sequelize.literal(
-                  `currentValue + ${Response.gross_amount}`
-                ),
-              },
-              {
-                where: {
-                  id: result.dataValues.scholarshipId,
-                },
-              }
-            )
-            .then((result1) => {
-              console.log(
-                "------------------------------------------------success--------------------------------------------"
-              );
-              //  console.log(result1.dataValues)
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        }
-        Payment.update(
-          {
-            statusPayment: Response.transaction_status,
-          },
-          {
+
+      if (Response.order_id.includes("Donation")) {
+        donation
+          .findOne({
+            attributes: ["scholarshipId"],
             where: {
               order_id: Response.order_id,
             },
+          })
+          .then((result) => {
+            if (Response.transaction_status === "settlement") {
+              //   scholarship
+              //     .update(
+              //       {
+              //         currentValue: sequelize.literal(
+              //           `currentValue + ${Response.gross_amount}`
+              //         ),
+              //       },
+              //       {
+              //         where: {
+              //           id: result.dataValues.scholarshipId,
+              //         },
+              //       }
+              //     )
+              //     .then((result1) => {
+              //       console.log(
+              //         "------------------------------------------------success--------------------------------------------"
+              //       );
+              //       //  console.log(result1.dataValues)
+              //     })
+              //     .catch((err) => {
+              //       console.log(err);
+              //     });
+            }
+            donation.update(
+              {
+                statusPayment: Response.transaction_status,
+              },
+              {
+                where: {
+                  order_id: Response.order_id,
+                },
+              }
+            );
+          });
+      } else {
+        Payment.findOne({
+          attributes: ["scholarshipId"],
+          where: {
+            order_id: Response.order_id,
+          },
+        }).then((result) => {
+          if (Response.transaction_status === "settlement") {
+            scholarship
+              .update(
+                {
+                  currentValue: sequelize.literal(
+                    `currentValue + ${Response.gross_amount}`
+                  ),
+                },
+                {
+                  where: {
+                    id: result.dataValues.scholarshipId,
+                  },
+                }
+              )
+              .then((result1) => {
+                console.log(
+                  "------------------------------------------------success--------------------------------------------"
+                );
+                //  console.log(result1.dataValues)
+              })
+              .catch((err) => {
+                console.log(err);
+              });
           }
-        );
-      });
+          Payment.update(
+            {
+              statusPayment: Response.transaction_status,
+            },
+            {
+              where: {
+                order_id: Response.order_id,
+              },
+            }
+          );
+        });
+      }
 
       // mockNotificationJson = Response
       // snap.transaction.notification(Response)
@@ -475,7 +524,7 @@ module.exports = {
       // update payment status on database
       donation
         .findOne({
-          attributes: ["projectId"],
+          attributes: ["scholarshipId"],
           where: {
             order_id: Response.order_id,
           },
@@ -618,48 +667,94 @@ module.exports = {
       gross_amount,
       scholarshipId,
     } = req.body;
-    Payment.update(
-      {
-        paymentType: payment_type,
-        statusPayment: transaction_status,
-        updateAt: transaction_time,
-      },
-      {
-        where: {
-          order_id,
-        },
-      }
-    )
+    if (order_id.includes("Donation")) {
+      donation
+        .update(
+          {
+            paymentType: payment_type,
+            statusPayment: transaction_status,
+            updateAt: transaction_time,
+          },
+          {
+            where: {
+              order_id,
+            },
+          }
+        )
 
-      .then(() => {
-        // if(transaction_status === 'settlement'){
-        //     scholarship.update(
-        //         {
-        //             currentValue : sequelize.literal(`currentValue + ${gross_amount}`)
-        //         },
-        //         {
-        //             where :
-        //                 {
-        //                     id : scholarshipId
-        //                 }
-        //         }
-        //     )
-        //     .then((res)=>{
-        //          console.log('success')
-        //          console.log(res)
-        //     })
-        //     .catch((err)=>{
-        //         console.log(err)
-        //     })
-        // }
-        Payment.findAll({ where: { order_id } }).then((result) => {
-          console.log(result);
-          return res.status(200).send(result);
+        .then(() => {
+          // if(transaction_status === 'settlement'){
+          //     scholarship.update(
+          //         {
+          //             currentValue : sequelize.literal(`currentValue + ${gross_amount}`)
+          //         },
+          //         {
+          //             where :
+          //                 {
+          //                     id : scholarshipId
+          //                 }
+          //         }
+          //     )
+          //     .then((res)=>{
+          //          console.log('success')
+          //          console.log(res)
+          //     })
+          //     .catch((err)=>{
+          //         console.log(err)
+          //     })
+          // }
+          donation.findAll({ where: { order_id } }).then((result) => {
+            console.log(result);
+            return res.status(200).send(result);
+          });
+        })
+        .catch((err) => {
+          console.log(err);
         });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    } else {
+      Payment.update(
+        {
+          paymentType: payment_type,
+          statusPayment: transaction_status,
+          updateAt: transaction_time,
+        },
+        {
+          where: {
+            order_id,
+          },
+        }
+      )
+
+        .then(() => {
+          // if(transaction_status === 'settlement'){
+          //     scholarship.update(
+          //         {
+          //             currentValue : sequelize.literal(`currentValue + ${gross_amount}`)
+          //         },
+          //         {
+          //             where :
+          //                 {
+          //                     id : scholarshipId
+          //                 }
+          //         }
+          //     )
+          //     .then((res)=>{
+          //          console.log('success')
+          //          console.log(res)
+          //     })
+          //     .catch((err)=>{
+          //         console.log(err)
+          //     })
+          // }
+          Payment.findAll({ where: { order_id } }).then((result) => {
+            console.log(result);
+            return res.status(200).send(result);
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   },
 
   updateDonationToYayasan: (req, res) => {

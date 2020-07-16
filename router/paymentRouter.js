@@ -12,10 +12,8 @@ router.post("/getHistory", auth, paymentController.getHistory);
 router.get("/getHistoryAdmin", auth, paymentController.getHistoryAdmin); // BUTUH PROTEKSI ROLE = USERADMIN
 router.post("/getDonasiProject", paymentController.getDonasiProject);
 router.post("/getStatus", paymentController.getStatus);
-router.post(
-  "/getStatusDonationToYayasan",
-  paymentController.getStatusDonationToYayasan
-);
+router.post("/getStatusDonationToYayasan", paymentController.getStatus);
+// getStatusDonationToYayasan
 router.post("/createPayment", paymentController.addPayment);
 router.post("/createDonationToYayasan", paymentController.addDonationToYayasan);
 router.post(
