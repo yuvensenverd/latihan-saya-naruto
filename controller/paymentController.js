@@ -42,6 +42,7 @@ module.exports = {
     let { parameter } = req.body;
     console.log("masuk get token midtrans");
     console.log(req.body);
+    console.log("Masih di snap md");
     console.log(order_id);
     var Date = moment().format("YYMMDD");
     var randInt = Math.floor(Math.random() * (999 - 100 + 1) + 100);
