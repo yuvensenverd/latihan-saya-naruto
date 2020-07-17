@@ -124,6 +124,7 @@ module.exports = {
       order_id,
       paymentSource,
       noPembayaran,
+      donationToYayasan,
     } = req.body;
 
     return sequelize
@@ -157,6 +158,7 @@ module.exports = {
                 komentar: komentar,
                 isAnonim: anonim,
                 noPembayaran,
+                donationToYayasan,
               })
                 .then(() => {
                   // Payment.findAll()
