@@ -127,6 +127,9 @@ module.exports = {
       donationToYayasan,
     } = req.body;
 
+    console.log("Test req body ===========================");
+    console.log(req.body);
+
     return sequelize
       .transaction(function (t) {
         return Payment.findOne(
