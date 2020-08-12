@@ -308,6 +308,7 @@ module.exports = {
                             'shareDescription',
                             'nisn',
                             'kegiatanSosial',
+                            'jumlahSaudara',
                             ['createdAt', 'studentCreated']
 
                         ],
@@ -322,7 +323,8 @@ module.exports = {
                                     'email',
                                     ['telepon', 'teleponSekolah'],
                                     'namaPemilikRekening',
-                                    'nomorRekening'
+                                    'nomorRekening',
+                                    'npsn'
 
                                 ],
                             }
