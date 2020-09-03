@@ -134,13 +134,14 @@ module.exports = {
         const data = JSON.parse(req.body.data);
 
         const {
+          npsn,
           nama,
           alamat,
           telepon,
           namaPemilikRekening,
           nomorRekening,
           bank,
-          email,
+          website,
           cabangBank,
           provinsi,
         } = data;
@@ -149,17 +150,18 @@ module.exports = {
           return school
             .create(
               {
+                npsn,
                 nama,
                 alamat,
                 telepon,
                 namaPemilikRekening,
                 nomorRekening,
                 bank,
-                email,
+                website,
                 cabangBank,
                 provinsi,
                 isDeleted: 0,
-                isVerified: 1,
+                isVerified: 0,
               },
               { transaction: t }
             )
@@ -167,21 +169,22 @@ module.exports = {
               let schoolId = result.dataValues.id;
 
               let listImage = [];
-              for (let i = 0; i < image.length; i++) {
-                const imagePath = path + "/" + image[i].filename;
-                listImage.push({
-                  schoolId,
-                  imagePath,
-                });
-              }
-              return school_pictures
-                .bulkCreate(listImage, { transaction: t })
-                .then((result2) => {
-                  return res.status(200).send(result2);
-                })
-                .catch((err) => {
-                  throw new Error();
-                });
+              //   for (let i = 0; i < image.length; i++) {
+              //     const imagePath = path + "/" + image[i].filename;
+              //     listImage.push({
+              //       schoolId,
+              //       imagePath,
+              //     });
+              return res.status(200).send(result);
+              //   }
+              //   return school_pictures
+              //     .bulkCreate(listImage, { transaction: t })
+              //     .then((result2) => {
+              //       return res.status(200).send(result2);
+              //     })
+              //     .catch((err) => {
+              //       throw new Error();
+              //     });
             })
             .catch((err) => {
               throw new Error();
