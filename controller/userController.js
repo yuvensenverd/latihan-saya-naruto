@@ -255,7 +255,7 @@ module.exports = {
 
                     let mailOptions = {
                       from:
-                        "KasihNusantara Admin <operational@kasihnusantara.com>",
+                        "KasihNusantara Admin <operationalkasihnusantara@gmail.com>",
                       to: email,
                       subject: "Verifikasi Email for Kasih Nusantara",
                       html: `
@@ -270,6 +270,7 @@ module.exports = {
 
                     transporter.sendMail(mailOptions, (err1, res1) => {
                       if (err1) {
+                        console.log("Masuk Error");
                         return res
                           .status(500)
                           .send({ status: "error", err: err1 });
@@ -403,7 +404,7 @@ module.exports = {
           let linkVerifikasi = `${UI_LINK}/verified/${tokenJwt}`;
 
           let mailOptions = {
-            from: "KasihNusantara Admin <operational@kasihnusantara.com>",
+            from: "KasihNusantara Admin <operationalkasihnusantara@gmail.com>",
             to: req.user.email,
             subject: "Verifikasi Email for Kasih Nusantara",
             html: `
@@ -575,7 +576,7 @@ module.exports = {
           let linkVerifikasi = `${UI_LINK}/verifiedReset?token=${tokenPassword}`;
 
           let mailOptions = {
-            from: "Kasih Nusantara Admin <operational@kasihnusantara.com>",
+            from: "Kasih Nusantara Admin <operationalkasihnusantara@gmail.com>",
             to: req.body.email,
             subject: `Reset Password for ${req.body.email}`,
             html: `
