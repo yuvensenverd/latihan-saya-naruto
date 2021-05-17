@@ -372,10 +372,14 @@ module.exports = {
             model: Payment,
             required: false,
             attributes: [],
+            where: {
+              scholarshipId: Number(id),
+              statusPayment: "settlement",
+            },
           },
         ],
         where: {
-          id,
+          id: Number(id),
           isOngoing: 1,
         },
         group: ["id"],
@@ -1181,13 +1185,11 @@ module.exports = {
                 });
               })
               .catch((err) => {
-                return res
-                  .status(500)
-                  .json({
-                    message:
-                      "There's an error on the server. Please contact the administrator.",
-                    error: err.message,
-                  });
+                return res.status(500).json({
+                  message:
+                    "There's an error on the server. Please contact the administrator.",
+                  error: err.message,
+                });
               });
           })
           .catch((err) => {
@@ -1263,13 +1265,11 @@ module.exports = {
                 });
               })
               .catch((err) => {
-                return res
-                  .status(500)
-                  .json({
-                    message:
-                      "There's an error on the server. Please contact the administrator.",
-                    error: err.message,
-                  });
+                return res.status(500).json({
+                  message:
+                    "There's an error on the server. Please contact the administrator.",
+                  error: err.message,
+                });
               });
           })
           .catch((err) => {
