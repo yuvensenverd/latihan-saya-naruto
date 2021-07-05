@@ -254,8 +254,7 @@ module.exports = {
                     let linkVerifikasi = `${UI_LINK}/verified/${tokenJwt}`;
 
                     let mailOptions = {
-                      from:
-                        "KasihNusantara Admin <operationalkasihnusantara@gmail.com>",
+                      from: "KasihNusantara Admin <operationalkasihnusantara@gmail.com>",
                       to: email,
                       subject: "Verifikasi Email for Kasih Nusantara",
                       html: `
@@ -679,6 +678,47 @@ module.exports = {
             {
               where: {
                 password: oldPw,
+              },
+            }
+          )
+            .then((lastResults) => {
+              return res.status(200).send(results);
+            })
+            .catch((err) => {
+              return res.status(500).json({
+                message:
+                  "There's an error on the server. Please contact the administrator.",
+                error: err.message,
+              });
+            });
+        } else {
+          return res
+            .status(500)
+            .json({ message: "Password Lama Salah", error: err.message });
+        }
+      })
+      .catch((err) => {
+        return res
+          .status(500)
+          .json({ message: "Password Lama Salah", error: err.message });
+      });
+  },
+
+  userChangePhoneNumber: (req, res) => {
+    User.findOne({
+      where: {
+        id: req.user.userId,
+      },
+    })
+      .then((results) => {
+        if (results) {
+          User.update(
+            {
+              phoneNumber: req.body.phoneNumber,
+            },
+            {
+              where: {
+                id: req.user.userId,
               },
             }
           )

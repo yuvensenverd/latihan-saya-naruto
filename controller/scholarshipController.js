@@ -60,14 +60,8 @@ module.exports = {
     // need changes
     // console.log(req.body)
     // console.log('masuk edit scholarship')
-    const {
-      id,
-      judul,
-      nominal,
-      durasi,
-      description,
-      shareDescription,
-    } = req.body;
+    const { id, judul, nominal, durasi, description, shareDescription } =
+      req.body;
     scholarship
       .update(
         {
@@ -742,6 +736,10 @@ module.exports = {
                   "nomorRekening",
                 ],
               },
+              {
+                model: User,
+                attributes: [["phoneNumber", "nomorKontakSiswa"]],
+              },
             ],
             where: {
               pendidikanTerakhir: {
@@ -865,14 +863,8 @@ module.exports = {
   // User
   getAvailableScholarship: (req, res) => {
     console.log("------------------------> masuk per user");
-    var {
-      offset,
-      limit,
-      name,
-      date,
-      pendidikanTerakhir,
-      provinsiMurid,
-    } = req.body;
+    var { offset, limit, name, date, pendidikanTerakhir, provinsiMurid } =
+      req.body;
 
     console.log(offset);
     // if(offset) {
@@ -994,14 +986,8 @@ module.exports = {
 
   getScholarshipTemporaryUser: (req, res) => {
     console.log("------------------------> masuk per user");
-    var {
-      offset,
-      limit,
-      name,
-      date,
-      pendidikanTerakhir,
-      provinsiMurid,
-    } = req.body;
+    var { offset, limit, name, date, pendidikanTerakhir, provinsiMurid } =
+      req.body;
 
     console.log(req.body);
     const { userId } = req.user;
@@ -1153,8 +1139,7 @@ module.exports = {
                 // console.log(tokenJwt)
 
                 let mailOptions = {
-                  from:
-                    "KasihNusantara Admin <operationalkasihnusantara@gmail.com>",
+                  from: "KasihNusantara Admin <operationalkasihnusantara@gmail.com>",
                   to: dataUser.dataValues.email,
                   subject: status
                     ? "Proses verifikasi"
@@ -1243,8 +1228,7 @@ module.exports = {
                 // console.log(tokenJwt)
 
                 let mailOptions = {
-                  from:
-                    "KasihNusantara Admin <operationalkasihnusantara@gmail.com>",
+                  from: "KasihNusantara Admin <operationalkasihnusantara@gmail.com>",
                   to: dataUser.dataValues.email,
                   subject: "Beasiswa berhasil di approve",
                   html: `

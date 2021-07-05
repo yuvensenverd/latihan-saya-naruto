@@ -30,6 +30,7 @@ router.get(
 );
 router.post("/newPasswordUser", resetToken, userController.userResetPassword);
 router.post("/userChangePassword", auth, userController.userChangePassword);
+router.post("/changePhoneNumber", auth, userController.userChangePhoneNumber);
 
 router.get("/getSubscription/:id", auth, userController.getSubscription);
 router.get("/getDonationUser", auth, userController.getDonationUser);
