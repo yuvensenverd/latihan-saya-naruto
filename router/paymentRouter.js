@@ -36,5 +36,10 @@ router.get("/getlastid", paymentController.getlastid);
 router.get("/get_last_donation_id", paymentController.getlastdonationid);
 router.post("/paymentcheck", paymentController.paymentcheck);
 router.post("/donationcheck", paymentController.donationcheck);
+router.post(
+  "/addDonationUserViaSystem",
+  auth,
+  paymentController.addDonationUserViaSystem
+);
 // donationcheck
 module.exports = router;

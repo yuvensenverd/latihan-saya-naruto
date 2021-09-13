@@ -1372,4 +1372,89 @@ module.exports = {
   },
 
   // ============ core api ===============
+
+  addDonationUserViaSystem: (req, res) => {
+    //######## INSERT DATABASE
+    const {
+      userId,
+      paymentType,
+      gross_amount,
+      statusPayment,
+      projectId,
+      scholarshipId,
+      komentar,
+      anonim,
+      order_id,
+      paymentSource,
+      noPembayaran,
+      donationToYayasan,
+    } = req.body;
+
+    return sequelize
+      .transaction(function (t) {
+        return Payment.findOne(
+          {
+            attributes: {
+              exclude: ["createdAt", "updatedAt"],
+            },
+            where: {
+              order_id,
+            },
+          },
+          { transaction: t }
+        )
+          .then((result) => {
+            if (!result) {
+              Payment.create({
+                paymentType,
+                nominal: gross_amount,
+                statusPayment,
+                paymentSource,
+                projectId: projectId ? projectId : null,
+                scholarshipId: scholarshipId ? scholarshipId : null,
+                userId: userId,
+                isRefund: "0",
+                isDeleted: "0",
+                order_id: order_id,
+                komentar: komentar,
+                isAnonim: anonim,
+                noPembayaran,
+                donationToYayasan,
+              })
+                .then(() => {
+                  scholarship
+                    .update(
+                      {
+                        currentValue: sequelize.literal(
+                          `currentValue + ${gross_amount}`
+                        ),
+                      },
+                      {
+                        where: {
+                          id: scholarshipId,
+                        },
+                      }
+                    )
+                    .then((result1) => {})
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            }
+          })
+          .catch((err) => {
+            console.log("tidak ada");
+            console.log(err);
+          });
+      })
+      .then((results) => {
+        return res.status(200).send({ message: "message success", results });
+      })
+      .catch((error) => {
+        return res.status(500).send({ message: "theres an error", error });
+      });
+  },
 };

@@ -2199,4 +2199,23 @@ module.exports = {
         });
     }
   },
+
+  adminGetUserIdAndUserName: (req, res) => {
+    User.findAll({
+      attributes: ["id", "nama", "email"],
+      where: {
+        verified: 1,
+      },
+      order: [["nama", "ASC"]],
+    })
+      .then((results) => {
+        return res.status(200).send({
+          message: "Get Success",
+          results,
+        });
+      })
+      .catch((err) => {
+        return res.status(500).send({ message: "Failed" });
+      });
+  },
 };

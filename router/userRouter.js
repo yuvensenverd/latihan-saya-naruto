@@ -36,6 +36,12 @@ router.get("/getSubscription/:id", auth, userController.getSubscription);
 router.get("/getDonationUser", auth, userController.getDonationUser);
 router.get("/scholarshipByIdUser", auth, userController.getScholarshipByUserId);
 
+router.get(
+  "/adminGetUserIdAndUserName",
+  auth,
+  userController.adminGetUserIdAndUserName
+);
+
 router.post("/uploadvideo", auth, userController.uploadVideoByAdmin);
 router.get("/allvideos", auth, userController.getAllVideo);
 router.post("/checkVideos", userController.checkAvailabilityVideo);
