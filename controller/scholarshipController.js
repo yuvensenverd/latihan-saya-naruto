@@ -15,7 +15,8 @@ const { uploader } = require("../helpers/uploader");
 var path = require("path");
 var mime = require("mime");
 const fs = require("fs");
-const { transporter } = require("../helpers/mailer");
+// const { transporter } = require("../helpers/mailer");
+const { emailer } = require("../helpers/mailer");
 
 module.exports = {
   postScholarship: (req, res) => {
@@ -1161,13 +1162,15 @@ module.exports = {
                                 </div>`,
                 };
 
-                transporter.sendMail(mailOptions, (err1, res1) => {
-                  if (err1) {
-                    return res.status(500).send({ status: "error", err: err1 });
-                  }
+                if (emailer(mailOptions)) {
+                  return res.status(200).send({
+                    dataUser: dataUser.dataValues,
+                    // token: tokenJwt,
+                  });
+                }
 
-                  return res.status(200).send(dataUser);
-                });
+                console.log("Masuk Error");
+                return res.status(500).send({ status: "error" });
               })
               .catch((err) => {
                 return res.status(500).json({
@@ -1216,45 +1219,10 @@ module.exports = {
           }
         )
           .then((results2) => {
-            User.findOne({
-              where: {
-                id: idUser,
-              },
-            })
-              .then((dataUser) => {
-                // Ketika sudah daftar kirim link verification dan create jwtToken
-                // const tokenJwt = createJWTToken({ userId: dataUser.dataValues.id, email: dataUser.dataValues.email })
-
-                // console.log(tokenJwt)
-
-                let mailOptions = {
-                  from: "KasihNusantara Admin <operationalkasihnusantara@gmail.com>",
-                  to: dataUser.dataValues.email,
-                  subject: "Beasiswa berhasil di approve",
-                  html: `
-                                <div>
-                                    <hr />
-                                    <h4>Mohon maaf data anda masih harus direvisi</h4>
-                                    <p>Terima Kasih</p>
-                                    <hr />
-                                </div>`,
-                };
-
-                transporter.sendMail(mailOptions, (err1, res1) => {
-                  if (err1) {
-                    return res.status(500).send({ status: "error", err: err1 });
-                  }
-
-                  return res.status(200).send(dataUser);
-                });
-              })
-              .catch((err) => {
-                return res.status(500).json({
-                  message:
-                    "There's an error on the server. Please contact the administrator.",
-                  error: err.message,
-                });
-              });
+            return res.status(200).send({
+              message: "Reject Beasiswa Berhasil",
+              status: "success",
+            });
           })
           .catch((err) => {
             console.log(err);

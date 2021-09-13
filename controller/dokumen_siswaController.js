@@ -1,151 +1,154 @@
-const {Sequelize, sequelize, dokumen_siswa} = require('../models')
-const Op = Sequelize.Op
-const {uploader}=require('../helpers/uploader')
-const fs=require('fs')
+const { Sequelize, sequelize, dokumen_siswa } = require("../models");
+const Op = Sequelize.Op;
+const { uploader } = require("../helpers/uploader");
+const fs = require("fs");
 
 module.exports = {
-    getDokumenByType: (req, res) => {
-        const { studentId, keterangan} = req.body
-        
-        dokumen_siswa.findAll({
-            attributes : [
-                'dokumenPath',
-                'keterangan',
-                'deskripsi'
-            ],
-            where: {
-                studentId,
-                keterangan
-            }
-        })
-        .then((results) => {
-            console.log(results)
-            return res.status(200).send({results})
-        })
-        .catch((err) => {
-            return res.status(500).send({message: err})
-        })
-    },
+  getDokumenByType: (req, res) => {
+    const { studentId, keterangan } = req.body;
 
-    getDokumenByAdmin: (req, res) => {
-        const { idSiswa } = req.body
+    dokumen_siswa
+      .findAll({
+        attributes: ["dokumenPath", "keterangan", "deskripsi"],
+        where: {
+          studentId,
+          keterangan,
+        },
+      })
+      .then((results) => {
+        console.log(results);
+        return res.status(200).send({ results });
+      })
+      .catch((err) => {
+        return res.status(500).send({ message: err });
+      });
+  },
 
-        // console.log(req.body)
+  getDokumenByAdmin: (req, res) => {
+    const { idSiswa } = req.body;
 
-        dokumen_siswa.findAll({
-            attributes : [
-                'dokumenPath',
-                'keterangan',
-                'deskripsi',
-                'orders'
-            ],
-            where: {
-                studentId: idSiswa
-            }
-        })
-        .then((results) => {
-            console.log(results)
-            return res.status(200).send({results})
-        })
-        .catch((err) => {
-            return res.status(500).send({message: err})
-        })
-    }, 
+    console.log(idSiswa);
+    console.log("Get Dokumen By Admin");
 
-    getDokumenByUser: (req, res) => {
-        const { idSiswa } = req.body
+    // console.log(req.body)
 
-        console.log(req.body)
+    dokumen_siswa
+      .findAll({
+        attributes: ["dokumenPath", "keterangan", "deskripsi", "orders"],
+        where: {
+          studentId: idSiswa,
+        },
+      })
+      .then((results) => {
+        console.log(results);
+        return res.status(200).send({ results });
+      })
+      .catch((err) => {
+        return res.status(500).send({ message: err });
+      });
+  },
 
-        dokumen_siswa.findAll({
-            attributes : [
-                'id',
-                'dokumenPath',
-                'keterangan',
-                'deskripsi',
-                'orders'
-            ],
-            where: {
-                studentId: idSiswa
-            }
-        })
-        .then((results) => {
-            console.log(results)
-            return res.status(200).send({results})
-        })
-        .catch((err) => {
-            return res.status(500).send({message: err})
-        })
-    },
+  getDokumenByUser: (req, res) => {
+    const { idSiswa } = req.body;
 
-    updateDokumentById: (req, res) => {
-        console.log('===== Masuk Pergantian Dokument')
+    console.log(req.body);
 
-        try {
+    dokumen_siswa
+      .findAll({
+        attributes: ["id", "dokumenPath", "keterangan", "deskripsi", "orders"],
+        where: {
+          studentId: idSiswa,
+        },
+      })
+      .then((results) => {
+        console.log(results);
+        return res.status(200).send({ results });
+      })
+      .catch((err) => {
+        return res.status(500).send({ message: err });
+      });
+  },
 
-            const path = '/student/images';
-            const upload = uploader(path, 'STD').fields([
-                {name: 'dokumen_image'}, 
-            ]);
+  updateDokumentById: (req, res) => {
+    console.log("===== Masuk Pergantian Dokument");
 
-            upload(req, res, (err) => {
-                if(err) {
-                    return res.status(500).json({ message: 'Upload picture failed !', error: err.message });
-                }
+    try {
+      const path = "/student/images";
+      const upload = uploader(path, "STD").fields([{ name: "dokumen_image" }]);
 
-                const { dokumen_image } = req.files;
-
-                console.log(dokumen_image)
-
-                if(dokumen_image) {
-                    var dokumen_imageDB = dokumen_image[0] ? path + '/' + dokumen_image[0].filename : '/defaultPhoto/defaultCategory.png';
-                }
-
-                const data = JSON.parse(req.body.data);
-
-                const {
-                    idSiswa,
-                    idDokument
-                } = data
-
-                dokumen_siswa.update({
-                    dokumenPath: dokumen_imageDB
-                }, {
-                    where: {
-                        studentId: idSiswa,
-                        id: idDokument
-                    }
-                })
-                .then((resultUpdate) => {
-                    return res.status(200).send(resultUpdate)
-                })
-                .catch((err) => {
-                    fs.unlinkSync('./public' + dokumen_imageDB);
-
-                    return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
-                })
-            })
-            
-        } catch (error) {
-            return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: error.message });
+      upload(req, res, (err) => {
+        if (err) {
+          return res
+            .status(500)
+            .json({ message: "Upload picture failed !", error: err.message });
         }
-    },
 
-    deleteDokumenById: (req, res) => {
-        const { idDokumen } = req.body
+        const { dokumen_image } = req.files;
 
-        dokumen_siswa.destroy({
-            where : {
-                id: idDokumen
+        console.log(dokumen_image);
+
+        if (dokumen_image) {
+          var dokumen_imageDB = dokumen_image[0]
+            ? path + "/" + dokumen_image[0].filename
+            : "/defaultPhoto/defaultCategory.png";
+        }
+
+        const data = JSON.parse(req.body.data);
+
+        const { idSiswa, idDokument } = data;
+
+        dokumen_siswa
+          .update(
+            {
+              dokumenPath: dokumen_imageDB,
+            },
+            {
+              where: {
+                studentId: idSiswa,
+                id: idDokument,
+              },
             }
-        })
-        .then((result) => {
-            return res.status(200).send({ result: 'success'})
-        })
-        .catch((err) => {
-            return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
-        })
+          )
+          .then((resultUpdate) => {
+            return res.status(200).send(resultUpdate);
+          })
+          .catch((err) => {
+            fs.unlinkSync("./public" + dokumen_imageDB);
+
+            return res.status(500).json({
+              message:
+                "There's an error on the server. Please contact the administrator.",
+              error: err.message,
+            });
+          });
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message:
+          "There's an error on the server. Please contact the administrator.",
+        error: error.message,
+      });
     }
-}
+  },
 
+  deleteDokumenById: (req, res) => {
+    const { idDokumen } = req.body;
 
+    dokumen_siswa
+      .destroy({
+        where: {
+          id: idDokumen,
+        },
+      })
+      .then((result) => {
+        return res.status(200).send({ result: "success" });
+      })
+      .catch((err) => {
+        return res.status(500).json({
+          message:
+            "There's an error on the server. Please contact the administrator.",
+          error: err.message,
+        });
+      });
+  },
+};

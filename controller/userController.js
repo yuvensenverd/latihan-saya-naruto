@@ -21,7 +21,7 @@ const {
   createJWTToken,
   createForgotPasswordToken,
 } = require("../helpers/jwtoken");
-const { transporter } = require("../helpers/mailer");
+// const { transporter } = require("../helpers/mailer");
 const testcontroller = require("./testpdf");
 
 // FOR EMAILER
@@ -267,19 +267,15 @@ module.exports = {
                                             </div>`,
                     };
 
-                    transporter.sendMail(mailOptions, (err1, res1) => {
-                      if (err1) {
-                        console.log("Masuk Error");
-                        return res
-                          .status(500)
-                          .send({ status: "error", err: err1 });
-                      }
-
+                    if (emailer(mailOptions)) {
                       return res.status(200).send({
                         dataUser: dataUser.dataValues,
                         token: tokenJwt,
                       });
-                    });
+                    }
+
+                    console.log("Masuk Error");
+                    return res.status(500).send({ status: "error" });
                   })
                   .catch((err) => {
                     return res.status(500).json({
@@ -416,16 +412,15 @@ module.exports = {
                             </div>`,
           };
 
-          transporter.sendMail(mailOptions, (err1, res1) => {
-            if (err1) {
-              return res.status(500).send({ status: "error", err: err1 });
-            }
-
+          if (emailer(mailOptions)) {
             return res.status(200).send({
               dataUser: dataUser.dataValues,
               token: tokenJwt,
             });
-          });
+          }
+
+          console.log("Masuk Error");
+          return res.status(500).send({ status: "error" });
         } else {
           return res
             .status(500)
@@ -589,15 +584,15 @@ module.exports = {
                         </div>`,
           };
 
-          transporter.sendMail(mailOptions, (err1, res1) => {
-            if (err1) {
-              return res.status(500).send({ status: "error", err: err1 });
-            }
-
+          if (emailer(mailOptions)) {
             return res.status(200).send({
-              token: tokenPassword,
+              dataUser: dataUser.dataValues,
+              token: tokenJwt,
             });
-          });
+          }
+
+          console.log("Masuk Error");
+          return res.status(500).send({ status: "error" });
         } else {
           return res.status(500).send({
             status: "notFoundEmail",
